@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add new Employee</title>
+</head>
+<body>
+
+<form th:action="@{/employee/add}" method="post" th:object="${employee}">
+
+    <input type="text" th:field="*{name}" placeholder="employee name">
+    <br>
+    <input type="text" th:field="*{second_name}" placeholder="employee second name">
+    <br>
+    <input type="number" th:field="*{age}" placeholder="employee age" min="18">
+    <br>
+    <select th:field="*{gender}">
+        <option th:each="gender : ${T(com.example.mongo_db.Entity.Gender).values()}" th:value="${gender}"
+                th:text="${gender}"></option>
+    </select>
+    <br>
+    <input type="number" th:field="*{experience}" placeholder="employee age of exp " min="0">
+    <br>
+    <select th:field="*{rank}">
+        <option th:each="rank : ${T(com.example.mongo_db.Entity.Rank).values()}" th:value="${rank}"
+                th:text="${rank}"></option>
+    </select>
+    <br>
+    <select th:field="*{post}">
+        <option th:each="post : ${T(com.example.mongo_db.Entity.Post).values()}" th:value="${post}"
+                th:text="${post}"></option>
+    </select>
+    <br>
+
+    <button>Add</button>
+</form>
+
+<!--<a th:href="@{/}" th:text="main page"></a>-->
+
+</body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+
+<ul th:each="members : ${members}">
+    <li>
+        <p th:text="${members.id}"></p>
+        <p th:text="${members.name}"></p>
+        <p th:text="${members.second_name}"></p>
+        <p th:text="${members.age}"></p>
+        <p th:text="${members.gender}"></p>
+        <p th:text="${members.experience}"></p>
+        <p th:text="${members.rank}"></p>
+        <p th:text="${members.post}"></p>
+    </li>
+</ul>
+
+
+</body>
+</html>
