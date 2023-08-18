@@ -4,7 +4,6 @@ import com.example.mongo_db.Entity.Employee;
 import com.example.mongo_db.Entity.Rank;
 import com.example.mongo_db.Repository.EmployeeRepo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,6 +39,14 @@ public class EmployeeService {
     public List<Employee> findAllByExp() {
         employees = repo.findAllByExperience();
         return employees;
+    }
+
+    public Employee findByNameQuery(String name) {
+        return repo.findByNameTest(name);
+    }
+
+    public Employee findByNameAndExpQuery(String name, int exp) {
+        return repo.findByNameAndExpTest(name, exp);
     }
 
 
