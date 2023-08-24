@@ -2,8 +2,11 @@ package com.example.mongo_db.Service;
 
 import com.example.mongo_db.Entity.Employee;
 import com.example.mongo_db.Entity.Rank;
+import com.example.mongo_db.Filter.EmployeeFilterDTO;
+import com.example.mongo_db.Filter.FilterEmployees;
 import com.example.mongo_db.Repository.EmployeeRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,6 +14,10 @@ import java.util.List;
 
 @Service
 public class EmployeeService {
+
+    @Autowired
+    private MongoTemplate mongoTemplate;
+
 
     @Autowired
     private EmployeeRepo repo;
@@ -49,5 +56,11 @@ public class EmployeeService {
         return repo.findByNameAndExpTest(name, exp);
     }
 
+    public List<Employee> filterUsers(EmployeeFilterDTO filterDTO) {
+
+        List<Employee> filteredEmployees = (List<Employee>) mongoTemplate.find(new FilterEmployees().filter(filterDTO), Employee.class);
+        System.out.println(filteredEmployees.size());
+        return filteredEmployees;
+    }
 
 }

@@ -6,12 +6,55 @@
 </head>
 <body>
 
+<div>
+    <form th:action="@{/employee/search}" method="post" th:object="${filter}">
 
-<form th:action="@{/employee/search}" method="get">
+        <input type="text" th:field="*{name}"  placeholder="employee name">
+        <br>
+        <input type="text" th:field="*{second_name}" placeholder="employee second name">
+        <br>
+        <input type="number" th:field="*{age}" placeholder="employee age">
+        <br>
+        <select th:field="*{gender}">
+            <option value="">-- Выберите пол --</option>
+            <option th:each="gender : ${T(com.example.mongo_db.Entity.Gender).values()}" th:value="${gender}"
+                    th:text="${gender}"></option>
+        </select>
+        <br>
+        <input type="number" th:field="*{experience}" placeholder="employee age of exp " min="0">
+        <br>
+        <select th:field="*{rank}">
+            <option value="">-- Выберите ранг --</option>
+            <option th:each="rank : ${T(com.example.mongo_db.Entity.Rank).values()}" th:value="${rank}"
+                    th:text="${rank}"></option>
+        </select>
+        <br>
+        <select th:field="*{post}">
+            <option value="">-- Выберите должность --</option>
+            <option th:each="post : ${T(com.example.mongo_db.Entity.Post).values()}" th:value="${post}"
+                    th:text="${post}"></option>
+        </select>
+        <br>
+
+        <button>Filter</button>
+    </form>
+</div>
 
 
-
-</form>
+<div>
+    <ul th:each="members : ${members}">
+        <li>
+            <p th:text="${members.id}"></p>
+            <p th:text="${members.name}"></p>
+            <p th:text="${members.second_name}"></p>
+            <p th:text="${members.age}"></p>
+            <p th:text="${members.gender}"></p>
+            <p th:text="${members.experience}"></p>
+            <p th:text="${members.rank}"></p>
+            <p th:text="${members.post}"></p>
+        </li>
+    </ul>
+</div>
 
 
 </body>

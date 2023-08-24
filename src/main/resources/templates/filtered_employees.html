@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+
+<div>
+    <form th:action="@{/employee/search/filtered/params}" method="post" th:object="${filter}">
+
+        <input type="text" th:field="*{name}" th:if="${filter.name == '' }" placeholder="Employee name">
+        <input type="text" th:field="*{name}" th:if="${filter.name != ''}" th:value="${filter.name}" value="test">
+
+        <br>
+        <input type="text" th:field="*{second_name}" th:if="${filter.second_name == '' }"
+               placeholder="employee second name">
+        <input type="text" th:field="*{second_name}" th:if="${filter.second_name != '' }"
+               th:value="${filter.second_name}" placeholder="employee second name">
+
+        <br>
+        <input type="number" th:field="*{age}" th:if="${filter.age == 0}" placeholder="employee age">
+        <input type="number" th:field="*{age}" th:if="${filter.age > 0}" th:value="${filter.age}">
+
+        <br>
+        <select th:field="*{gender}">
+            <option value="">-- Выберите пол --</option>
+            <option th:each="gender : ${T(com.example.mongo_db.Entity.Gender).values()}" th:value="${gender}"
+                    th:text="${gender}"></option>
+        </select>
+
+        <br>
+        <input type="number" th:field="*{experience}" th:if="${filter.experience == 0}"
+               placeholder="employee age of exp " min="0">
+        <input type="number" th:field="*{experience}" th:if="${filter.experience > 0}" th:value="${filter.experience}"
+               min="0">
+        <br>
+        <select th:field="*{rank}">
+            <option value="">-- Выберите ранг --</option>
+            <option th:each="rank : ${T(com.example.mongo_db.Entity.Rank).values()}" th:value="${rank}"
+                    th:text="${rank}"></option>
+        </select>
+        <br>
+        <select th:field="*{post}">
+            <option value="">-- Выберите должность --</option>
+            <option th:each="post : ${T(com.example.mongo_db.Entity.Post).values()}" th:value="${post}"
+                    th:text="${post}"></option>
+        </select>
+        <br>
+
+        <button>Filter</button>
+    </form>
+</div>
+
+
+<form th:action="@{/employee/search/filtered/params}">
+    <p th:if="${filtered_employees == null}" th:text="${notFound}"></p>
+
+    <ul th:if="${filtered_employees != null}" th:each="filtered : ${filtered_employees}">
+        <li>
+            <p th:text="${filtered.id}"></p>
+            <p th:text="${filtered.name}"></p>
+            <p th:text="${filtered.second_name}"></p>
+            <p th:text="${filtered.age}"></p>
+            <p th:text="${filtered.gender}"></p>
+            <p th:text="${filtered.experience}"></p>
+            <p th:text="${filtered.rank}"></p>
+            <p th:text="${filtered.post}"></p>
+        </li>
+    </ul>
+</form>
+
+
+</body>
+</html>

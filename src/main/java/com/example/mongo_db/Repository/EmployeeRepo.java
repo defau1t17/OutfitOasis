@@ -3,10 +3,15 @@ package com.example.mongo_db.Repository;
 import com.example.mongo_db.Entity.Employee;
 import com.example.mongo_db.Entity.Gender;
 import com.example.mongo_db.Entity.Rank;
+import com.example.mongo_db.Entity.User;
+import org.bson.types.ObjectId;
+import org.springframework.boot.sql.init.dependency.DependsOnDatabaseInitialization;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.UUID;
 
