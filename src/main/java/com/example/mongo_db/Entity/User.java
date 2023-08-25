@@ -1,5 +1,8 @@
 package com.example.mongo_db.Entity;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.bson.types.ObjectId;
 import org.springframework.context.annotation.Primary;
@@ -18,13 +21,21 @@ public abstract class User {
 
     @Id
     private UUID id;
-
+    @NotBlank
+    @NotEmpty
+    @NotNull
     private String name;
-
+    @NotBlank
+    @NotEmpty
+    @NotNull
     private String second_name;
 
+    @NotBlank
+    @NotEmpty
+    @NotNull
     private int age;
-
+    @NotBlank
+    @NotEmpty
     private Gender gender;
 }
 

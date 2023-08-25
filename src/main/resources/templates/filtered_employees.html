@@ -18,10 +18,11 @@
                placeholder="employee second name">
         <input type="text" th:field="*{second_name}" th:if="${filter.second_name != '' }"
                th:value="${filter.second_name}" placeholder="employee second name">
-
         <br>
-        <input type="number" th:field="*{age}" th:if="${filter.age == 0}" placeholder="employee age">
-        <input type="number" th:field="*{age}" th:if="${filter.age > 0}" th:value="${filter.age}">
+        <input type="number" th:field="*{age}" th:if="${filter.age == 0}" placeholder="employee age" min="0" max="100"
+               value="0" oninput="setDefaultZeroIfEmpty(this), replaceNumberIfOutOfMax(this)">
+        <input type="number" th:field="*{age}" th:if="${filter.age > 0}" th:value="${filter.age}" min="0" max="100"
+               value="0" oninput="setDefaultZeroIfEmpty(this), replaceNumberIfOutOfMax(this)">
 
         <br>
         <select th:field="*{gender}">
@@ -32,9 +33,9 @@
 
         <br>
         <input type="number" th:field="*{experience}" th:if="${filter.experience == 0}"
-               placeholder="employee age of exp " min="0">
-        <input type="number" th:field="*{experience}" th:if="${filter.experience > 0}" th:value="${filter.experience}"
-               min="0">
+               placeholder="employee age of exp " min="0" max="100" oninput="setDefaultZeroIfEmpty(this),replaceNumberIfOutOfMax(this)">
+        <input type="number" th:field="*{experience}" th:if="${filter.experience > 0}" th:value="${filter.experience} "
+               min="0" max="100" th:required="false" oninput="setDefaultZeroIfEmpty(this),replaceNumberIfOutOfMax(this)">
         <br>
         <select th:field="*{rank}">
             <option value="">-- Выберите ранг --</option>
@@ -57,6 +58,7 @@
 <form th:action="@{/employee/search/filtered/params}">
     <p th:if="${filtered_employees == null}" th:text="${notFound}"></p>
 
+
     <ul th:if="${filtered_employees != null}" th:each="filtered : ${filtered_employees}">
         <li>
             <p th:text="${filtered.id}"></p>
@@ -71,6 +73,31 @@
     </ul>
 </form>
 
+
+<script>
+    function replaceNumberIfOutOfMax(inputElement) {
+
+        if (inputElement.value.startsWith(0) && !inputElement.value.endsWith(0)) {
+            inputElement.value = inputElement.value.substring(1, inputElement.value.length);
+        }
+        if (inputElement.value > 100) {
+            inputElement.value = ''
+        }
+        if (inputElement.value === '') {
+            inputElement.value = '0';
+        }
+    }
+
+    function setDefaultZeroIfEmpty(inputElement) {
+
+
+        if (inputElement.value === '') {
+            inputElement.value = '0';
+        }
+    }
+
+
+</script>
 
 </body>
 </html>

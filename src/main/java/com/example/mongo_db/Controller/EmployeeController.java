@@ -3,20 +3,24 @@ package com.example.mongo_db.Controller;
 
 import com.example.mongo_db.Entity.*;
 import com.example.mongo_db.Filter.EmployeeFilterDTO;
+import com.example.mongo_db.Service.CheckForQuery;
 import com.example.mongo_db.Service.EmployeeService;
 import com.example.mongo_db.Service.GenerateQuery;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.net.http.HttpResponse;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -64,16 +68,11 @@ public class EmployeeController {
     }
 
     @PostMapping("/search")
-    public String filterEmployees(@ModelAttribute EmployeeFilterDTO filterDTO, Model model, HttpServletRequest httpServletRequest) {
+    public String filterEmployees(@ModelAttribute @Valid EmployeeFilterDTO filterDTO, Model model, HttpServletRequest httpServletRequest) {
         List<Employee> employees = service.filterUsers(filterDTO);
+        query = new GenerateQuery().generateURL(filterDTO);
 
         if (employees.size() > 0) {
-            query = new GenerateQuery().generateURL(filterDTO);
-
-//            if(query.startsWith("?") && query.endsWith("?") && employees.size()>0){
-//
-//                return "redirect:/employee/search";
-//            }
 
             httpServletRequest.getSession().setAttribute("filtered_employees", employees);
             httpServletRequest.getSession().setAttribute("params", filterDTO);
@@ -85,14 +84,9 @@ public class EmployeeController {
 
         } else {
 
-            query = new GenerateQuery().generateURL(filterDTO);
-
-//            if (query.startsWith("?") && query.endsWith("?")) {
-//                return "redirect:/employee/search";
-//            }
-
             httpServletRequest.getSession().setAttribute("filtered_employees", null);
             httpServletRequest.getSession().setAttribute("params", filterDTO);
+            httpServletRequest.getSession().setAttribute("query", query);
 
             logger.info("Not found user(s) and redirected to page with params : " + query);
             return "redirect:/employee/search/filtered/params" + query;
@@ -100,63 +94,63 @@ public class EmployeeController {
 
     }
 
-
     @GetMapping("/search/filtered/params")
     public String displayFilteredEmployees(HttpServletRequest httpServletRequest, Model model) {
-        List<Employee> filtered_employees = (List<Employee>) httpServletRequest.getSession().getAttribute("filtered_employees");
-        EmployeeFilterDTO filterDTO = (EmployeeFilterDTO) httpServletRequest.getSession().getAttribute("params");
         query = (String) httpServletRequest.getSession().getAttribute("query");
-
-        System.out.println("query from filtered get : " + query);
-
-//        if (query == null) {
-//            return "redirect:/employee/search";
-//        }
-//        if (query.startsWith("?") && query.endsWith("&")) {
-//            return "redirect:/employee/search";
-//        }
-
-
-        model.addAttribute("filter", filterDTO);
-        model.addAttribute("filtered_employees", filtered_employees);
         model.addAttribute("notFound", "User not found!");
 
+        if ((new CheckForQuery().doRedirectionNeeded(httpServletRequest))) {
 
+            logger.info("redirected cause no params has been found");
+            return "redirect:/employee/search";
+        } else {
+            EmployeeFilterDTO filterDTO = new CheckForQuery().findEmployeeFromQuery(httpServletRequest);
+
+            Map<String, String> wrongParams = (Map<String, String>) httpServletRequest.getSession().getAttribute("wrongParams");
+            if (filterDTO == null) {
+                logger.info("caught null user and redirected to '/employee/search' page");
+                return "redirect:/employee/search";
+            } else {
+                model.addAttribute("filter", filterDTO);
+                List<Employee> filtered_employees = service.filterUsers(filterDTO);
+
+                if (filtered_employees.size() > 0) {
+                    model.addAttribute("filtered_employees", filtered_employees);
+
+                    logger.info("object " + filterDTO + " successfully added to page, also " + filtered_employees.size() + " objects has been viewed");
+
+                } else {
+                    model.addAttribute("filtered_employees", null);
+                    logger.info("object " + filterDTO + "not found  error message will be shown");
+
+                }
+            }
+        }
         return "filtered_employees";
     }
 
 
     @PostMapping("search/filtered/params")
-    public String displayFilteredEmployees(HttpServletRequest httpServletRequest, Model model, @ModelAttribute EmployeeFilterDTO filterDTO) {
+    public String displayFilteredEmployees(@ModelAttribute @Valid EmployeeFilterDTO filterDTO ) {
+
         List<Employee> employees = service.filterUsers(filterDTO);
+
+        query = new GenerateQuery().generateURL(filterDTO);
 
         if (employees.size() > 0) {
 
-            query = new GenerateQuery().generateURL(filterDTO);
-            httpServletRequest.getSession().setAttribute("filtered_employees", employees);
-            httpServletRequest.getSession().setAttribute("params", filterDTO);
-
-            logger.info("Found " + employees.size() + " user(s) and redirected to page with params : " + query);
+            logger.info("Found " + employees.size() + " object(s) and redirected to page with params : " + query);
 
             return "redirect:/employee/search/filtered/params" + query;
 
         } else if (employees.size() == 0) {
 
+            logger.info("No object(s) found and redirected to page with params : " + query);
 
-            query = new GenerateQuery().generateURL(filterDTO);
-
-//            if (query.startsWith("?") && query.endsWith("?")) {
-//                return "redirect:/employee/search";
-//            }
-
-            httpServletRequest.getSession().setAttribute("filtered_employees", null);
-            httpServletRequest.getSession().setAttribute("params", filterDTO);
-            logger.info("Not found user(s) and redirected to page with params : " + query);
-
-            return "redirect:/employee/search/filtered/params?" + query;
+            return "redirect:/employee/search/filtered/params" + query;
 
 
         }
-        return "filtered_employees";
+        return "redirect:/employee/search";
     }
 }

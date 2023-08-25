@@ -9,11 +9,12 @@
 <div>
     <form th:action="@{/employee/search}" method="post" th:object="${filter}">
 
-        <input type="text" th:field="*{name}"  placeholder="employee name">
+        <input type="text" th:field="*{name}" placeholder="employee name">
         <br>
         <input type="text" th:field="*{second_name}" placeholder="employee second name">
         <br>
-        <input type="number" th:field="*{age}" placeholder="employee age">
+        <input type="number" th:field="*{age}" placeholder="employee age" min="0" max="100"
+               oninput="replaceNumberIfOutOfMax(this),setDefaultZeroIfEmpty(this)">
         <br>
         <select th:field="*{gender}">
             <option value="">-- Выберите пол --</option>
@@ -21,7 +22,8 @@
                     th:text="${gender}"></option>
         </select>
         <br>
-        <input type="number" th:field="*{experience}" placeholder="employee age of exp " min="0">
+        <input type="number" th:field="*{experience}" placeholder="employee age of exp " min="0" max="100 "
+               oninput="setDefaultZeroIfEmpty(this),replaceNumberIfOutOfMax(this)">
         <br>
         <select th:field="*{rank}">
             <option value="">-- Выберите ранг --</option>
@@ -57,5 +59,29 @@
 </div>
 
 
+<script>
+    function replaceNumberIfOutOfMax(inputElement) {
+
+        if (inputElement.value.startsWith(0) && !inputElement.value.endsWith(0)) {
+            inputElement.value = inputElement.value.substring(1, inputElement.value.length);
+        }
+        if (inputElement.value > 100) {
+            inputElement.value = ''
+        }
+        if (inputElement.value === '') {
+            inputElement.value = '0';
+        }
+    }
+
+    function setDefaultZeroIfEmpty(inputElement) {
+
+
+        if (inputElement.value === '') {
+            inputElement.value = '0';
+        }
+    }
+
+
+</script>
 </body>
 </html>
