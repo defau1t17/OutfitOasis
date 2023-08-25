@@ -10,14 +10,19 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class CheckForQuery {
+
+    private Logger logger = Logger.getGlobal();
 
     public boolean doRedirectionNeeded(HttpServletRequest request) {
         boolean doRedirectionNeeded = false;
         Enumeration<String> parameterNames = request.getParameterNames();
         if (!parameterNames.asIterator().hasNext()) {
             doRedirectionNeeded = true;
+            logger.log(Level.INFO, "no params found. Redirection required");
         }
 
         return doRedirectionNeeded;
@@ -75,6 +80,7 @@ public class CheckForQuery {
                     break;
 
                 default:
+                    logger.log(Level.WARNING, "got some issue with params and return null model");
                     return null;
             }
 
@@ -82,6 +88,7 @@ public class CheckForQuery {
         if (employeeFilterDTO.getName() == null) employeeFilterDTO.setName("");
         if (employeeFilterDTO.getSecond_name() == null) employeeFilterDTO.setSecond_name("");
 
+        logger.info("generated Filtered Model - " + employeeFilterDTO + " and send to page");
 
         return employeeFilterDTO;
     }

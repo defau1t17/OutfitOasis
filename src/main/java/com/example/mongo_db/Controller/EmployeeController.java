@@ -7,21 +7,16 @@ import com.example.mongo_db.Service.CheckForQuery;
 import com.example.mongo_db.Service.EmployeeService;
 import com.example.mongo_db.Service.GenerateQuery;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
-import java.net.http.HttpResponse;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
@@ -45,9 +40,10 @@ public class EmployeeController {
 
     @Transactional
     @PostMapping("/add")
-    public String addEmployee(@ModelAttribute Employee employee) {
+    public String addEmployee(@ModelAttribute @Valid Employee employee) {
         service.addEmployee(employee);
-        logger.info("new employee has been added successfully");
+
+        logger.log(Level.INFO, "new employee has been added successfully with params : " + employee);
         return "employee_add";
 
     }
@@ -56,6 +52,8 @@ public class EmployeeController {
     @GetMapping("/members")
     public String viewAllMembers(Model model) {
         model.addAttribute("members", service.findAllEmployees());
+
+        logger.log(Level.INFO, "all members was displayed successfully");
         return "employee_members";
     }
 
@@ -64,18 +62,23 @@ public class EmployeeController {
     public String displayMembers(Model model) {
         model.addAttribute("members", service.findAllEmployees());
         model.addAttribute("filter", new EmployeeFilterDTO());
+
+        logger.log(Level.INFO, "all members was displayed successfully");
+
         return "employees_search";
     }
 
     @PostMapping("/search")
-    public String filterEmployees(@ModelAttribute @Valid EmployeeFilterDTO filterDTO, Model model, HttpServletRequest httpServletRequest) {
+    public String filterEmployees(@ModelAttribute @Valid EmployeeFilterDTO filterDTO, HttpServletRequest httpServletRequest) {
         List<Employee> employees = service.filterUsers(filterDTO);
+        logger.info("list of filtered users created");
+
+
         query = new GenerateQuery().generateURL(filterDTO);
+
 
         if (employees.size() > 0) {
 
-            httpServletRequest.getSession().setAttribute("filtered_employees", employees);
-            httpServletRequest.getSession().setAttribute("params", filterDTO);
             httpServletRequest.getSession().setAttribute("query", query);
 
             logger.info("Found " + employees.size() + "user(s) and redirected to page with params : " + query);
@@ -84,11 +87,10 @@ public class EmployeeController {
 
         } else {
 
-            httpServletRequest.getSession().setAttribute("filtered_employees", null);
-            httpServletRequest.getSession().setAttribute("params", filterDTO);
             httpServletRequest.getSession().setAttribute("query", query);
 
             logger.info("Not found user(s) and redirected to page with params : " + query);
+
             return "redirect:/employee/search/filtered/params" + query;
         }
 
@@ -102,11 +104,11 @@ public class EmployeeController {
         if ((new CheckForQuery().doRedirectionNeeded(httpServletRequest))) {
 
             logger.info("redirected cause no params has been found");
+
             return "redirect:/employee/search";
         } else {
             EmployeeFilterDTO filterDTO = new CheckForQuery().findEmployeeFromQuery(httpServletRequest);
 
-            Map<String, String> wrongParams = (Map<String, String>) httpServletRequest.getSession().getAttribute("wrongParams");
             if (filterDTO == null) {
                 logger.info("caught null user and redirected to '/employee/search' page");
                 return "redirect:/employee/search";
@@ -131,7 +133,7 @@ public class EmployeeController {
 
 
     @PostMapping("search/filtered/params")
-    public String displayFilteredEmployees(@ModelAttribute @Valid EmployeeFilterDTO filterDTO ) {
+    public String displayFilteredEmployees(@ModelAttribute @Valid EmployeeFilterDTO filterDTO) {
 
         List<Employee> employees = service.filterUsers(filterDTO);
 
