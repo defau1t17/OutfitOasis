@@ -4,6 +4,7 @@ package com.example.mongo_db.Controller;
 import com.example.mongo_db.Entity.*;
 import com.example.mongo_db.Filter.EmployeeFilterDTO;
 import com.example.mongo_db.Service.CheckForQuery;
+import com.example.mongo_db.Service.EmployeeAccountService;
 import com.example.mongo_db.Service.EmployeeService;
 import com.example.mongo_db.Service.GenerateQuery;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,7 +16,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,6 +28,9 @@ public class EmployeeController {
 
     @Autowired
     private EmployeeService service;
+
+    @Autowired
+    private EmployeeAccountService employeeAccountService;
 
     private String query;
 
@@ -42,6 +45,7 @@ public class EmployeeController {
     @PostMapping("/add")
     public String addEmployee(@ModelAttribute @Valid Employee employee) {
         service.addEmployee(employee);
+        employeeAccountService.saveEmployeeAccount(service.generateAccount(employee));
 
         logger.log(Level.INFO, "new employee has been added successfully with params : " + employee);
         return "employee_add";

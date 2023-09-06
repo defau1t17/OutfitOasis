@@ -1,15 +1,22 @@
 package com.example.mongo_db.Service;
 
 import com.example.mongo_db.Entity.Employee;
+import com.example.mongo_db.Entity.Employee_Account;
 import com.example.mongo_db.Entity.Rank;
 import com.example.mongo_db.Filter.EmployeeFilterDTO;
 import com.example.mongo_db.Filter.FilterEmployees;
+import com.example.mongo_db.Repository.EmployeeAccountRepo;
 import com.example.mongo_db.Repository.EmployeeRepo;
+import org.passay.CharacterData;
+import org.passay.CharacterRule;
+import org.passay.EnglishCharacterData;
+import org.passay.PasswordGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 
 @Service
@@ -22,8 +29,6 @@ public class EmployeeService {
     @Autowired
     private EmployeeRepo repo;
 
-    private List<Employee> employees;
-
 
     public void addEmployee(Employee employee) {
         repo.save(employee);
@@ -33,34 +38,57 @@ public class EmployeeService {
         return repo.findAll();
     }
 
-    public List<Employee> findAllByRank(Rank rank) {
-        employees = repo.findAllByRank(rank);
-        return employees;
-    }
-
-    public List<Employee> findAllByPost(String post) {
-        employees = repo.findAllByPost(post);
-        return employees;
-    }
-
-    public List<Employee> findAllByExp() {
-        employees = repo.findAllByExperience();
-        return employees;
-    }
-
-    public Employee findByNameQuery(String name) {
-        return repo.findByNameTest(name);
-    }
-
-    public Employee findByNameAndExpQuery(String name, int exp) {
-        return repo.findByNameAndExpTest(name, exp);
-    }
 
     public List<Employee> filterUsers(EmployeeFilterDTO filterDTO) {
 
         List<Employee> filteredEmployees = (List<Employee>) mongoTemplate.find(new FilterEmployees().filter(filterDTO), Employee.class);
-        System.out.println(filteredEmployees.size());
         return filteredEmployees;
     }
+
+    public Employee_Account generateAccount(Employee employee) {
+        Employee_Account employee_account = new Employee_Account();
+        employee_account.setEmployee(employee);
+        employee_account.setUsername(generateUsername(employee.getName()));
+        employee_account.setPassword(generateUserPassword());
+
+        return employee_account;
+    }
+
+    public static String generateUsername(String empName) {
+        String generatedUsername = empName + UUID.randomUUID();
+        return generatedUsername;
+    }
+
+    public static String generateUserPassword() {
+        PasswordGenerator generatedPassword = new PasswordGenerator();
+        CharacterData lowerCaseChars = EnglishCharacterData.LowerCase;
+        CharacterRule lowerCaseRule = new CharacterRule(lowerCaseChars);
+        lowerCaseRule.setNumberOfCharacters(2);
+
+        CharacterData upperCaseChars = EnglishCharacterData.UpperCase;
+        CharacterRule upperCaseRule = new CharacterRule(upperCaseChars);
+        upperCaseRule.setNumberOfCharacters(2);
+
+        CharacterData digitChars = EnglishCharacterData.Digit;
+        CharacterRule digitRule = new CharacterRule(digitChars);
+        digitRule.setNumberOfCharacters(2);
+
+        CharacterData specialChars = new CharacterData() {
+            public String getErrorCode() {
+                return "error";
+            }
+
+            public String getCharacters() {
+                return "!@#$%^&*()_+";
+            }
+        };
+        CharacterRule splCharRule = new CharacterRule(specialChars);
+        splCharRule.setNumberOfCharacters(2);
+
+        String password = generatedPassword.generatePassword(10, splCharRule, lowerCaseRule,
+                upperCaseRule, digitRule);
+        return password;
+    }
+
 
 }

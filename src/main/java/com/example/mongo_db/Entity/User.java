@@ -20,7 +20,8 @@ public abstract class User {
 
 
     @Id
-    private UUID id;
+    private String _id;
+
     @NotBlank
     @NotEmpty
     @NotNull
@@ -30,12 +31,9 @@ public abstract class User {
     @NotNull
     private String second_name;
 
-    @NotBlank
-    @NotEmpty
     @NotNull
     private int age;
-    @NotBlank
-    @NotEmpty
+
     private Gender gender;
 }
 
