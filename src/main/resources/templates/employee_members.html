@@ -3,22 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+
+    <link rel="stylesheet" th:href="@{/view_members_style.css}">
 </head>
 <body>
 
 
-<ul th:each="members : ${members}">
-    <li>
-        <p th:text="${members.id}"></p>
-        <p th:text="${members.name}"></p>
-        <p th:text="${members.second_name}"></p>
-        <p th:text="${members.age}"></p>
-        <p th:text="${members.gender}"></p>
-        <p th:text="${members.experience}"></p>
-        <p th:text="${members.rank}"></p>
-        <p th:text="${members.post}"></p>
-    </li>
-</ul>
+<div class="links-container">
+    <button class="button-link">
+        <a class="link" th:href="@{/}">move to main page</a>
+    </button>
+
+    <button class="button-link">
+        <a class="link" th:href="@{/employee/add}">add new user</a>
+    </button>
+
+    <button class="button-link">
+        <a class="link" th:href="@{/employee/search}">search</a>
+    </button>
+
+
+</div>
+
+<div class="members-container">
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Second Name</th>
+            <th>Age</th>
+            <th>Experience</th>
+            <th>Phone Number</th>
+            <th>Gender</th>
+            <th>Rank</th>
+            <th>Post</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="member : ${members}">
+            <td th:text="${member.id}"></td>
+            <td th:text="${member.name}"></td>`
+            <td th:text="${member.second_name}"></td>
+            <td th:text="${member.age}"></td>
+            <td th:text="${member.experience}"></td>
+            <td th:text="${member.phone_number}"></td>
+            <td th:text="${member.gender}"></td>
+            <td th:text="${member.rank}"></td>
+            <td th:text="${member.post}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>
 
 
 </body>

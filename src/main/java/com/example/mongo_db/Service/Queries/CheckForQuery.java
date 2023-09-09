@@ -1,15 +1,13 @@
-package com.example.mongo_db.Service;
+package com.example.mongo_db.Service.Queries;
 
 import com.example.mongo_db.Entity.Gender;
-import com.example.mongo_db.Entity.Post;
+import com.example.mongo_db.Entity.Employee.Post;
 import com.example.mongo_db.Entity.Rank;
 import com.example.mongo_db.Filter.EmployeeFilterDTO;
 import jakarta.servlet.http.HttpServletRequest;
+import org.assertj.core.error.ShouldBeAlphabetic;
 
-import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -51,28 +49,36 @@ public class CheckForQuery {
                     employeeFilterDTO.setSecond_name(value);
                     break;
                 case "age":
-                    employeeFilterDTO.setAge(Integer.parseInt(value));
+                    if (Integer.parseInt(value) >= 0) {
+                        employeeFilterDTO.setAge(Integer.parseInt(value));
+                        System.out.println(ShouldBeAlphabetic.shouldBeAlphabetic(Integer.parseInt(value)));
+                    } else {
+                        employeeFilterDTO.setAge(0);
+                    }
                     break;
                 case "gender":
-                    if (Gender.values().equals(value)) {
+                    if (Gender.valueOf(value) != null) {
                         employeeFilterDTO.setGender(Gender.valueOf(value));
                     } else {
                         employeeFilterDTO.setGender(null);
                     }
                     break;
-                case "experience":
-                    employeeFilterDTO.setExperience(Integer.parseInt(value));
-
+                case "exp":
+                    if (Integer.parseInt(value) >= 0) {
+                        employeeFilterDTO.setExperience(Integer.parseInt(value));
+                    } else {
+                        employeeFilterDTO.setExperience(0);
+                    }
                     break;
                 case "rank":
-                    if (Rank.values().equals(value)) {
+                    if (Rank.valueOf(value) != null) {
                         employeeFilterDTO.setRank(Rank.valueOf(value));
                     } else {
                         employeeFilterDTO.setRank(null);
                     }
                     break;
                 case "post":
-                    if (Post.values().equals(value)) {
+                    if (Post.valueOf(value) != null) {
                         employeeFilterDTO.setPost(Post.valueOf(value));
                     } else {
                         employeeFilterDTO.setPost(null);

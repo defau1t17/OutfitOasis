@@ -19,11 +19,8 @@ import java.util.UUID;
 public abstract class User {
 
 
-    @Id
-    private String _id;
-
     @NotBlank
-    @NotEmpty
+    @NotEmpty(message = "field must not be empty")
     @NotNull
     private String name;
     @NotBlank
@@ -34,6 +31,7 @@ public abstract class User {
     @NotNull
     private int age;
 
+    @NotNull
     private Gender gender;
 }
 

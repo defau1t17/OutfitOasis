@@ -1,18 +1,19 @@
-package com.example.mongo_db.Controller;
+package com.example.mongo_db.Controller.Employee;
 
 
-import com.example.mongo_db.Entity.*;
+import com.example.mongo_db.Entity.Employee.Employee;
 import com.example.mongo_db.Filter.EmployeeFilterDTO;
-import com.example.mongo_db.Service.CheckForQuery;
-import com.example.mongo_db.Service.EmployeeAccountService;
-import com.example.mongo_db.Service.EmployeeService;
-import com.example.mongo_db.Service.GenerateQuery;
+import com.example.mongo_db.Service.Queries.CheckForQuery;
+import com.example.mongo_db.Service.Employee.EmployeeAccountService;
+import com.example.mongo_db.Service.Employee.EmployeeService;
+import com.example.mongo_db.Service.Queries.GenerateQuery;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -43,9 +44,12 @@ public class EmployeeController {
 
     @Transactional
     @PostMapping("/add")
-    public String addEmployee(@ModelAttribute @Valid Employee employee) {
-        service.addEmployee(employee);
-        employeeAccountService.saveEmployeeAccount(service.generateAccount(employee));
+    public String addEmployee(@ModelAttribute @Valid Employee employee, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            service.addEmployee(employee);
+            employeeAccountService.saveEmployeeAccount(service.generateAccount(employee));
+        }
+
 
         logger.log(Level.INFO, "new employee has been added successfully with params : " + employee);
         return "employee_add";

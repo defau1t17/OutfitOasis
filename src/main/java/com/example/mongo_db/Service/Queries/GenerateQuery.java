@@ -1,4 +1,4 @@
-package com.example.mongo_db.Service;
+package com.example.mongo_db.Service.Queries;
 
 import com.example.mongo_db.Filter.EmployeeFilterDTO;
 

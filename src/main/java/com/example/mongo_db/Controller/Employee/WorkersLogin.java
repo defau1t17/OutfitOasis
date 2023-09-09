@@ -1,10 +1,9 @@
-package com.example.mongo_db.Controller;
+package com.example.mongo_db.Controller.Employee;
 
-import com.example.mongo_db.Entity.Employee_Account;
+import com.example.mongo_db.Entity.Employee.Employee_Account;
 import com.example.mongo_db.Entity.Role;
-import com.example.mongo_db.Service.EmployeeAccountService;
+import com.example.mongo_db.Service.Employee.EmployeeAccountService;
 import jakarta.servlet.http.HttpServletRequest;
-import org.apache.catalina.util.ToStringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,7 +28,7 @@ public class WorkersLogin {
     @PostMapping("/login")
     public String checkForEmployee(String employeeUserName, String password, HttpServletRequest httpServletRequest) {
 
-        System.out.println("got it");
+
         Optional<Employee_Account> employeeByUserName = service.findEmployeeByUserName(employeeUserName);
         if (employeeByUserName.isPresent()) {
             if (employeeByUserName.get().getPassword().equals(password) && employeeByUserName.get().getRole() == Role.ROLE_ADMIN) {

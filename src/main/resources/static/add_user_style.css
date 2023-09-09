@@ -1,0 +1,82 @@
+.header-text {
+    text-align: center;
+}
+
+.container {
+    width: 100%;
+    margin-top: 30px;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+}
+
+.input_field {
+    margin-top: 15px;
+    padding: 10px 10px 10px 5px;
+    border: none;
+    border-radius: 0;
+    border-bottom: 1px solid black;
+    width: 250px;
+    height: 40px;
+    font-size: 18px;
+    font-family: "Times New Roman"
+}
+
+.selection-container {
+    display: flex;
+    flex-direction: column;
+    margin-top: 15px;
+    justify-content: center;
+    align-items: center;
+}
+
+.select-field {
+    background: none;
+    text-align: center;
+    margin-top: 20px;
+    width: 250px;
+    height: 40px;
+    font-size: 16px;
+    font-family: "Times New Roman";
+    border: none;
+    border-bottom: 1px solid black;
+}
+
+.submit-container {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#add-button {
+    width: 250px;
+    height: 40px;
+    font-size: 16px;
+    border: 1px solid black;
+    border-radius: 20px;
+}
+
+.links-container {
+    margin-top: 40px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.button-link {
+    width: 150px;
+    height: 30px;
+    background: none;
+    border: none;
+    border-radius: 0;
+    border-bottom: 1px solid black;
+}
+
+.link {
+    text-decoration: none;
+    color: black;
+    font-family: "Times New Roman";
+    font-size: 18px;
+}

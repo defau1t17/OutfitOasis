@@ -1,4 +1,4 @@
-package com.example.mongo_db.Controller;
+package com.example.mongo_db.Controller.Shop;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

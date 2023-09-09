@@ -6,7 +6,6 @@ import org.springframework.data.mongodb.core.query.Query;
 
 public class FilterEmployees {
 
-
     public Query filter(EmployeeFilterDTO filterDTO) {
         Query query = new Query();
 
@@ -18,13 +17,13 @@ public class FilterEmployees {
             query.addCriteria(Criteria.where("second_name").is(filterDTO.getSecond_name()));
         }
         if (filterDTO.getAge() > 0) {
-            query.addCriteria(Criteria.where("age").is(filterDTO.getAge()));
+            query.addCriteria(Criteria.where("age").gte(filterDTO.getAge()));
         }
         if (filterDTO.getGender() != null) {
             query.addCriteria(Criteria.where("gender").is(filterDTO.getGender()));
         }
         if (filterDTO.getExperience() > 0) {
-            query.addCriteria(Criteria.where("experience").is(filterDTO.getExperience()));
+            query.addCriteria(Criteria.where("experience").gte(filterDTO.getExperience()));
         }
         if (filterDTO.getRank() != null) {
             query.addCriteria(Criteria.where("rank").is(filterDTO.getRank()));

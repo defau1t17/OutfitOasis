@@ -1,8 +1,8 @@
-package com.example.mongo_db.Service;
+package com.example.mongo_db.Service.Employee;
 
 
-import com.example.mongo_db.Entity.Employee_Account;
-import com.example.mongo_db.Repository.EmployeeAccountRepo;
+import com.example.mongo_db.Entity.Employee.Employee_Account;
+import com.example.mongo_db.Repository.EmployeesRepoes.EmployeeAccountRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

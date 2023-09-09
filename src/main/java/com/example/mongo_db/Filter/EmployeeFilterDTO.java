@@ -1,10 +1,9 @@
 package com.example.mongo_db.Filter;
 
 import com.example.mongo_db.Entity.Gender;
-import com.example.mongo_db.Entity.Post;
+import com.example.mongo_db.Entity.Employee.Post;
 import com.example.mongo_db.Entity.Rank;
 import lombok.Data;
-import org.springframework.boot.context.properties.bind.DefaultValue;
 
 @Data
 public class EmployeeFilterDTO {

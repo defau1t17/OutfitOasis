@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Registration</title>
+</head>
+<body>
+
+<div>
+    <h1>Create New Account</h1>
+</div>
+
+<div class="container">
+    <form th:action="@{/shop/client/registration}" method="post" th:object="${newClient}">
+
+        <input class="input_field" type="text" th:field="*{name}" placeholder="name" required>
+        <br>
+        <input class="input_field" type="text" th:field="*{second_name}" placeholder="second name" required>
+        <br>
+
+        <input class="input_field" type="number" th:field="*{age}" placeholder="age" min="12" required>
+        <br>
+
+        <select class="select-field" th:field="*{gender}" required>
+            <option value="">-- Выберите пол --</option>
+            <option th:each="gender : ${T(com.example.mongo_db.Entity.Gender).values()}" th:value="${gender}"
+                    th:text="${gender}"></option>
+        </select>
+        <br>
+
+        <input class="input_field" type="email" th:field="*{mail}" placeholder="email address" required>
+        <br>
+        <input class="input_field" type="tel" th:field="*{phone_number}" placeholder="phone number" min="0"
+               maxlength="12" required oninput="addPlusToNumber(this)">
+        <br>
+        <input class="input_field" type="text" th:field="*{client_user_name}" placeholder="client name"
+               required>
+        <br>
+        <input class="input_field" type="text" th:field="*{client_password}" placeholder="client password"
+               required>
+        <br>
+        <button>Create Account</button>
+    </form>
+</div>
+
+<div class="links-container">
+    <button><a>Log In</a></button>
+</div>
+
+
+<script>
+
+
+    // function replaceNumberIfOutOfMax(inputElement) {
+    //
+    //     if (inputElement.value.startsWith(0) && !inputElement.value.endsWith(0)) {
+    //         inputElement.value = inputElement.value.substring(1, inputElement.value.length);
+    //     }
+    //     if (inputElement.value > 100) {
+    //         inputElement.value = ''
+    //     }
+    //     if (inputElement.value === '') {
+    //         inputElement.value = '0';
+    //     }
+    // }
+    //
+    // function setDefaultZeroIfEmpty(inputElement) {
+    //
+    //
+    //     if (inputElement.value === '') {
+    //         inputElement.value = '0';
+    //     }
+    // }
+
+
+    function addPlusToNumber(inputElement) {
+        if (inputElement.value.startsWith('+')) {
+
+        } else {
+            inputElement.value = '+' + inputElement.value;
+        }
+
+
+    }
+
+</script>
+
+</body>
+
+
+</html>

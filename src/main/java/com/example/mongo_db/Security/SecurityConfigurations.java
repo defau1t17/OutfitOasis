@@ -11,7 +11,7 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfigurations  {
+public class SecurityConfigurations {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -23,7 +23,7 @@ public class SecurityConfigurations  {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
                 .authorizeHttpRequests()
-                .requestMatchers("/employee/search").authenticated()
+//                .requestMatchers("/employee/search").authenticated()
                 .anyRequest().permitAll()
                 .and()
                 .formLogin().loginPage("/workers/login").usernameParameter("employeeUserName").passwordParameter("password").permitAll()
