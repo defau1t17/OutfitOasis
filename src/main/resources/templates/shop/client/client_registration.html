@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Registration</title>
+    <link rel="stylesheet" th:href="@{/client/client_registration_style.css}" >
 </head>
 <body>
 
@@ -46,6 +47,7 @@
 <div class="links-container">
     <button><a>Log In</a></button>
 </div>
+<p th:if="${error_message} != null" th:text="${error_message}"></p>
 
 
 <script>
