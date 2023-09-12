@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet">
+
+</head>
+<body>
+
+
+<div class="login-container">
+
+    <div class="container">
+
+        <form th:action="@{/shop/client/login}" method="post">
+            <input type="text" name="username" th:value="${client_user_name}">
+            <br>
+            <input type="password" name="password">
+
+            <br>
+            <button>Log In</button>
+        </form>
+
+        <h3 th:if="${login_massage != null}" th:text="${login_massage}"></h3>
+
+        <div class="links">
+            <a>Forgot Password?</a>
+            <a>Create Account</a>
+        </div>
+
+    </div>
+
+
+</div>
+
+</body>
+</html>

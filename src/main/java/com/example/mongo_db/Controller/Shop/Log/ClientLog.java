@@ -4,9 +4,7 @@ package com.example.mongo_db.Controller.Shop.Log;
 import com.example.mongo_db.Entity.Client.Client;
 import com.example.mongo_db.Service.Clients.ClientsService;
 import jakarta.servlet.http.HttpServletRequest;
-import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.json.JacksonJsonParser;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -57,6 +55,51 @@ public class ClientLog {
         } else {
             return "redirect:/";
         }
+    }
+
+
+    @GetMapping("/login")
+    public String displayClientLoginPage(Model model, HttpServletRequest request) {
+//        if (request.getSession().getAttribute("login_massage") != null && request.getSession().getAttribute("client_user_name") != null) {
+//            System.out.println("got first");
+//            model.addAttribute("login_massage", request.getAttribute("login_massage"));
+//            model.addAttribute("client_user_name", request.getAttribute("client_user_name"));
+//
+//        } else if (request.getSession().getAttribute("login_massage") != null && request.getSession().getAttribute("client_user_name") == null) {
+//            System.out.println("got second");
+//            model.addAttribute("login_massage", request.getAttribute("login_massage"));
+//        } else {
+//            System.out.println("bad logic");
+//        }
+
+//        if(request.getSession().getAttribute())
+        System.out.println(request.getSession().getAttribute("login_message"));
+
+        return "shop/client/client_login";
+    }
+
+    @PostMapping("/login")
+    public String loginClient(String username, String password, HttpServletRequest request) {
+        request.getSession().setAttribute("login_message", "waiting for attributes");
+        Client client = service.findClientByUserName(username);
+
+        if (client != null) {
+            if (client.getClient_password().equals(password)) {
+                logger.info("Client was found successfully! ");
+                return "redirect:/";
+            } else {
+                logger.info("Client wrote wrong password");
+                request.getSession().setAttribute("login_message", "Client write wrong password!");
+                request.getSession().setAttribute("client_user_name", username);
+                return "redirect:/shop/client/login";
+            }
+
+        } else {
+            logger.info("client not found");
+            request.getSession().setAttribute("login_message", "User with such username not found!");
+            return "redirect:/shop/client/login";
+        }
+
     }
 
 

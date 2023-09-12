@@ -3,82 +3,106 @@
 <head>
     <meta charset="UTF-8">
     <title>Registration</title>
-    <link rel="stylesheet" th:href="@{/client/client_registration_style.css}" >
+    <link rel="stylesheet" th:href="@{/client/client_registration_style.css}">
 </head>
 <body>
 
-<div>
-    <h1>Create New Account</h1>
+<div class="header-text">
+    <h1>Create Account</h1>
 </div>
 
 <div class="container">
-    <form th:action="@{/shop/client/registration}" method="post" th:object="${newClient}">
 
-        <input class="input_field" type="text" th:field="*{name}" placeholder="name" required>
-        <br>
-        <input class="input_field" type="text" th:field="*{second_name}" placeholder="second name" required>
-        <br>
+    <div class="registration">
+        <form th:action="@{/shop/client/registration}" method="post" th:object="${newClient}">
 
-        <input class="input_field" type="number" th:field="*{age}" placeholder="age" min="12" required>
-        <br>
+            <input class="input_field" type="text" th:field="*{name}" placeholder="name" required maxlength="25">
+            <br>
+            <input class="input_field" type="text" th:field="*{second_name}" placeholder="second name" required
+                   maxlength="25">
+            <br>
 
-        <select class="select-field" th:field="*{gender}" required>
-            <option value="">-- Выберите пол --</option>
-            <option th:each="gender : ${T(com.example.mongo_db.Entity.Gender).values()}" th:value="${gender}"
-                    th:text="${gender}"></option>
-        </select>
-        <br>
+            <input class="input_field" type="number" th:field="*{age}" placeholder="age" min="12" max="100" required
+                   maxlength="3" oninput="replaceNumberIfOutOfMax(this),setDefaultZeroIfEmpty(this)">
+            <br>
 
-        <input class="input_field" type="email" th:field="*{mail}" placeholder="email address" required>
-        <br>
-        <input class="input_field" type="tel" th:field="*{phone_number}" placeholder="phone number" min="0"
-               maxlength="12" required oninput="addPlusToNumber(this)">
-        <br>
-        <input class="input_field" type="text" th:field="*{client_user_name}" placeholder="client name"
-               required>
-        <br>
-        <input class="input_field" type="text" th:field="*{client_password}" placeholder="client password"
-               required>
-        <br>
-        <button>Create Account</button>
-    </form>
+            <div class="select-gender-container">
+                <select class="select-field" th:field="*{gender}" required>
+                    <option value="">-- Select gender --</option>
+                    <option th:each="gender : ${T(com.example.mongo_db.Entity.Gender).values()}" th:value="${gender}"
+                            th:text="${gender}"></option>
+                </select>
+            </div>
+
+            <br>
+
+            <input class="input_field" type="email" th:field="*{mail}" placeholder="email address" required
+                   minlength="5" maxlength="40">
+            <br>
+            <input class="input_field" type="tel" th:field="*{phone_number}" placeholder="phone number" min="0"
+                   maxlength="12" required oninput="addPlusToNumber(this)">
+            <br>
+            <input class="input_field" type="text" th:field="*{client_user_name}" placeholder="client name"
+                   maxlength="40"
+                   required>
+            <br>
+            <input class="input_field" type="password" th:field="*{client_password}" placeholder="client password"
+                   required maxlength="40">
+            <br>
+            <div class="create-new-client-confirm">
+                <button id="create-new-client-button">Create Account</button>
+            </div>
+        </form>
+    </div>
+
+
+    <div class="login">
+        <h1 id="login-main-text">Welcome!</h1>
+        <h2 id="login-secondary-text">If you already have an account, please Log In</h2>
+        <div class="links-container">
+            <button id="login-button"><a id="login-link" th:href="@{/shop/client/login}">Log In</a></button>
+        </div>
+
+
+    </div>
 </div>
 
-<div class="links-container">
-    <button><a>Log In</a></button>
-</div>
+
 <p th:if="${error_message} != null" th:text="${error_message}"></p>
 
 
 <script>
 
 
-    // function replaceNumberIfOutOfMax(inputElement) {
-    //
-    //     if (inputElement.value.startsWith(0) && !inputElement.value.endsWith(0)) {
-    //         inputElement.value = inputElement.value.substring(1, inputElement.value.length);
-    //     }
-    //     if (inputElement.value > 100) {
-    //         inputElement.value = ''
-    //     }
-    //     if (inputElement.value === '') {
-    //         inputElement.value = '0';
-    //     }
-    // }
-    //
-    // function setDefaultZeroIfEmpty(inputElement) {
-    //
-    //
-    //     if (inputElement.value === '') {
-    //         inputElement.value = '0';
-    //     }
-    // }
+    function replaceNumberIfOutOfMax(inputElement) {
+
+        if (inputElement.value.startsWith(0) && !inputElement.value.endsWith(0)) {
+            inputElement.value = inputElement.value.substring(1, inputElement.value.length);
+        }
+        if (inputElement.value > 100) {
+            inputElement.value = ''
+        }
+        if (inputElement.value === '') {
+            inputElement.value = '0';
+        }
+    }
+
+    function setDefaultZeroIfEmpty(inputElement) {
+        if (inputElement.value === '') {
+            inputElement.value = '0';
+        }
+    }
 
 
     function addPlusToNumber(inputElement) {
         if (inputElement.value.startsWith('+')) {
 
-        } else {
+        }
+        if(inputElement.value.startsWith('+') && inputElement.value.endsWith('+')){
+            inputElement.value = '';
+        }
+
+        else if(!inputElement.value.startsWith('+') && !inputElement.value.endsWith('+')){
             inputElement.value = '+' + inputElement.value;
         }
 

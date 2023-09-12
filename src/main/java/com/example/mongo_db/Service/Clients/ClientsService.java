@@ -4,7 +4,6 @@ import com.example.mongo_db.Entity.Client.Client;
 import com.example.mongo_db.Repository.ClientsRepoes.ClientsRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -35,15 +34,16 @@ public class ClientsService {
         if (clientsRepo.doesUserPhoneNumberExists(client.getPhone_number()) != null) {
             fields += " phone number '" + client.getPhone_number() + "'";
         }
-
-
         if (fields.endsWith("and")) {
             fields = fields.substring(0, fields.length() - 3);
         }
-
-
         fields += " already exists";
         return fields;
+    }
+
+
+    public Client findClientByUserName(String username) {
+        return clientsRepo.doesUserNameExists(username);
     }
 
 

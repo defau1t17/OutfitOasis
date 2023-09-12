@@ -5,6 +5,8 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface ClientsRepo extends MongoRepository<Client, String> {
 
@@ -22,5 +24,8 @@ public interface ClientsRepo extends MongoRepository<Client, String> {
 
     @Query(value = "{'mail' :  '?0'}")
     Client doesUserMailExists(String mail);
+
+    @Override
+    List<Client> findAll();
 
 }
