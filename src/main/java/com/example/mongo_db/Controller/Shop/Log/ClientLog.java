@@ -114,6 +114,12 @@ public class ClientLog {
         return "/shop/client/client_password_recovery";
     }
 
+    @PostMapping("/passwordrecovery")
+    public String recoverPassword(String client_mail, RedirectAttributes redirectAttributes){
+
+
+    }
+
 
 //    @GetMapping("/authorization")
 //    public String viewAuthPage(){
