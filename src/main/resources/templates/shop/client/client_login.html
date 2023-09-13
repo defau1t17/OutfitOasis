@@ -3,30 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
-    <link rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/client/client_login_style.css}">
 
 </head>
 <body>
 
-
 <div class="login-container">
+
+    <p id="login-main-text">WELCOME BACK!</p>
+
+
+    <h5 th:if="${issue != null}" th:text="${issue}"></h5>
 
     <div class="container">
 
         <form th:action="@{/shop/client/login}" method="post">
-            <input type="text" name="username" th:value="${client_user_name}">
-            <br>
-            <input type="password" name="password">
 
-            <br>
-            <button>Log In</button>
+            <div class="form-login">
+
+                <input type="text" class="input_field" name="username" th:value="${client_user_name}" required
+                       placeholder="robert_den3ro443">
+                <br>
+                <input type="password" class="input_field" name="password" required maxlength="40"
+                       placeholder="Enter you password">
+
+                <br>
+                <button id="login-button">Log In</button>
+            </div>
+
         </form>
 
-        <h3 th:if="${login_massage != null}" th:text="${login_massage}"></h3>
 
         <div class="links">
-            <a>Forgot Password?</a>
-            <a>Create Account</a>
+            <a class="redirection-link" th:href="@{/shop/client/passwordrecovery}">Forgot Password?</a>
+            <a class="redirection-link" th:href="@{/shop/client/registration}">Create Account</a>
         </div>
 
     </div>
@@ -35,4 +45,5 @@
 </div>
 
 </body>
+
 </html>

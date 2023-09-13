@@ -3,6 +3,7 @@ package com.example.mongo_db.Controller.Shop.Log;
 
 import com.example.mongo_db.Entity.Client.Client;
 import com.example.mongo_db.Service.Clients.ClientsService;
+import com.example.mongo_db.Service.Clients.LoginRedirection;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.logging.Logger;
 
@@ -60,27 +62,29 @@ public class ClientLog {
 
     @GetMapping("/login")
     public String displayClientLoginPage(Model model, HttpServletRequest request) {
-//        if (request.getSession().getAttribute("login_massage") != null && request.getSession().getAttribute("client_user_name") != null) {
-//            System.out.println("got first");
-//            model.addAttribute("login_massage", request.getAttribute("login_massage"));
-//            model.addAttribute("client_user_name", request.getAttribute("client_user_name"));
-//
-//        } else if (request.getSession().getAttribute("login_massage") != null && request.getSession().getAttribute("client_user_name") == null) {
-//            System.out.println("got second");
-//            model.addAttribute("login_massage", request.getAttribute("login_massage"));
-//        } else {
-//            System.out.println("bad logic");
-//        }
 
-//        if(request.getSession().getAttribute())
-        System.out.println(request.getSession().getAttribute("login_message"));
+        logger.info("login page was shown successfully");
+
+        String total_client = request.getParameter("client_user_name");
+        String total_issue = request.getParameter("issue");
+
+
+        if (total_client != null) {
+            if (LoginRedirection.addModels(total_client)) {
+                model.addAttribute("client_user_name", total_client);
+                model.addAttribute("issue", LoginRedirection.printIssue(total_issue));
+                logger.info("model was added successfully");
+            }
+        }
+
 
         return "shop/client/client_login";
     }
 
     @PostMapping("/login")
-    public String loginClient(String username, String password, HttpServletRequest request) {
-        request.getSession().setAttribute("login_message", "waiting for attributes");
+    public String loginClient(String username, String password, HttpServletRequest request, RedirectAttributes attributes) {
+//        request.getSession().setAttribute("login_message", "waiting for attributes");
+
         Client client = service.findClientByUserName(username);
 
         if (client != null) {
@@ -89,17 +93,25 @@ public class ClientLog {
                 return "redirect:/";
             } else {
                 logger.info("Client wrote wrong password");
-                request.getSession().setAttribute("login_message", "Client write wrong password!");
-                request.getSession().setAttribute("client_user_name", username);
+                attributes.addAttribute("client_user_name", username);
+                attributes.addAttribute("issue", "WRONG_PASSWORD");
+
                 return "redirect:/shop/client/login";
             }
 
         } else {
             logger.info("client not found");
-            request.getSession().setAttribute("login_message", "User with such username not found!");
+            attributes.addAttribute("client_user_name", username);
+            attributes.addAttribute("issue", "USER_NOT_FOUND");
             return "redirect:/shop/client/login";
         }
 
+    }
+
+    @GetMapping("/passwordrecovery")
+    public String displayPasswordRecoveryPage(Model model) {
+        logger.info("password recovery page was shown successfully");
+        return "/shop/client/client_password_recovery";
     }
 
 
