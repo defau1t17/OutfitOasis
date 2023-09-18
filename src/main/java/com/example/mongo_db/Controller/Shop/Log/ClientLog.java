@@ -197,6 +197,7 @@ public class ClientLog {
 
     @GetMapping("/login/update/password/{id}")
     public String displayNewPasswordPage(@PathVariable(value = "id", required = false) String id, Model model, HttpServletRequest request) {
+        String issue = request.getParameter("issue");
         model.addAttribute("update_password_client_id");
         Optional<Client> clientById = service.findClientById(id);
         if (clientById.isPresent()) {
@@ -206,16 +207,27 @@ public class ClientLog {
             return "redirect:/shop/client/login/passwordrecovery";
         }
 
+        if(issue != null){
+            model.addAttribute("issue", "Password must not be the same!");
+        }
+
 
         return "/shop/client/client_new_password";
     }
 
     @PatchMapping("/login/update/password/{id}")
-    public String changePassword(@PathVariable(value = "id", required = false) String id, String new_password, HttpServletRequest request) {
+    public String changePassword(@PathVariable(value = "id", required = false) String id, String new_password, HttpServletRequest request, RedirectAttributes redirectAttributes) {
         Client redirected_client = (Client) request.getSession().getAttribute("redirected_client");
-        redirected_client.setClient_password(new_password);
-        service.updateClientPassword(redirected_client);
-        return "redirect:/";
+        if (redirected_client.getClient_password().equals(new_password)) {
+            redirectAttributes.addAttribute("issue", "NOT_MODIFIED");
+            return "redirect:/shop/client/login/update/password/" + id;
+        } else {
+            redirected_client.setClient_password(new_password);
+            service.updateClientPassword(redirected_client);
+            return "redirect:/";
+        }
+
+
     }
 
 
