@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<form th:action="@{/shop/client/registration/verification}" method="post">
+    <input type="text" name="user_verification_code" th:value="${incorrect_mail}">
+    <br>
+
+    <button>Send</button>
+</form>
+
+<h3 th:if="${issue != null}" th:text="${issue}"></h3>
+
+
+</body>
+</html>

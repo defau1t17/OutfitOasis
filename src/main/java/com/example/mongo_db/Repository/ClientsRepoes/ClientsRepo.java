@@ -6,6 +6,7 @@ import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ClientsRepo extends MongoRepository<Client, String> {
@@ -27,5 +28,7 @@ public interface ClientsRepo extends MongoRepository<Client, String> {
 
     @Override
     List<Client> findAll();
+
+    Optional<Client> findById(String id);
 
 }

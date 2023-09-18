@@ -3,24 +3,31 @@ package com.example.mongo_db.Service.Clients;
 import com.example.mongo_db.Entity.Client.Client;
 import com.example.mongo_db.Repository.ClientsRepoes.ClientsRepo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class ClientsService {
 
     @Autowired
+    private JavaMailSender mailSender;
+
+    @Autowired
     private ClientsRepo clientsRepo;
 
-    public ResponseEntity<Client> saveNewClient(Client client) {
+    private static final String sender = "onlineshop.project@yandex.com";
+
+
+    public boolean doesClientExists(Client client) {
         if (client != null && clientsRepo.doesUserExists(client.getPhone_number(), client.getMail(), client.getClient_user_name()) == null) {
-            clientsRepo.save(client);
-            return new ResponseEntity<>(HttpStatus.CREATED);
-        } else if (clientsRepo.doesUserExists(client.getPhone_number(), client.getMail(), client.getClient_user_name()) != null) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
-        return new ResponseEntity<>(HttpStatus.OK);
+            return false;
+        } else return true;
+    }
+
+    public void saveNewClient(Client client) {
+        clientsRepo.save(client);
     }
 
     public String existedFields(Client client) {
@@ -41,13 +48,36 @@ public class ClientsService {
         return fields;
     }
 
+    public Optional<Client> findClientById(String id) {
+        return clientsRepo.findById(id);
+    }
+
 
     public Client findClientByUserName(String username) {
         return clientsRepo.doesUserNameExists(username);
     }
 
+    public Client findClientByMail(String client_mail) {
+        return clientsRepo.doesUserMailExists(client_mail);
+    }
 
 
+    public String sendPasswordRecoveryMessage(String client_mail) {
+        String recovery_code = GenerateCode.createCode();
+        SendMessage.sendRecoveryPassword(client_mail, sender, recovery_code, mailSender);
+        return recovery_code;
+    }
+
+
+    public String sendVerificationMessage(String client_mail) {
+        String verification_code = GenerateCode.createCode();
+        SendVerificationMessage.SendVerificationCode(client_mail, sender, verification_code, mailSender);
+        return verification_code;
+    }
+
+    public void updateClientPassword(Client client) {
+        clientsRepo.save(client);
+    }
 
 
 }
