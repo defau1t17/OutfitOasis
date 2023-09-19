@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -143,7 +144,7 @@ public class ClientLog {
             model.addAttribute("redirection_issue", "Client with such mail  not found");
         }
 
-        return "/shop/client/client_password_recovery";
+        return "shop/client/client_password_recovery";
     }
 
     @PostMapping("/login/passwordrecovery")
@@ -167,24 +168,27 @@ public class ClientLog {
     }
 
     @GetMapping("/login/passwordrecovery/{id}/verification")
-    public String displayRecoveryVerificationPage(@PathVariable(value = "id", required = false) String id, Model model, HttpServletRequest request, RedirectAttributes redirectAttributes) {
-
+    public String displayRecoveryVerificationPage(@PathVariable(value = "id", required = true) String id, Model model, HttpServletRequest request, RedirectAttributes redirectAttributes) {
         String issue = request.getParameter("issue");
+        model.addAttribute("client_verification_id", id);
         if (issue != null) {
             model.addAttribute("issue", "Your verification code doesn't matches");
         }
-        model.addAttribute("client_verification_id", id);
+        Optional<Client> clientById = service.findClientById(id);
+        if (clientById.isPresent()) {
+            Client client = clientById.get();
+            model.addAttribute("info", client.getMail());
+        }
+        logger.info("verification page for client with id " + id + " was shown successfully!");
 
-        return "/shop/client/client_password_recovery_verification";
+        return "shop/client/client_password_recovery_verification";
     }
 
     @PostMapping("/login/passwordrecovery/{id}/verification")
-    public String verifyPasswordRecovery(@PathVariable(value = "id", required = false) String id, String user_verification_code, HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    public String verifyPasswordRecovery(@PathVariable(value = "id", required = true) String id, String user_verification_code, HttpServletRequest request, RedirectAttributes redirectAttributes) {
         String recovery_code = (String) request.getSession().getAttribute("recovery_code");
         if (recovery_code.equals(user_verification_code)) {
             logger.info("user verified successfully. Redirected to new password page");
-            Client client = (Client) request.getSession().getAttribute("redirected_client");
-
             return "redirect:/shop/client/login/update/password/" + id;
 
         } else {
@@ -192,13 +196,11 @@ public class ClientLog {
             redirectAttributes.addAttribute("issue", "WRONG_CODE");
             return "redirect:/shop/client/login/passwordrecovery/" + id + "/verification";
         }
-
     }
 
     @GetMapping("/login/update/password/{id}")
-    public String displayNewPasswordPage(@PathVariable(value = "id", required = false) String id, Model model, HttpServletRequest request) {
+    public String displayNewPasswordPage(@PathVariable(value = "id") String id, Model model, HttpServletRequest request) {
         String issue = request.getParameter("issue");
-        model.addAttribute("update_password_client_id");
         Optional<Client> clientById = service.findClientById(id);
         if (clientById.isPresent()) {
             Client client = clientById.get();
@@ -207,7 +209,7 @@ public class ClientLog {
             return "redirect:/shop/client/login/passwordrecovery";
         }
 
-        if(issue != null){
+        if (issue != null) {
             model.addAttribute("issue", "Password must not be the same!");
         }
 
@@ -215,8 +217,9 @@ public class ClientLog {
         return "/shop/client/client_new_password";
     }
 
+    @Transactional
     @PatchMapping("/login/update/password/{id}")
-    public String changePassword(@PathVariable(value = "id", required = false) String id, String new_password, HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    public String changePassword(@PathVariable(value = "id") String id, String new_password, HttpServletRequest request, RedirectAttributes redirectAttributes) {
         Client redirected_client = (Client) request.getSession().getAttribute("redirected_client");
         if (redirected_client.getClient_password().equals(new_password)) {
             redirectAttributes.addAttribute("issue", "NOT_MODIFIED");
@@ -226,15 +229,7 @@ public class ClientLog {
             service.updateClientPassword(redirected_client);
             return "redirect:/";
         }
-
-
     }
-
-
-//    @GetMapping("/authorization")
-//    public String viewAuthPage(){
-//
-//    }
 
 //    @GetMapping("/account/{id}")
 //    public String displayClientAccountPage(){
