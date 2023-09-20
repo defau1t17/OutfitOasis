@@ -1,5 +1,6 @@
 body {
     background: url("https://wallpapercave.com/wp/KPZGQrc.jpg");
+
 }
 
 .main-container {
@@ -10,13 +11,35 @@ body {
     transform: translate(-50%, -50%);
 }
 
-#recovery-main-text {
+.verification-main-text {
     font-family: Dialog;
     text-align: center;
     opacity: 0.8;
     color: white;
-    font-size: 50px;
+    font-size: 40px;
     text-shadow: 0 0 15px rgb(245, 5, 56), 0 0 10px rgb(245, 5, 5);
+}
+
+#promt-text{
+    text-align: center;
+    font-family: Dialog;
+    text-align: center;
+    opacity: 0.8;
+    color: white;
+    font-size: 20px;
+    text-shadow: 0 0 15px rgb(245, 5, 56), 0 0 10px rgb(245, 5, 5);
+
+}
+#mail{
+    text-align: center;
+
+    font-family: Dialog;
+    text-align: center;
+    opacity: 0.8;
+    color: white;
+    font-size: 18px;
+    text-shadow: 0 0 15px rgb(245, 5, 56), 0 0 10px rgb(245, 5, 5);
+
 }
 
 .container {
@@ -82,4 +105,3 @@ body {
     font-size: 17px;
     color: white;
 }
-

@@ -4,7 +4,19 @@
     text-align: center;
 }
 
+body {
+    background: url("https://wallpapercave.com/wp/KPZGQrc.jpg");
+}
 
+#main-header-text {
+    font-family: Dialog;
+    text-align: center;
+    opacity: 0.8;
+    color: white;
+    font-size: 40px;
+    text-shadow: 0 0 15px rgb(245, 5, 56), 0 0 10px rgb(245, 5, 5);
+
+}
 
 .container {
     width: 70%;
@@ -14,7 +26,7 @@
     justify-content: center;
     align-items: center;
     margin: 0 auto;
-    border: 1px solid black;
+    border: 1px solid #3d010e;
     border-radius: 10px;
 }
 
@@ -30,7 +42,7 @@
 
 .login {
     height: available;
-    background-color: darkgrey;
+    background-color: #b6042a;
     width: 40%;
     display: flex;
     flex-direction: column;
@@ -44,18 +56,24 @@
 
 .input_field {
     margin-top: 15px;
-    width: 300px;
+    opacity: 0.8;
+    width: 350px;
     height: 40px;
     text-align: center;
     font-size: 17px;
     font-family: Times New Roman;
-    border: 1px solid darkgrey;
+    background: #79021c;
+    color: white;
+    border: none;
+    border-radius: 10px;
     -webkit-box-shadow: 5px 5px 5px -5px rgba(34, 60, 80, 0.6);
     -moz-box-shadow: 5px 5px 5px -5px rgba(34, 60, 80, 0.6);
     box-shadow: 5px 5px 5px -5px rgba(34, 60, 80, 0.6);
 }
 
 .select-field {
+    color: white;
+    background: #b6042a;
     justify-content: center;
     align-items: center;
     background: none;
@@ -66,9 +84,14 @@
     font-size: 17px;
     font-family: "Times New Roman";
     border: none;
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid #79021c;
 
 }
+
+option {
+    background: #b6042a;
+}
+
 
 .select-gender-container {
     display: flex;
@@ -84,11 +107,12 @@
 }
 
 #create-new-client-button {
-    width: 250px;
-    height: 35px;
-    background-color: darkgrey;
+    width: 300px;
+    height: 40px;
+    background-color: #b6042a;
     border-radius: 5px;
-    border: 1px solid #5c4d4d;
+    border: none;
+    opacity: 0.8;
     color: white;
     font-size: 17px;
     font-family: "Times New Roman";
@@ -105,12 +129,14 @@
 }
 
 #login-button {
-    width: 250px;
-    height: 35px;
-    background-color: white;
-    border-radius: 5px;
-    border: 1px solid black;
-    color: black;
+    margin-top: 30px;
+    width: 350px;
+    height: 40px;
+    background-color: #000000;
+    border-radius: 10px;
+    border: none;
+    opacity: 0.8;
+    color: white;
     font-size: 17px;
     font-family: "Times New Roman";
 
@@ -119,7 +145,38 @@
 
 #login-link {
     text-decoration: none;
-    color: black;
+    color: white;
     font-size: 17px;
     font-family: "Times New Roman";
+}
+
+#login-button:hover {
+    opacity: 1;
+    transition: 700ms;
+    background: #79021c;
+}
+
+#login-button:not(:hover) {
+    transition: 700ms;
+    background-color: #000000;
+    border-radius: 10px;
+    border: none;
+    opacity: 0.8;
+    color: white;
+}
+
+#create-new-client-button:hover {
+    color: white;
+    opacity: 1;
+    transition: 700ms;
+    background: #0f0f0f;
+}
+
+#create-new-client-button:not(:hover) {
+    transition: 700ms;
+    background-color: #b6042a;
+    border-radius: 10px;
+    border: none;
+    opacity: 0.8;
+    color: white;
 }

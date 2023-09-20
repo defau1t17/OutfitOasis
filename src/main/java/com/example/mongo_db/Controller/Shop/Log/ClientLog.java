@@ -5,17 +5,15 @@ import com.example.mongo_db.Entity.Client.Client;
 import com.example.mongo_db.Service.Clients.ClientsService;
 import com.example.mongo_db.Service.Clients.LoginRedirection;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.support.RequestContextUtils;
 
-import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Logger;
 
@@ -67,10 +65,14 @@ public class ClientLog {
         if (issue != null) {
             model.addAttribute("issue", "Your verification code doesn't matches");
         }
+        Client newClient = (Client) request.getSession().getAttribute("newClient");
+
+        model.addAttribute("info", newClient.getMail());
 
         return "/shop/client/client_create_account_verification";
     }
 
+    @Transactional
     @PostMapping("/registration/verification")
     public String verifyNewAccount(String user_verification_code, HttpServletRequest request, RedirectAttributes redirectAttributes) {
         String verification_code = (String) request.getSession().getAttribute("verification_code");
@@ -115,7 +117,7 @@ public class ClientLog {
         if (client != null) {
             if (client.getClient_password().equals(password)) {
                 logger.info("Client was found successfully! ");
-                return "redirect:/";
+                return "redirect:/shop/client/account/" + client.getId();
             } else {
                 logger.info("Client wrote wrong password");
                 attributes.addAttribute("client_user_name", username);
@@ -219,7 +221,7 @@ public class ClientLog {
 
     @Transactional
     @PatchMapping("/login/update/password/{id}")
-    public String changePassword(@PathVariable(value = "id") String id, String new_password, HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    public String changePassword(@PathVariable(value = "id") String id, @NotBlank @NotEmpty String new_password, HttpServletRequest request, RedirectAttributes redirectAttributes) {
         Client redirected_client = (Client) request.getSession().getAttribute("redirected_client");
         if (redirected_client.getClient_password().equals(new_password)) {
             redirectAttributes.addAttribute("issue", "NOT_MODIFIED");
@@ -227,16 +229,31 @@ public class ClientLog {
         } else {
             redirected_client.setClient_password(new_password);
             service.updateClientPassword(redirected_client);
-            return "redirect:/";
+            return "redirect:/shop/client/login";
         }
     }
 
-//    @GetMapping("/account/{id}")
-//    public String displayClientAccountPage(){
-//
-//    }
+
+    @GetMapping("/account/{id}")
+    public String displayClientAccountPage(@PathVariable(value = "id") String id, Model model) {
+        if (id == null) {
+            return "redirect:/shop/client/login";
+        } else {
+            Optional<Client> optionalClient = service.findClientById(id);
+            if (optionalClient.isPresent()) {
+                Client client = optionalClient.get();
+                model.addAttribute("current_client", client);
+            } else {
+                return "redirect:/shop/client/login";
+            }
+        }
+        return "/shop/client/client_account";
+
+    }
 
 
 }
+
+
 
 
