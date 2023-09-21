@@ -3,63 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <title>My Account</title>
+    <link rel="stylesheet" th:href="@{/client/client_account_style.css}">
+
 </head>
 <body>
+
+
+<header class="shop-header">
+
+    <div class="logo-block-link">
+        <img class="header-logo" src="">
+    </div>
+
+    <div class="header-links-block">
+        <a>PRODUCTS</a>
+        <a>CATEGORIES</a>
+        <a>HELP</a>
+    </div>
+
+    <div class="header-account-link">
+        <a href="account-link"><img id="account-link-logo"></a>
+
+    </div>
+
+</header>
 
 <div class="client-account-container">
 
     <div class="personal-information" th:object="${current_client}">
         <div class="block_1">
             <div class="image_block">
-                <img class="client_personal_info">
+                <img class="client_personal_info"
+                     src="https://i0.wp.com/www.repol.copl.ulaval.ca/wp-content/uploads/2019/01/default-user-icon.jpg">
             </div>
 
             <div class="info_block">
-                <p class="client_personal_info"></p>
-                <button>Edit</button>
+                <p class="client_name" th:text="${current_client.name}"></p>
             </div>
 
         </div>
 
         <div class="block_2">
-            <p id="mail_address"></p>
-            <button>Edit</button>
-            <p id="phone_number"></p>
-            <button>Edit</button>
-            <p id="gender"></p>
-            <button>Edit</button>
+
+            <p id="info-main-text">INFORMATION</p>
+
+            <div class="inner_block_2">
+
+                <div class="phone_mail_block">
+                    <div class="mail_block">
+                        <label class="labels">Email</label>
+                        <p class="inner_info" th:text="${current_client.mail}"></p>
+                    </div>
+
+                    <div class="phone_block">
+                        <label class="labels">Phone</label>
+                        <p class="inner_info" th:text="${current_client.phone_number}"></p>
+                    </div>
+                </div>
+
+
+                <div class="block_3">
+                    <div class="delivery_info">
+                        <label class="labels">Delivery Information</label>
+                        <p class="inner_info">Delivery Address, 2313 </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="edit-info-button-block">
+                <button id="edit-info-button">EDIT</button>
+            </div>
 
         </div>
+        <div class="stuff">
+            <div class="stuff-inner-block">
+                <div class="bucket">
+                    <a class="link_block" href="https://www.youtube.com/">BUCKET</a>
+                </div>
 
-    </div>
+                <div class="purchases">
+                    <a class="link_block">PURCHASES </a>
+                </div>
 
-    <div class="stuff">
+                <div class="remove_account">
+                    <a class="link_block">REMOVE ACCOUNT</a>
 
-        <div class="exchange_rates">
-
-
+                </div>
+            </div>
         </div>
-
-        <div class="delivery_info">
-
-        </div>
-
-
-        <div class="bucket">
-
-        </div>
-
-        <div class="purchases">
-
-
-        </div>
-
-    </div>
-
-    <div class="remove_account">
-
-
-
     </div>
 
 

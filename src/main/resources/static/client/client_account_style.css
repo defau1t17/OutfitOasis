@@ -1,0 +1,254 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    width: 100%;
+    background: url("https://cdn.wallpapersafari.com/13/58/8NWFSa.jpg") no-repeat center center fixed;
+    background-size: cover;
+    backdrop-filter: blur(3px);
+}
+
+.shop-header {
+    width: 100%;
+    height: 150px;
+    background: rgb(245, 5, 56, 0.7);
+    border: none;
+    display: flex;
+    flex-direction: row;
+}
+.header-logo{
+    /*background-image: url("/static/images/logo.png");*/
+}
+
+
+.client-account-container {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    margin-top: 50px;
+}
+
+.personal-information {
+    width: 100%; /* Занимает всю доступную ширину */
+    display: flex;
+    flex-direction: row;
+}
+
+.block_1 {
+    width: 30%;
+    height: 600px;
+    background: rgb(182, 4, 42, 0.7);
+
+    /*opacity: 0.4;*/
+    /*backdrop-filter: opacity(20%);*/
+    border: none;
+    border-radius: 20px 0 0 20px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.image_block {
+    margin-top: 50px;
+}
+
+.info_block {
+    text-align: center;
+    margin-top: 50px;
+}
+
+.client_personal_info {
+    width: 300px;
+    height: 300px;
+    background-size: cover;
+    border: none;
+    border-radius: 20px;
+}
+
+.client_name {
+    color: white;
+    font-family: Arial;
+    font-size: 23px;
+}
+
+
+.block_2 {
+    width: 40%;
+    height: 600px;
+
+    background: rgba(87, 87, 87, 0.5);
+    opacity: 0.7;
+    border: none;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+#info-main-text {
+    font-size: 40px;
+    color: #ffffff;
+    font-family: Arial;
+    text-align: center;
+    position: relative;
+    text-shadow: 2px 2px 6px #F1F1F1, 0px 8px 16px rgba(241, 241, 241, 0.87);
+}
+
+#info-main-text::after {
+    content: '';
+    display: block;
+    width: 300px;
+    height: 1px;
+    background-color: white;
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.phone_mail_block {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.inner_block_2 {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.mail_block {
+    width: 50%;
+    border: none;
+    border-radius: 15px;
+    background: rgba(245, 5, 56, 0.7);
+    padding-left: 20px;
+    margin-left: 10px;
+
+}
+
+.phone_block {
+    width: 50%;
+    border: none;
+    border-radius: 15px;
+    background: rgba(245, 5, 56, 0.7);
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+
+.block_3 {
+    width: 50%;
+    border: none;
+    border-radius: 15px;
+    background: rgba(245, 5, 56, 0.7);
+    margin-top: 10px;
+}
+
+.stuff-inner-block {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+
+.labels {
+    margin-top: 5px;
+    margin-left: 30px;
+    color: white;
+    font-size: 20px;
+    font-family: Arial;
+
+}
+
+.edit-info-button-block {
+    margin-top: 50px;
+}
+
+#edit-info-button {
+    width: 350px;
+    height: 40px;
+    background: rgba(28, 28, 28, 0.7);
+    border: none;
+    border-radius: 15px;
+    color: white;
+    font-size: 16px;
+    font-family: Arial;
+}
+
+
+.stuff {
+    width: 30%;
+    height: 600px;
+    background: rgb(182, 4, 42, 0.7);
+    opacity: 0.7;
+    border: none;
+    border-radius: 0 20px 20px 0;
+}
+
+.inner_info {
+    margin-left: 10px;
+    font-size: 17px;
+    color: white;
+    font-family: Arial;
+
+}
+
+.stuff-inner-block {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+
+.link_block {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+    color: white; /* Установите цвет текста по вашему выбору */
+    font-size: 20px; /* Размер текста по вашему выбору */
+    text-align: center; /* Выравнивание текста по центру */
+    font-family: Arial;
+
+}
+
+.bucket a,
+.purchases a,
+.remove_account a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+    color: white; /* Установите цвет текста по вашему выбору */
+    font-size: 20px; /* Размер текста по вашему выбору */
+    text-align: center; /* Выравнивание текста по центру */
+    font-family: Arial;
+}
+
+.bucket,
+.purchases,
+.remove_account {
+    margin: 10px;
+    width: 100%;
+    height: 20%;
+    background: rgba(28, 28, 28, 0.7);
+    border: none;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+}

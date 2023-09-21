@@ -247,7 +247,7 @@ public class ClientLog {
                 return "redirect:/shop/client/login";
             }
         }
-        return "/shop/client/client_account";
+        return "/shop/client/client_account_page";
 
     }
 
