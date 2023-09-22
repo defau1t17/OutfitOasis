@@ -4,29 +4,14 @@
     <meta charset="UTF-8">
     <title>My Account</title>
     <link rel="stylesheet" th:href="@{/client/client_account_style.css}">
+    <link rel="stylesheet" th:href="@{/header_style.css}">
+    <link rel="stylesheet" th:href="@{/footer_style.css}">
+
+    <!--    <link rel="import" th:href="@{/templates/header_footer/header.html}">-->
 
 </head>
 <body>
-
-
-<header class="shop-header">
-
-    <div class="logo-block-link">
-        <img class="header-logo" src="">
-    </div>
-
-    <div class="header-links-block">
-        <a>PRODUCTS</a>
-        <a>CATEGORIES</a>
-        <a>HELP</a>
-    </div>
-
-    <div class="header-account-link">
-        <a href="account-link"><img id="account-link-logo"></a>
-
-    </div>
-
-</header>
+<div th:replace="header :: header"></div>
 
 <div class="client-account-container">
 
@@ -52,7 +37,7 @@
                 <div class="phone_mail_block">
                     <div class="mail_block">
                         <label class="labels">Email</label>
-                        <p class="inner_info" th:text="${current_client.mail}"></p>
+                        <p class="inner_info" th:text="${current_client.mail}">test-temp-mail@gmail.com</p>
                     </div>
 
                     <div class="phone_block">
@@ -82,7 +67,7 @@
                 </div>
 
                 <div class="purchases">
-                    <a class="link_block">PURCHASES </a>
+                    <a class="link_block">PURCHASES</a>
                 </div>
 
                 <div class="remove_account">
@@ -95,6 +80,9 @@
 
 
 </div>
+
+
+<div th:replace="footer :: footer"></div>
 
 
 </body>

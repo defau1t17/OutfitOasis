@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/header_style.css}">
+
+</head>
+<body>
+
+<header class="shop-header">
+
+    <div class="logo-block-link">
+        <a th:href="@{/}"> <img class="header-logo" th:src="@{/images/out_fit_oasis.png}"></a>
+    </div>
+
+    <div class="header-links-block">
+        <a class="header-link">PRODUCTS</a>
+        <a class="header-link">CATEGORIES</a>
+        <a class="header-link">HELP</a>
+    </div>
+
+    <div class="header-account-link">
+        <div class="account-inner-links">
+            <a class="header-link" th:href="@{/shop/client/registration}">SIGN IN </a>
+            <p class="spaced-slash">/</p>
+            <a class="header-link" th:href="@{/shop/client/login}">SIGN UP</a>
+        </div>
+
+        <a href="account-link"><img id="account-link-logo"
+                                    src="https://i0.wp.com/www.repol.copl.ulaval.ca/wp-content/uploads/2019/01/default-user-icon.jpg">
+        </a>
+
+    </div>
+
+</header>
+
+</body>
+</html>

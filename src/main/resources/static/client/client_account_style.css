@@ -11,17 +11,6 @@ body {
     backdrop-filter: blur(3px);
 }
 
-.shop-header {
-    width: 100%;
-    height: 150px;
-    background: rgb(245, 5, 56, 0.7);
-    border: none;
-    display: flex;
-    flex-direction: row;
-}
-.header-logo{
-    /*background-image: url("/static/images/logo.png");*/
-}
 
 
 .client-account-container {
@@ -32,7 +21,7 @@ body {
 }
 
 .personal-information {
-    width: 100%; /* Занимает всю доступную ширину */
+    width: 100%;
     display: flex;
     flex-direction: row;
 }
@@ -132,6 +121,7 @@ body {
     background: rgba(245, 5, 56, 0.7);
     padding-left: 20px;
     margin-left: 10px;
+    padding-top: 10px;
 
 }
 
@@ -142,6 +132,8 @@ body {
     background: rgba(245, 5, 56, 0.7);
     margin-right: 10px;
     margin-left: 10px;
+    padding-top: 10px;
+
 }
 
 
@@ -153,13 +145,11 @@ body {
     margin-top: 10px;
 }
 
-.stuff-inner-block {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
+.delivery_info{
+    margin-right: 10px;
+    margin-left: 10px;
+    padding-top: 10px;
 }
-
 
 .labels {
     margin-top: 5px;
@@ -209,13 +199,14 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
+    align-items: center;
 }
 
 .link_block {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 100%;
+    width: 75%;
     height: 100%;
     text-decoration: none;
     color: white; /* Установите цвет текста по вашему выбору */
@@ -231,12 +222,12 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 100%;
+    width: 75%;
     height: 100%;
     text-decoration: none;
     color: white; /* Установите цвет текста по вашему выбору */
     font-size: 20px; /* Размер текста по вашему выбору */
-    text-align: center; /* Выравнивание текста по центру */
+    text-align: center;
     font-family: Arial;
 }
 
@@ -244,11 +235,14 @@ body {
 .purchases,
 .remove_account {
     margin: 10px;
-    width: 100%;
+    width: 75%;
     height: 20%;
     background: rgba(28, 28, 28, 0.7);
     border: none;
     border-radius: 15px;
     display: flex;
     align-items: center;
+    justify-content: center;
+    text-align: center;
 }
+
