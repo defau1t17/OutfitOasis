@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Configure Address</title>
+</head>
+<body>
+
+<form th:action="@{/shop/client/registration/address}" method="#" th:method="patch" th:object="${newAddress}" id="addressForm">
+
+    <select id="selected_country" onchange="sendRequest()" required>
+        <option value="">-- Select country --</option>
+        <option th:each="country : ${countries}" th:value="${country}" th:text="${country.name}"></option>
+    </select>
+
+    <select id="select-city-by-country-name" disabled required>
+        <option value="">-- Select city --</option>
+    </select>
+    <input type="text" th:field="*{address}" placeholder="Input your address" required>
+    <input type="text" th:field="*{flat}" placeholder="Input your flat" required>
+    <input type="text" th:field="*{postcode}" placeholder="Input your postcode" required>
+
+    <button type="submit">CONFIRM</button>
+    <button id="skip-button">SKIP</button>
+</form>
+
+
+<script>
+    function sendRequest() {
+        var selectElement = document.getElementById("selected_country");
+        var selectedOption = selectElement.options[selectElement.selectedIndex];
+        var selectedText = selectedOption.textContent;
+
+        console.log("selected country ", selectedText);
+
+        // Очистите второй <select> перед добавлением новых вариантов
+        var citySelect = document.getElementById("select-city-by-country-name");
+        // citySelect.setAttribute("disabled");
+        citySelect.innerHTML = '';
+
+
+        var xhr = new XMLHttpRequest();
+
+        xhr.open('GET', 'https://countriesnow.space/api/v0.1/countries', true);
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                // Преобразование ответа в объект JavaScript
+                var response = JSON.parse(xhr.responseText);
+
+                var countries = response.data;
+
+                for (var i = 0; i < countries.length; i++) {
+                    if (selectedText === countries[i].country) {
+                        var countryName = countries[i].country;
+                        var cities = countries[i].cities;
+
+                        console.log("Название страны:", countryName);
+                        console.log("Список городов:", cities);
+
+                        for (var j = 0; j < cities.length; j++) {
+                            citySelect.removeAttribute("disabled");
+                            var option = document.createElement("option");
+                            option.text = cities[j];
+                            option.value = cities[j];
+                            citySelect.appendChild(option);
+                        }
+                    }
+                }
+
+                if (citySelect.options.length === 0) {
+                    citySelect.innerHTML = '<option value="">No city found in this area</option>';
+                    citySelect.disabled = true;
+                }
+
+            }
+        };
+
+        xhr.send();
+    }
+
+    function skip() {
+        var emptyAddress = {};
+
+        var emptyAddressJson = JSON.stringify(emptyAddress);
+
+        document.getElementById("addressForm").setAttribute("th:object", "'" + emptyAddressJson + "'");
+
+        document.getElementById("addressForm").submit();
+    }
+
+    document.getElementById("skip-button").addEventListener("click", skip);
+</script>
+
+
+</body>
+</html>

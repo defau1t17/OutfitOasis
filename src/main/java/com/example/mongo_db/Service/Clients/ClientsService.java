@@ -1,11 +1,20 @@
 package com.example.mongo_db.Service.Clients;
 
+import com.example.mongo_db.Entity.Client.Bucket;
 import com.example.mongo_db.Entity.Client.Client;
+import com.example.mongo_db.Entity.Client.Image;
+import com.example.mongo_db.Entity.Parse.Countries;
+import com.example.mongo_db.Entity.Parse.Country;
+import com.example.mongo_db.Repository.ClientsRepoes.BucketRepo;
 import com.example.mongo_db.Repository.ClientsRepoes.ClientsRepo;
+import com.example.mongo_db.Repository.ClientsRepoes.ImagesRepo;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Optional;
 
 @Service
@@ -17,6 +26,12 @@ public class ClientsService {
     @Autowired
     private ClientsRepo clientsRepo;
 
+    @Autowired
+    private BucketRepo bucketRepo;
+
+    @Autowired
+    private ImagesRepo imagesRepo;
+
     private static final String sender = "onlineshop.project@yandex.com";
 
 
@@ -27,6 +42,15 @@ public class ClientsService {
     }
 
     public void saveNewClient(Client client) {
+        Bucket client_bucket = new Bucket();
+        Image image = new Image();
+
+        imagesRepo.save(image);
+        bucketRepo.save(client_bucket);
+
+        client.setBucket(client_bucket);
+        client.setImage(image);
+
         clientsRepo.save(client);
     }
 
@@ -77,6 +101,17 @@ public class ClientsService {
 
     public void updateClientPassword(Client client) {
         clientsRepo.save(client);
+    }
+
+    public void setClientAddress(Client client) {
+        clientsRepo.save(client);
+    }
+
+    public Countries getCountries() throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        Countries countries = objectMapper.readValue(new File("src/main/java/com/example/mongo_db/Entity/Parse/countries.json"), Countries.class);
+
+        return countries;
     }
 
 

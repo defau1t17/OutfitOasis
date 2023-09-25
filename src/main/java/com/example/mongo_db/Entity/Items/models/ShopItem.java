@@ -1,19 +1,16 @@
-package com.example.mongo_db.Entity.Client;
-
+package com.example.mongo_db.Entity.Items.models;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-
-@Document(collection = "images")
 @Data
-public class Image {
+@Document(collection = "shop_items")
+public abstract class ShopItem {
 
     @Id
     private String id;
 
-    private String name;
+    private Item item;
 
-    private byte[] imageData;
 }

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Account</title>
+    <link rel="stylesheet" th:href="@{/client/client_edit_account_style.css}">
+    <link rel="stylesheet" th:href="@{/header_style.css}">
+    <link rel="stylesheet" th:href="@{/footer_style.css}">
+</head>
+<body>
+
+
+<div th:replace="header :: header"></div>
+
+
+<div class="container">
+
+    <form th:action="@{/shop/client/account/__${edit_client_id}__/edit}" method="#" th:method="patch"
+          th:object="${edit_client}">
+
+        <input class="input_field" type="text" th:field="*{name}" placeholder="name" required maxlength="25"
+               th:value="${edit_client.name}">
+        <input class="input_field" type="text" th:field="*{second_name}" placeholder="second name" required
+               maxlength="25" th:value="${edit_client.second_name}">
+
+        <input class="input_field" type="number" th:field="*{age}" placeholder="age" min="12" max="100" required
+               maxlength="3" th:value="${edit_client.age}"
+               oninput="replaceNumberIfOutOfMax(this),setDefaultZeroIfEmpty(this)">
+
+        <div class="select-gender-container">
+            <select class="select-field" th:field="*{gender}" required>
+                <option value="">-- Select gender --</option>
+                <option th:each="gender : ${T(com.example.mongo_db.Entity.Gender).values()}"
+                        th:value="${edit_client.gender}"
+                        th:text="${gender}"></option>
+            </select>
+        </div>
+        <a>EDIT MAIL</a>
+
+        <input class="input_field" type="tel" th:field="*{phone_number}" placeholder="phone number" min="0"
+               maxlength="12" required oninput="addPlusToNumber(this)" th:value="${edit_client.phone_number}">
+
+
+
+        <a>EDIT PASSWORD</a>
+
+        <button type="submit">CONFIRM</button>
+    </form>
+
+
+</div>
+
+
+<div th:replace="footer :: footer"></div>
+
+<script>
+
+    function replaceNumberIfOutOfMax(inputElement) {
+
+        if (inputElement.value.startsWith(0) && !inputElement.value.endsWith(0)) {
+            inputElement.value = inputElement.value.substring(1, inputElement.value.length);
+        }
+        if (inputElement.value > 100) {
+            inputElement.value = ''
+        }
+        if (inputElement.value === '') {
+            inputElement.value = '0';
+        }
+    }
+
+    function setDefaultZeroIfEmpty(inputElement) {
+        if (inputElement.value === '') {
+            inputElement.value = '0';
+        }
+    }
+
+
+    function addPlusToNumber(inputElement) {
+        if (inputElement.value.startsWith('+')) {
+
+        }
+        if (inputElement.value.startsWith('+') && inputElement.value.endsWith('+')) {
+            inputElement.value = '';
+        } else if (!inputElement.value.startsWith('+') && !inputElement.value.endsWith('+')) {
+            inputElement.value = '+' + inputElement.value;
+        }
+
+
+    }
+
+</script>
+</body>
+</html>

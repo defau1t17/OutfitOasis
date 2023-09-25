@@ -1,6 +1,7 @@
 package com.example.mongo_db.Controller.Shop.Log;
 
 
+import com.example.mongo_db.Entity.Client.Address;
 import com.example.mongo_db.Entity.Client.Client;
 import com.example.mongo_db.Service.Clients.ClientsService;
 import com.example.mongo_db.Service.Clients.LoginRedirection;
@@ -14,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.IOException;
 import java.util.Optional;
 import java.util.logging.Logger;
 
@@ -80,12 +82,52 @@ public class ClientLog {
         if (verification_code.equals(user_verification_code)) {
             logger.info("user verified successfully. Redirected to new password page");
             service.saveNewClient((Client) request.getSession().getAttribute("newClient"));
-            return "redirect:/";
+            request.getSession().setAttribute("global_client", request.getSession().getAttribute("newClient"));
+
+            return "redirect:/shop/client/registration/address";
         } else {
             logger.info("User wrote incorrect verification code. Redirected back");
             redirectAttributes.addAttribute("issue", "WRONG_CODE");
             return "redirect:/shop/client/registration/verification";
         }
+    }
+
+    @GetMapping("/registration/address")
+    public String displayAddressPage(Model model, HttpServletRequest request) {
+
+        if (request.getSession().getAttribute("global_client") == null) {
+            logger.info("global client not found. Redirected");
+            return "redirect:/shop/client/login";
+        }
+
+        try {
+            logger.info("all countries has been loaded to form");
+            model.addAttribute("countries", service.getCountries().getCountries());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        model.addAttribute("newAddress", new Address());
+
+        logger.info("new address page has been loaded successfully");
+
+        return "/shop/client/client_address_page";
+    }
+
+    @PatchMapping("/registration/address")
+    public String createNewAddress(@ModelAttribute Address address, HttpServletRequest request) {
+        Client globalClient = (Client) request.getSession().getAttribute("global_client");
+        if (address == null) {
+            globalClient.setAddress(address);
+            service.setClientAddress(globalClient);
+            logger.info("client has skipped address page");
+        } else {
+            logger.info("added new address to client");
+            service.setClientAddress(globalClient);
+            globalClient.setAddress(address);
+        }
+
+        return "redirect:/shop/client/account/" + globalClient.getId();
     }
 
 
@@ -239,10 +281,12 @@ public class ClientLog {
         if (id == null) {
             return "redirect:/shop/client/login";
         } else {
+
             Optional<Client> optionalClient = service.findClientById(id);
             if (optionalClient.isPresent()) {
                 Client client = optionalClient.get();
                 model.addAttribute("current_client", client);
+                model.addAttribute("current_client_id", id);
             } else {
                 return "redirect:/shop/client/login";
             }
@@ -251,7 +295,33 @@ public class ClientLog {
 
     }
 
+    @GetMapping("/account/{id}/edit")
+    public String displayEditAccountPage(@PathVariable(value = "id") String id, Model model) {
 
+        if (id == null) {
+            logger.info("client with such id was not found for edit. Redirected");
+            return "redirect:/shop/client/login";
+        }
+        logger.info("edit client page was shown successfully");
+        model.addAttribute("edit_client_id", id);
+        Optional<Client> clientById = service.findClientById(id);
+        if (clientById.isPresent()) {
+            Client client = clientById.get();
+            model.addAttribute("edit_client", client);
+            logger.info("client for edit was found and dispatched to form");
+        } else {
+            logger.info("client for edit was not found. Redirected");
+            return "redirect:/shop/client/registration";
+        }
+        return "/shop/client/client_edit_account";
+    }
+
+    @PatchMapping("/account/{id}/edit")
+    public String editClient(@PathVariable(value = "id") String id, @ModelAttribute Client client, RedirectAttributes attributes) {
+
+
+        return "";
+    }
 }
 
 

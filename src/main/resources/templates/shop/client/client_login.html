@@ -4,9 +4,14 @@
     <meta charset="UTF-8">
     <title>Login</title>
     <link rel="stylesheet" th:href="@{/client/client_login_style.css}">
+    <link rel="stylesheet" th:href="@{/header_style.css}">
+    <link rel="stylesheet" th:href="@{/footer_style.css}">
 
 </head>
 <body>
+
+<div th:replace="header :: header"></div>
+
 
 <div class="login-container">
 
@@ -43,6 +48,9 @@
 
 
 </div>
+
+<div th:replace="footer :: footer"></div>
+
 
 </body>
 
