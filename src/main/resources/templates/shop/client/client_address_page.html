@@ -3,26 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <title>Configure Address</title>
+    <link rel="stylesheet" th:href="@{/client/client_set_address_style.css}">
+    <link rel="stylesheet" th:href="@{/header_style.css}">
+    <link rel="stylesheet" th:href="@{/footer_style.css}">
 </head>
 <body>
 
-<form th:action="@{/shop/client/registration/address}" method="#" th:method="patch" th:object="${newAddress}" id="addressForm">
+<div th:replace="header :: header"></div>
 
-    <select id="selected_country" onchange="sendRequest()" required>
-        <option value="">-- Select country --</option>
-        <option th:each="country : ${countries}" th:value="${country}" th:text="${country.name}"></option>
-    </select>
+<div class="main-text-container">
+    <p id="main-text">INPUT YOUR LOCAL ADDRESS</p>
+</div>
 
-    <select id="select-city-by-country-name" disabled required>
-        <option value="">-- Select city --</option>
-    </select>
-    <input type="text" th:field="*{address}" placeholder="Input your address" required>
-    <input type="text" th:field="*{flat}" placeholder="Input your flat" required>
-    <input type="text" th:field="*{postcode}" placeholder="Input your postcode" required>
 
-    <button type="submit">CONFIRM</button>
-    <button id="skip-button">SKIP</button>
-</form>
+<div class="container">
+    <form th:action="@{/shop/client/registration/address}" method="#" th:method="patch" th:object="${newAddress}"
+          id="addressForm">
+
+        <div class="inner-container">
+            <div class="input-data-container">
+                <div class="selection-container">
+
+                    <select class="select-field" id="selected_country" onchange="sendRequest()" required
+                            th:field="*{country}">
+                        <option value="">-- Select country --</option>
+                        <option th:each="country : ${countries}" th:value="${country}" th:text="${country}"></option>
+                    </select>
+
+                    <select class="select-field" id="select-city-by-country-name" disabled required th:field="*{city}">
+                        <option value="">-- Select city --</option>
+                    </select>
+                </div>
+
+                <div class="input-container">
+                    <input class="input_field" type="text" id="address" th:field="*{address}"
+                           placeholder="Input your address"
+                           required>
+                    <input class="input_field" type="text" id="flat" th:field="*{flat}" placeholder="Input your flat"
+                           required>
+                    <input class="input_field" type="text" id="postcode" th:field="*{postcode}"
+                           placeholder="Input your postcode" required>
+                </div>
+            </div>
+
+            <div class="submit-container">
+                <p id="submit-skip-text">This step is not important, so you may skip it </p>
+                <button id="skip-button" onclick="skip()">SKIP</button>
+                <p id="submit-continue-text">Or input you local address</p>
+                <button id="submit-address-button" type="submit">CONFIRM</button>
+            </div>
+        </div>
+    </form>
+
+</div>
+
+
+<div th:replace="footer :: footer"></div>
 
 
 <script>
@@ -79,16 +115,16 @@
     }
 
     function skip() {
-        var emptyAddress = {};
 
-        var emptyAddressJson = JSON.stringify(emptyAddress);
-
-        document.getElementById("addressForm").setAttribute("th:object", "'" + emptyAddressJson + "'");
+        document.getElementById("selected_country").value = null;
+        document.getElementById("select-city-by-country-name").value = null;
+        document.getElementById("address").value = '';
+        document.getElementById("flat").value = '';
+        document.getElementById("postcode").value = '';
 
         document.getElementById("addressForm").submit();
     }
 
-    document.getElementById("skip-button").addEventListener("click", skip);
 </script>
 
 

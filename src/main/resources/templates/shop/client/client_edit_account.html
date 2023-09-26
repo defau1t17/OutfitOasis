@@ -7,7 +7,7 @@
     <link rel="stylesheet" th:href="@{/header_style.css}">
     <link rel="stylesheet" th:href="@{/footer_style.css}">
 </head>
-<body>
+<body >
 
 
 <div th:replace="header :: header"></div>
@@ -15,7 +15,7 @@
 
 <div class="container">
 
-    <form th:action="@{/shop/client/account/__${edit_client_id}__/edit}" method="#" th:method="patch"
+    <form th:action="@{/shop/client/account/__${edit_client.id}__/edit}" method="#" th:method="patch"
           th:object="${edit_client}">
 
         <input class="input_field" type="text" th:field="*{name}" placeholder="name" required maxlength="25"
@@ -37,12 +37,49 @@
         </div>
         <a>EDIT MAIL</a>
 
-        <input class="input_field" type="tel" th:field="*{phone_number}" placeholder="phone number" min="0"
+        <input class="input_field" type="tel" th:field="*{phone_number}" placeholder="phone number" min="6"
                maxlength="12" required oninput="addPlusToNumber(this)" th:value="${edit_client.phone_number}">
 
-
-
         <a>EDIT PASSWORD</a>
+
+        <h3>Delivery information</h3>
+
+        <select id="selected_country" required th:field="*{address.country}" onchange="sendRequest()">
+
+            <div th:if="${edit_client.address.country == null}">
+                <option value="">-- Select country --</option>
+                <option th:each="country : ${countries}" th:value="${country}"
+                        th:text="${country}"></option>
+            </div>
+
+            <div th:if="${edit_client.address.country != null}">
+                <option value="" th:value="${edit_client.address.country}"
+                        th:text="${edit_client.address.country}"></option>
+
+                <option th:each="country : ${countries}" th:value="${country}"
+                        th:text="${country}"></option>
+            </div>
+
+        </select>
+
+        <select id="select-city-by-country-name" required th:field="*{address.city}">
+            <div th:if="${edit_client.address.city == null}">
+            </div>
+
+            <div th:if="${edit_client.address.city != null}">
+                <option th:value="${edit_client.address.city}" th:text="${edit_client.address.city}">
+                </option>
+
+            </div>
+
+        </select>
+
+        <input type="text" th:field="*{address.address}" th:value="${edit_client.address.address}"
+               placeholder="Input your address" required>
+        <input type="text" th:field="*{address.flat}" th:value="${edit_client.address.flat}"
+               placeholder="Input your flat" required>
+        <input type="text" th:field="*{address.postcode}" th:value="${edit_client.address.postcode}"
+               placeholder="Input your postcode" required>
 
         <button type="submit">CONFIRM</button>
     </form>
@@ -54,6 +91,20 @@
 <div th:replace="footer :: footer"></div>
 
 <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var selectElement = document.getElementById("select-city-by-country-name");
+
+        if (selectElement && selectElement.options.length > 0) {
+            sendRequest();
+            console.log("Есть объекты в select-city-by-country-name");
+        } else {
+            selectElement.disabled = true
+            selectElement.innerHTML = '<option value="">No city found in this area</option>';
+            selectElement.value = null;
+            console.log("Нет объектов в select-city-by-country-name или элемент не существует");
+        }
+    });
+
 
     function replaceNumberIfOutOfMax(inputElement) {
 
@@ -86,6 +137,55 @@
         }
 
 
+    }
+
+    function sendRequest() {
+        var selectElement = document.getElementById("selected_country");
+        var selectedOption = selectElement.options[selectElement.selectedIndex];
+        var selectedText = selectedOption.textContent;
+
+        console.log("selected country ", selectedText);
+
+        var citySelect = document.getElementById("select-city-by-country-name");
+        citySelect.disabled = false;
+        citySelect.innerHTML = '';
+
+        var xhr = new XMLHttpRequest();
+
+        xhr.open('GET', 'https://countriesnow.space/api/v0.1/countries', true);
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                // Преобразование ответа в объект JavaScript
+                var response = JSON.parse(xhr.responseText);
+
+                var countries = response.data;
+
+                for (var i = 0; i < countries.length; i++) {
+                    if (selectedText === countries[i].country) {
+                        var countryName = countries[i].country;
+                        var cities = countries[i].cities;
+
+                        console.log("Название страны:", countryName);
+                        console.log("Список городов:", cities);
+
+                        for (var j = 0; j < cities.length; j++) {
+                            var option = document.createElement("option");
+                            option.text = cities[j];
+                            option.value = cities[j];
+                            citySelect.appendChild(option);
+                        }
+                    }
+                }
+
+                if (citySelect.options.length === 0) {
+                    citySelect.innerHTML = '<option value="">No city found in this area</option>';
+                    citySelect.disabled = true;
+                }
+
+            }
+        };
+
+        xhr.send();
     }
 
 </script>

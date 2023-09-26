@@ -3,6 +3,7 @@ package com.example.mongo_db.Controller.Shop.Log;
 
 import com.example.mongo_db.Entity.Client.Address;
 import com.example.mongo_db.Entity.Client.Client;
+import com.example.mongo_db.Service.Clients.CheckForAddress;
 import com.example.mongo_db.Service.Clients.ClientsService;
 import com.example.mongo_db.Service.Clients.LoginRedirection;
 import jakarta.servlet.http.HttpServletRequest;
@@ -102,7 +103,7 @@ public class ClientLog {
 
         try {
             logger.info("all countries has been loaded to form");
-            model.addAttribute("countries", service.getCountries().getCountries());
+            model.addAttribute("countries", service.getCountries());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -115,18 +116,19 @@ public class ClientLog {
     }
 
     @PatchMapping("/registration/address")
-    public String createNewAddress(@ModelAttribute Address address, HttpServletRequest request) {
+    public String createNewAddress(@ModelAttribute("newAddress") Address address, HttpServletRequest request) {
         Client globalClient = (Client) request.getSession().getAttribute("global_client");
-        if (address == null) {
-            globalClient.setAddress(address);
-            service.setClientAddress(globalClient);
+
+        if (CheckForAddress.isAddressNull(address)) {
             logger.info("client has skipped address page");
+            globalClient.setAddress(null);
+            service.setClientAddress(globalClient);
+
         } else {
             logger.info("added new address to client");
-            service.setClientAddress(globalClient);
             globalClient.setAddress(address);
+            service.setClientAddress(globalClient);
         }
-
         return "redirect:/shop/client/account/" + globalClient.getId();
     }
 
@@ -285,8 +287,13 @@ public class ClientLog {
             Optional<Client> optionalClient = service.findClientById(id);
             if (optionalClient.isPresent()) {
                 Client client = optionalClient.get();
+                System.out.println(client);
                 model.addAttribute("current_client", client);
-                model.addAttribute("current_client_id", id);
+                if (client.getAddress() == null) {
+                    model.addAttribute("address", null);
+                } else {
+                    model.addAttribute("address", client.getAddress());
+                }
             } else {
                 return "redirect:/shop/client/login";
             }
@@ -299,15 +306,21 @@ public class ClientLog {
     public String displayEditAccountPage(@PathVariable(value = "id") String id, Model model) {
 
         if (id == null) {
-            logger.info("client with such id was not found for edit. Redirected");
+            logger.info(" id is null . Redirected");
             return "redirect:/shop/client/login";
         }
         logger.info("edit client page was shown successfully");
-        model.addAttribute("edit_client_id", id);
         Optional<Client> clientById = service.findClientById(id);
         if (clientById.isPresent()) {
             Client client = clientById.get();
             model.addAttribute("edit_client", client);
+            try {
+                model.addAttribute("countries", service.getCountries());
+                logger.info("all countries was added to form successfully");
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+
             logger.info("client for edit was found and dispatched to form");
         } else {
             logger.info("client for edit was not found. Redirected");
@@ -319,8 +332,15 @@ public class ClientLog {
     @PatchMapping("/account/{id}/edit")
     public String editClient(@PathVariable(value = "id") String id, @ModelAttribute Client client, RedirectAttributes attributes) {
 
+        Client updated_client = service.requestClientUpdate(client, CheckForAddress.isAddressNull(client.getAddress()));
+        if (updated_client != null) {
+            service.updateClient(updated_client);
+            return "redirect:/shop/client/account/" + id;
+        } else {
+            attributes.addAttribute("issue", "NO_DATA");
+            return "redirect/shop/client/account/" + id + "/edit";
+        }
 
-        return "";
     }
 }
 

@@ -50,14 +50,17 @@
                 <div class="block_3">
                     <div class="delivery_info">
                         <label class="labels">Delivery Information</label>
-                        <p class="inner_info">Delivery Address, 2313 </p>
+                        <p class="inner_info" th:if="${address !=null}"
+                           th:text="${current_client.address.country} + ',' +  ${current_client.address.city} +  ',' +  ${current_client.address.address} + ' ' +  ${current_client.address.flat} + ' (' + ${current_client.address.postcode} + ')'"></p>
+                        <p class="inner_info" th:if="${address == null}">No information</p>
                     </div>
                 </div>
             </div>
 
             <div class="edit-info-button-block">
                 <button id="edit-info-button"><a id="edit-account-link"
-                        th:href="@{/shop/client/account/__${current_client_id}__/edit} ">EDIT</a></button>
+                                                 th:href="@{/shop/client/account/__${current_client.id}__/edit} ">EDIT</a>
+                </button>
             </div>
 
         </div>

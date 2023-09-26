@@ -15,7 +15,10 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ClientsService {
@@ -107,11 +110,31 @@ public class ClientsService {
         clientsRepo.save(client);
     }
 
-    public Countries getCountries() throws IOException {
+    public ArrayList<String> getCountries() throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         Countries countries = objectMapper.readValue(new File("src/main/java/com/example/mongo_db/Entity/Parse/countries.json"), Countries.class);
+        ArrayList<String> countryArrayList = (ArrayList<String>) countries.getCountries().stream().map(Country::getName).collect(Collectors.toList());
+        return countryArrayList;
+    }
 
-        return countries;
+    public Client requestClientUpdate(Client request_for_update_client, boolean isAddressEmpty) {
+        Optional<Client> clientById = findClientById(request_for_update_client.getId());
+        if (clientById.isPresent()) {
+            Client client = clientById.get();
+            Client updated_client = new UpdateClient().updateClient(request_for_update_client, client, isAddressEmpty);
+            if (updated_client != null) {
+                return updated_client;
+            } else {
+                return null;
+            }
+        }
+        return null;
+
+    }
+
+
+    public void updateClient(Client updatedClient) {
+        clientsRepo.save(updatedClient);
     }
 
 
