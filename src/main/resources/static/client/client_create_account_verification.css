@@ -20,7 +20,7 @@ body {
     text-shadow: 0 0 15px rgb(245, 5, 56), 0 0 10px rgb(245, 5, 5);
 }
 
-#promt-text{
+.promt-text {
     text-align: center;
     font-family: Dialog;
     text-align: center;
@@ -30,7 +30,8 @@ body {
     text-shadow: 0 0 15px rgb(245, 5, 56), 0 0 10px rgb(245, 5, 5);
 
 }
-#mail{
+
+.mail {
     text-align: center;
 
     font-family: Dialog;
@@ -71,7 +72,7 @@ body {
 
 }
 
-#send_button {
+.send_button {
     margin-top: 30px;
     width: 350px;
     height: 40px;
@@ -101,7 +102,7 @@ body {
     text-shadow: 0 0 15px rgb(245, 5, 56), 0 0 10px rgb(245, 5, 56);
 }
 
-#issue {
+.issue {
     font-size: 17px;
     color: white;
 }

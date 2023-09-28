@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Mail</title>
+    <link rel="stylesheet" th:href="@{/client/client_account_verification.css}">
+</head>
+<body>
+
+<div class="main-container">
+    <h3 class="verification-main-text">Write new mail</span></h3>
+    <div class="container">
+        <form th:action="@{/shop/client/account/__${session.get('global_client').id}__/edit/mail}" method="post">
+            <div class="input-container">
+                <input class="input_field" type="text" name="newMail" th:value="${session.get('global_client').mail}">
+                <button class="send_button">VERIFY</button>
+            </div>
+        </form>
+        <h3 class="issue" th:if="${issue != null}" th:text="${issue}"></h3>
+    </div>
+</div>
+
+
+</body>
+</html>

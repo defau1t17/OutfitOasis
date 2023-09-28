@@ -111,13 +111,7 @@ public class ClientsService {
         return verification_code;
     }
 
-    public void updateClientPassword(Client client) {
-        clientsRepo.save(client);
-    }
 
-    public void setClientAddress(Client client) {
-        clientsRepo.save(client);
-    }
 
     public ArrayList<String> getCountries() throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -145,6 +139,8 @@ public class ClientsService {
     public void updateClient(Client updatedClient) {
         clientsRepo.save(updatedClient);
     }
+
+
 
 
 }
