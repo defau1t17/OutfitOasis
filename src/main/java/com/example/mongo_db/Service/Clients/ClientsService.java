@@ -53,15 +53,7 @@ public class ClientsService {
     public void saveNewClient(Client client) {
         Bucket client_bucket = new Bucket();
         client_bucket.setItems(null);
-        Image image = null;
-
-
-
         client.setBucket(client_bucket);
-//        client.setImage(image);
-//        client.setImage(image);
-
-        imagesRepo.insert(image);
         bucketRepo.save(client_bucket);
         clientsRepo.save(client);
     }

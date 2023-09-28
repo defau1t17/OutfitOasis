@@ -4,8 +4,14 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <link rel="stylesheet" th:href="@{/client/client_account_verification.css}">
+    <link rel="stylesheet" th:href="@{/header_style.css}">
+    <link rel="stylesheet" th:href="@{/footer_style.css}">
 </head>
 <body>
+
+<div th:replace="header :: header"></div>
+
+
 <div class="main-container" th:if="${newMail == null}">
 
     <h3 class="verification-main-text">We have sent a verification code to your mail</span></h3>
@@ -43,6 +49,7 @@
     </div>
 </div>
 
+<div th:replace="footer :: footer"></div>
 
 </body>
 </html>

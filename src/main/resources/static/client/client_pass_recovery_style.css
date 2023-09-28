@@ -2,6 +2,12 @@ body {
     background: url("https://wallpapercave.com/wp/KPZGQrc.jpg");
 }
 
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
 .main-container {
     width: 100%;
     position: absolute;

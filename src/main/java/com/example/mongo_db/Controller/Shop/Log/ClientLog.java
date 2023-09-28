@@ -36,6 +36,10 @@ public class ClientLog {
     @GetMapping("/registration")
     public String viewRegistrationPage(Model model, HttpServletRequest request) {
 
+        if (request.getSession().getAttribute(GLOBAL_CLIENT) != null) {
+            UpdateGlobalClient.updateGlobalClient(GLOBAL_CLIENT, null, request.getSession());
+        }
+
         if (request.getSession().getAttribute("clientExists") == null) {
             model.addAttribute("newClient", new Client());
         } else {
@@ -85,7 +89,7 @@ public class ClientLog {
         if (verification_code.equals(user_verification_code)) {
             logger.info("user verified successfully. Redirected to new password page");
             service.saveNewClient((Client) request.getSession().getAttribute("newClient"));
-            request.getSession().setAttribute("global_client", request.getSession().getAttribute("newClient"));
+            UpdateGlobalClient.updateGlobalClient(GLOBAL_CLIENT, (Client) request.getSession().getAttribute("newClient"), request.getSession());
 
             return "redirect:/shop/client/registration/address";
         } else {
@@ -114,25 +118,29 @@ public class ClientLog {
 
     @PatchMapping("/registration/address")
     public String createNewAddress(@ModelAttribute("newAddress") Address address, HttpServletRequest request) {
-        Client globalClient = (Client) request.getSession().getAttribute("global_client");
+        Client client = (Client) request.getSession().getAttribute(GLOBAL_CLIENT);
 
         if (CheckForAddress.isAddressNull(address)) {
             logger.info("client has skipped address page");
-            globalClient.setAddress(null);
-            service.updateClient(globalClient);
+            client.setAddress(null);
+            service.updateClient(client);
 
         } else {
             logger.info("added new address to client");
-            globalClient.setAddress(address);
-            service.updateClient(globalClient);
+            client.setAddress(address);
+            service.updateClient(client);
         }
-        return "redirect:/shop/client/account/" + globalClient.getId();
+        UpdateGlobalClient.updateGlobalClient(GLOBAL_CLIENT, client, request.getSession());
+        return "redirect:/shop/client/account/" + client.getId();
     }
 
 
     @GetMapping("/login")
     public String displayClientLoginPage(Model model, HttpServletRequest request) {
 
+        if (request.getSession().getAttribute(GLOBAL_CLIENT) != null) {
+            UpdateGlobalClient.updateGlobalClient(GLOBAL_CLIENT, null, request.getSession());
+        }
         logger.info("login page was shown successfully");
 
         String total_client = request.getParameter("client_user_name");
@@ -386,6 +394,7 @@ public class ClientLog {
 
     }
 
+    @Transactional
     @PatchMapping("/account/{id}/edit/mail/verification")
     public String verifyClientEditMail(@PathVariable(value = "id") String id, String user_verification_code, HttpServletRequest request, RedirectAttributes attributes) {
         Client client = (Client) request.getSession().getAttribute(GLOBAL_CLIENT);
@@ -394,11 +403,10 @@ public class ClientLog {
 
 
         if (verification_code_for_global_client.equals(user_verification_code)) {
+            logger.info("client with id " + id + " changed mail from " + client.getMail() + " to " + mail_for_verification);
             client.setMail(mail_for_verification);
             service.updateClient(client);
             UpdateGlobalClient.updateGlobalClient(GLOBAL_CLIENT, client, request.getSession());
-
-            logger.info("client mail has been updated successfully");
             return "redirect:/shop/client/account/" + id;
         } else {
             attributes.addAttribute("issue", "WRONG_CODE");
