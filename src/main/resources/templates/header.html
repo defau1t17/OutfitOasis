@@ -21,15 +21,21 @@
     </div>
 
     <div class="header-account-link">
-        <div class="account-inner-links">
+        <div class="account-inner-links" th:if="${session.get('global_client') == null}">
             <a class="header-link" th:href="@{/shop/client/registration}">SIGN IN </a>
             <p class="spaced-slash">/</p>
             <a class="header-link" th:href="@{/shop/client/login}">SIGN UP</a>
         </div>
 
-        <a href="account-link"><img id="account-link-logo"
-                                    src="https://i0.wp.com/www.repol.copl.ulaval.ca/wp-content/uploads/2019/01/default-user-icon.jpg">
-        </a>
+        <div class="account-inner-links" th:if="${session.get('global_client') != null}">
+            <a class="header-link" th:href="@{/shop/client/account/__${session.get('global_client').id}__}"
+               th:text="${session.get('global_client').name}"></a>
+<!--            <a href="account-link" th:href="@{/shop/client/account/__${session.get('global_client').id}__}"><img-->
+<!--                    id="account-link-logo" th:src="${session.get('global_client').image.image}">-->
+<!--            </a>-->
+
+        </div>
+
 
     </div>
 

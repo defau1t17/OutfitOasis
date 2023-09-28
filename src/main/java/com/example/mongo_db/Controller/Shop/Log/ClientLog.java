@@ -23,10 +23,7 @@ import java.util.logging.Logger;
 @Controller
 @RequestMapping("/shop/client/")
 public class ClientLog {
-
-
-    private Logger logger = Logger.getGlobal();
-
+    private static final Logger logger = Logger.getGlobal();
 
     @Autowired
     private ClientsService service;
@@ -96,11 +93,6 @@ public class ClientLog {
     @GetMapping("/registration/address")
     public String displayAddressPage(Model model, HttpServletRequest request) {
 
-        if (request.getSession().getAttribute("global_client") == null) {
-            logger.info("global client not found. Redirected");
-            return "redirect:/shop/client/login";
-        }
-
         try {
             logger.info("all countries has been loaded to form");
             model.addAttribute("countries", service.getCountries());
@@ -154,13 +146,13 @@ public class ClientLog {
 
     @PostMapping("/login")
     public String loginClient(String username, String password, HttpServletRequest request, RedirectAttributes attributes) {
-//        request.getSession().setAttribute("login_message", "waiting for attributes");
 
         Client client = service.findClientByUserName(username);
 
         if (client != null) {
             if (client.getClient_password().equals(password)) {
-                logger.info("Client was found successfully! ");
+                logger.info("Client was found successfully!");
+                request.getSession().setAttribute("global_client", client);
                 return "redirect:/shop/client/account/" + client.getId();
             } else {
                 logger.info("Client wrote wrong password");
@@ -244,13 +236,15 @@ public class ClientLog {
         }
     }
 
-    @GetMapping("/login/update/password/{id}")
+    @GetMapping("/account/{id}/edit/password")
     public String displayNewPasswordPage(@PathVariable(value = "id") String id, Model model, HttpServletRequest request) {
         String issue = request.getParameter("issue");
         Optional<Client> clientById = service.findClientById(id);
         if (clientById.isPresent()) {
             Client client = clientById.get();
             model.addAttribute("client_name", client.getClient_user_name());
+            model.addAttribute("client_id", id);
+
         } else {
             return "redirect:/shop/client/login/passwordrecovery";
         }
@@ -259,12 +253,11 @@ public class ClientLog {
             model.addAttribute("issue", "Password must not be the same!");
         }
 
-
         return "/shop/client/client_new_password";
     }
 
     @Transactional
-    @PatchMapping("/login/update/password/{id}")
+    @PatchMapping("/account/{id}/edit/password")
     public String changePassword(@PathVariable(value = "id") String id, @NotBlank @NotEmpty String new_password, HttpServletRequest request, RedirectAttributes redirectAttributes) {
         Client redirected_client = (Client) request.getSession().getAttribute("redirected_client");
         if (redirected_client.getClient_password().equals(new_password)) {
@@ -280,37 +273,31 @@ public class ClientLog {
 
     @GetMapping("/account/{id}")
     public String displayClientAccountPage(@PathVariable(value = "id") String id, Model model) {
-        if (id == null) {
-            return "redirect:/shop/client/login";
-        } else {
 
-            Optional<Client> optionalClient = service.findClientById(id);
-            if (optionalClient.isPresent()) {
-                Client client = optionalClient.get();
-                System.out.println(client);
-                model.addAttribute("current_client", client);
-                if (client.getAddress() == null) {
-                    model.addAttribute("address", null);
-                } else {
-                    model.addAttribute("address", client.getAddress());
-                }
+
+        Optional<Client> optionalClient = service.findClientById(id);
+        if (optionalClient.isPresent()) {
+            Client client = optionalClient.get();
+            System.out.println(client);
+            model.addAttribute("current_client", client);
+            if (client.getAddress() == null) {
+                model.addAttribute("address", null);
             } else {
-                return "redirect:/shop/client/login";
+                model.addAttribute("address", client.getAddress());
             }
+        } else {
+            return "redirect:/shop/client/login";
         }
         return "/shop/client/client_account_page";
 
     }
 
     @GetMapping("/account/{id}/edit")
-    public String displayEditAccountPage(@PathVariable(value = "id") String id, Model model) {
+    public String displayEditAccountPage(@PathVariable(value = "id") String id, Model model, HttpServletRequest request) {
 
-        if (id == null) {
-            logger.info(" id is null . Redirected");
-            return "redirect:/shop/client/login";
-        }
         logger.info("edit client page was shown successfully");
         Optional<Client> clientById = service.findClientById(id);
+
         if (clientById.isPresent()) {
             Client client = clientById.get();
             model.addAttribute("edit_client", client);
@@ -326,18 +313,22 @@ public class ClientLog {
             logger.info("client for edit was not found. Redirected");
             return "redirect:/shop/client/registration";
         }
+
+        if (request.getParameter("issue") != null) {
+            model.addAttribute("issue", "SOMETHING WENT WRONG!");
+        }
         return "/shop/client/client_edit_account";
     }
 
+    @Transactional
     @PatchMapping("/account/{id}/edit")
     public String editClient(@PathVariable(value = "id") String id, @ModelAttribute Client client, RedirectAttributes attributes) {
-
         Client updated_client = service.requestClientUpdate(client, CheckForAddress.isAddressNull(client.getAddress()));
         if (updated_client != null) {
             service.updateClient(updated_client);
             return "redirect:/shop/client/account/" + id;
         } else {
-            attributes.addAttribute("issue", "NO_DATA");
+            attributes.addAttribute("issue", "FORBIDDEN");
             return "redirect/shop/client/account/" + id + "/edit";
         }
 

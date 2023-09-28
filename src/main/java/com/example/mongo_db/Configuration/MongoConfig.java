@@ -9,7 +9,9 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.config.AbstractMongoClientConfiguration;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.convert.MongoCustomConversions;
+import org.springframework.data.mongodb.core.convert.*;
+import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
+import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 
 import java.util.List;
 
@@ -35,4 +37,17 @@ public class MongoConfig extends AbstractMongoClientConfiguration {
     public MongoCustomConversions customConversions() {
         return new MongoCustomConversions(List.of(new BinaryConverter()));
     }
+
+//    @Bean
+//    public GridFsTemplate gridFsTemplate() throws Exception {
+//        return new GridFsTemplate(mongoDbFactory(), mappingMongoConverter());
+//    }
+//
+//    @Bean
+//    public MappingMongoConverter mappingMongoConverter() {
+//        DbRefResolver dbRefResolver = new DefaultDbRefResolver(mongoDbFactory());
+//        MappingMongoConverter converter = new MappingMongoConverter(dbRefResolver, new MongoMappingContext());
+//        converter.setTypeMapper(new DefaultMongoTypeMapper(null));
+//        return converter;
+//    }
 }

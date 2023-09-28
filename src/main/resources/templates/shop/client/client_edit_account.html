@@ -7,7 +7,7 @@
     <link rel="stylesheet" th:href="@{/header_style.css}">
     <link rel="stylesheet" th:href="@{/footer_style.css}">
 </head>
-<body >
+<body>
 
 
 <div th:replace="header :: header"></div>
@@ -15,77 +15,114 @@
 
 <div class="container">
 
+
     <form th:action="@{/shop/client/account/__${edit_client.id}__/edit}" method="#" th:method="patch"
           th:object="${edit_client}">
 
-        <input class="input_field" type="text" th:field="*{name}" placeholder="name" required maxlength="25"
-               th:value="${edit_client.name}">
-        <input class="input_field" type="text" th:field="*{second_name}" placeholder="second name" required
-               maxlength="25" th:value="${edit_client.second_name}">
+        <div class="inner-container">
 
-        <input class="input_field" type="number" th:field="*{age}" placeholder="age" min="12" max="100" required
-               maxlength="3" th:value="${edit_client.age}"
-               oninput="replaceNumberIfOutOfMax(this),setDefaultZeroIfEmpty(this)">
+            <div class="account-info-container">
+                <div class="account-info-text-container">
+                    <p class="information-main-text">ACCOUNT INFORMATION</p>
+                </div>
 
-        <div class="select-gender-container">
-            <select class="select-field" th:field="*{gender}" required>
-                <option value="">-- Select gender --</option>
-                <option th:each="gender : ${T(com.example.mongo_db.Entity.Gender).values()}"
-                        th:value="${edit_client.gender}"
-                        th:text="${gender}"></option>
-            </select>
+                <label class="field-label">NAME : </label>
+                <input class="input_field" type="text" th:field="*{name}" placeholder="name" required maxlength="25"
+                       th:value="${edit_client.name}">
+                <label class="field-label">SECOND NAME: </label>
+
+                <input class="input_field" type="text" th:field="*{second_name}" placeholder="second name" required
+                       maxlength="25" th:value="${edit_client.second_name}">
+
+                <label class="field-label">AGE : </label>
+
+                <input class="input_field" type="number" th:field="*{age}" placeholder="age" min="12" max="100" required
+                       maxlength="3" th:value="${edit_client.age}"
+                       oninput="replaceNumberIfOutOfMax(this),setDefaultZeroIfEmpty(this)">
+                <label class="field-label">GENDER : </label>
+                <div class="select-gender-container">
+                    <select class="select-field" th:field="*{gender}" required>
+                        <option th:each="gender : ${T(com.example.mongo_db.Entity.Gender).values()}"
+                                th:value="${edit_client.gender}"
+                                th:text="${gender}"></option>
+                    </select>
+                </div>
+
+                <label class="field-label">PHONE NUMBER : </label>
+
+                <input class="input_field" type="tel" th:field="*{phone_number}" placeholder="phone number" min="6"
+                       maxlength="12" required oninput="addPlusToNumber(this)" th:value="${edit_client.phone_number}">
+
+
+            </div>
+
+            <div class="delivery-info-container">
+                <div class="account-info-text-container">
+                    <p class="information-main-text">DELIVERY INFORMATION</p>
+                </div>
+                <label class="field-label">COUNTRY : </label>
+
+                <select id="selected_country" class="select-field" required th:field="*{address.country}"
+                        onchange="sendRequest()">
+
+                    <div th:if="${edit_client.address.country == null}">
+                        <option value="">-- Select country --</option>
+                        <option th:each="country : ${countries}" th:value="${country}"
+                                th:text="${country}"></option>
+                    </div>
+
+                    <div th:if="${edit_client.address.country != null}">
+                        <option value="" th:value="${edit_client.address.country}"
+                                th:text="${edit_client.address.country}"></option>
+
+                        <option th:each="country : ${countries}" th:value="${country}"
+                                th:text="${country}"></option>
+                    </div>
+
+                </select>
+                <label class="field-label">CITY : </label>
+
+                <select id="select-city-by-country-name" class="select-field" required th:field="*{address.city}">
+                    <div th:if="${edit_client.address.city == null}">
+                    </div>
+
+                    <div th:if="${edit_client.address.city != null}">
+                        <option th:value="${edit_client.address.city}" th:text="${edit_client.address.city}">
+                        </option>
+
+                    </div>
+
+                </select>
+                <label class="field-label">ADDRESS : </label>
+                <input class="input_field" type="text" th:field="*{address.address}"
+                       th:value="${edit_client.address.address}"
+                       placeholder="Input your address" required min="3" max="40">
+                <label class="field-label">FLAT : </label>
+
+                <input class="input_field" type="text" th:field="*{address.flat}" th:value="${edit_client.address.flat}"
+                       placeholder="Input your flat" required min="2" max="10">
+                <label class="field-label">POSTCODE : </label>
+                <input class="input_field" type="text" th:field="*{address.postcode}"
+                       th:value="${edit_client.address.postcode}"
+                       placeholder="Input your postcode" required max="15" min="6">
+            </div>
         </div>
-        <a>EDIT MAIL</a>
 
-        <input class="input_field" type="tel" th:field="*{phone_number}" placeholder="phone number" min="6"
-               maxlength="12" required oninput="addPlusToNumber(this)" th:value="${edit_client.phone_number}">
+        <div class="link-container">
+            <a class="edit-link" th:href="@{/shop/client/account/__${edit_client.id}__/edit/mail}">EDIT MAIL</a>
+            <a class="edit-link" th:href="@{/shop/client/account/__${edit_client.id}__/edit/password}">EDIT
+                PASSWORD</a>
 
-        <a>EDIT PASSWORD</a>
+        </div>
+        <div class="submit-container">
+            <button id="submit-button" type="submit">SUBMIT</button>
+        </div>
 
-        <h3>Delivery information</h3>
-
-        <select id="selected_country" required th:field="*{address.country}" onchange="sendRequest()">
-
-            <div th:if="${edit_client.address.country == null}">
-                <option value="">-- Select country --</option>
-                <option th:each="country : ${countries}" th:value="${country}"
-                        th:text="${country}"></option>
-            </div>
-
-            <div th:if="${edit_client.address.country != null}">
-                <option value="" th:value="${edit_client.address.country}"
-                        th:text="${edit_client.address.country}"></option>
-
-                <option th:each="country : ${countries}" th:value="${country}"
-                        th:text="${country}"></option>
-            </div>
-
-        </select>
-
-        <select id="select-city-by-country-name" required th:field="*{address.city}">
-            <div th:if="${edit_client.address.city == null}">
-            </div>
-
-            <div th:if="${edit_client.address.city != null}">
-                <option th:value="${edit_client.address.city}" th:text="${edit_client.address.city}">
-                </option>
-
-            </div>
-
-        </select>
-
-        <input type="text" th:field="*{address.address}" th:value="${edit_client.address.address}"
-               placeholder="Input your address" required>
-        <input type="text" th:field="*{address.flat}" th:value="${edit_client.address.flat}"
-               placeholder="Input your flat" required>
-        <input type="text" th:field="*{address.postcode}" th:value="${edit_client.address.postcode}"
-               placeholder="Input your postcode" required>
-
-        <button type="submit">CONFIRM</button>
     </form>
 
-
 </div>
+
+<p class="issue-text" th:if="${issue != null}" th:text="${issue}"></p>
 
 
 <div th:replace="footer :: footer"></div>
