@@ -37,12 +37,11 @@
 
                 <div class="input-container">
                     <input class="input_field" type="text" id="address" th:field="*{address}"
-                           placeholder="Input your address"
-                           required>
+                           placeholder="Input your address" min="3" max="40" required>
                     <input class="input_field" type="text" id="flat" th:field="*{flat}" placeholder="Input your flat"
-                           required>
+                           required min="2" max="10">
                     <input class="input_field" type="text" id="postcode" th:field="*{postcode}"
-                           placeholder="Input your postcode" required>
+                           placeholder="Input your postcode" required max="15" min="6">
                 </div>
             </div>
 

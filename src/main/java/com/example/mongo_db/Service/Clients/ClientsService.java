@@ -10,8 +10,11 @@ import com.example.mongo_db.Repository.ClientsRepoes.ClientsRepo;
 import com.example.mongo_db.Repository.ClientsRepoes.ImagesRepo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.mongo.MongoProperties;
+import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,6 +38,9 @@ public class ClientsService {
     @Autowired
     private ImagesRepo imagesRepo;
 
+    @Autowired
+    private GridFsTemplate fsTemplate;
+
     private static final String sender = "onlineshop.project@yandex.com";
 
 
@@ -46,14 +52,9 @@ public class ClientsService {
 
     public void saveNewClient(Client client) {
         Bucket client_bucket = new Bucket();
-        Image image = new Image();
-
-        imagesRepo.save(image);
-        bucketRepo.save(client_bucket);
-
+        client_bucket.setItems(null);
         client.setBucket(client_bucket);
-        client.setImage(image);
-
+        bucketRepo.save(client_bucket);
         clientsRepo.save(client);
     }
 
@@ -102,13 +103,7 @@ public class ClientsService {
         return verification_code;
     }
 
-    public void updateClientPassword(Client client) {
-        clientsRepo.save(client);
-    }
 
-    public void setClientAddress(Client client) {
-        clientsRepo.save(client);
-    }
 
     public ArrayList<String> getCountries() throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -136,6 +131,8 @@ public class ClientsService {
     public void updateClient(Client updatedClient) {
         clientsRepo.save(updatedClient);
     }
+
+
 
 
 }

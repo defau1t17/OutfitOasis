@@ -2,6 +2,12 @@ body {
     background: url("https://wallpapercave.com/wp/KPZGQrc.jpg");
 }
 
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
 .main-container {
     width: 100%;
     position: absolute;
@@ -19,7 +25,7 @@ body {
     text-shadow: 0 0 15px rgb(245, 5, 56), 0 0 10px rgb(245, 5, 5);
 }
 
-#promt-text{
+#promt-text {
     text-align: center;
     font-family: Dialog;
     text-align: center;
@@ -29,7 +35,8 @@ body {
     text-shadow: 0 0 15px rgb(245, 5, 56), 0 0 10px rgb(245, 5, 5);
 
 }
-#mail{
+
+#mail {
     text-align: center;
 
     font-family: Dialog;

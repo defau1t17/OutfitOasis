@@ -3,6 +3,7 @@ package com.example.mongo_db.Repository.ClientsRepoes;
 import com.example.mongo_db.Entity.Client.Client;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
+import org.springframework.data.mongodb.repository.Update;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -25,6 +26,16 @@ public interface ClientsRepo extends MongoRepository<Client, String> {
 
     @Query(value = "{'mail' :  '?0'}")
     Client doesUserMailExists(String mail);
+
+//    @Query("{'userId' : ?0}")
+//    @Update("{'$set': {'client_password': ?1}}")
+//    Client updatePassword(String id, String password);
+//
+//
+//    @Query("{'userId' : ?0}")
+//    @Update("{'$set': {'client_password': ?1}}")
+//    Client updateMail(String id, String mail);
+
 
     @Override
     List<Client> findAll();

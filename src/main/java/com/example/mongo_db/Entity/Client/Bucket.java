@@ -15,6 +15,7 @@ import java.util.HashMap;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Bucket  {
+
     @Id
     private String id;
 

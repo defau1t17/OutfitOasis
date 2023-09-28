@@ -43,8 +43,8 @@ public class Client extends User {
     @Field(name = "client_bucket")
     private Bucket bucket;
 
-    @Field(name = "client_image")
-    private Image image;
+//    @Field(name = "client_image")
+//    private Image clientImage;
 
 
 }

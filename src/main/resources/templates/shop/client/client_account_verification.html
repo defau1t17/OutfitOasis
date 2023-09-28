@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/client/client_account_verification.css}">
+    <link rel="stylesheet" th:href="@{/header_style.css}">
+    <link rel="stylesheet" th:href="@{/footer_style.css}">
+</head>
+<body>
+
+<div th:replace="header :: header"></div>
+
+
+<div class="main-container" th:if="${newMail == null}">
+
+    <h3 class="verification-main-text">We have sent a verification code to your mail</span></h3>
+    <p class="promt-text">Check <span class="mail" th:text="${info}">infomail</span> for it</p>
+
+    <div class="container">
+        <form th:action="@{/shop/client/registration/verification}" method="post"
+              th:if="${newMail == null}">
+            <div class="input-container">
+                <input class="input_field" type="text" name="user_verification_code">
+                <button class="send_button">VERIFY</button>
+            </div>
+        </form>
+
+        <h3 class="issue" th:if="${issue != null}" th:text="${issue}"></h3>
+    </div>
+</div>
+
+
+<div class="main-container" th:if="${newMail != null}">
+    <h3 class="verification-main-text">We have sent a verification code to your mail</span></h3>
+    <p class="promt-text">Check <span class="mail" th:text="${newMail}">infomail</span> for it</p>
+
+    <div class="container">
+        <form th:action="@{/shop/client/account/__${session.get('global_client').id}__/edit/mail/verification}"
+              method="#"
+              th:method="patch"
+              th:if="${newMail != null}">
+            <div class="input-container">
+                <input class="input_field" type="text" name="user_verification_code">
+                <button class="send_button">VERIFY</button>
+            </div>
+        </form>
+        <h3 class="issue" th:if="${issue != null}" th:text="${issue}"></h3>
+    </div>
+</div>
+
+<div th:replace="footer :: footer"></div>
+
+</body>
+</html>
