@@ -14,8 +14,6 @@ import org.springframework.data.mongodb.core.mapping.FieldType;
 public class Image {
     @Id
     private String id;
-
-    private String fileName;
-    private String fileType;
+    private String image;
 
 }

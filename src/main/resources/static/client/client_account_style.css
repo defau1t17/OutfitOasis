@@ -9,8 +9,8 @@ body {
     background: url("https://cdn.wallpapersafari.com/13/58/8NWFSa.jpg") no-repeat center center fixed;
     background-size: cover;
     backdrop-filter: blur(3px);
+    background-color: #f0f0f0;
 }
-
 
 
 .client-account-container {
@@ -31,18 +31,22 @@ body {
     height: 600px;
     background: rgb(182, 4, 42, 0.7);
 
-    /*opacity: 0.4;*/
-    /*backdrop-filter: opacity(20%);*/
+
     border: none;
     border-radius: 20px 0 0 20px;
 
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: space-evenly;
 }
 
 .image_block {
     margin-top: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
 }
 
 .info_block {
@@ -64,6 +68,23 @@ body {
     font-size: 23px;
 }
 
+#logout-button {
+    width: 350px;
+    height: 40px;
+    background: rgba(28, 28, 28, 0.7);
+    border: none;
+    border-radius: 15px;
+    color: white;
+
+}
+
+#logout-button-link {
+    text-decoration: none;
+    font-size: 16px;
+    font-family: Arial;
+    color: white;
+    opacity: 0.7;
+}
 
 .block_2 {
     width: 40%;
@@ -145,7 +166,7 @@ body {
     margin-top: 10px;
 }
 
-.delivery_info{
+.delivery_info {
     margin-right: 10px;
     margin-left: 10px;
     padding-top: 10px;
@@ -246,3 +267,9 @@ body {
     text-align: center;
 }
 
+#edit-account-link {
+    text-decoration: none;
+    color: white;
+    font-family: Arial;
+    font-size: 18px;
+}

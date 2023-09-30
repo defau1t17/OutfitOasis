@@ -3,23 +3,27 @@ package com.example.mongo_db.Controller.Shop.Log;
 
 import com.example.mongo_db.Entity.Client.Address;
 import com.example.mongo_db.Entity.Client.Client;
+import com.example.mongo_db.Entity.Client.Image;
 import com.example.mongo_db.Service.Clients.CheckForAddress;
 import com.example.mongo_db.Service.Clients.ClientsService;
 import com.example.mongo_db.Service.Clients.LoginRedirection;
 import com.example.mongo_db.Service.Clients.UpdateGlobalClient;
+import com.example.mongo_db.Service.Image.ImageService;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
+import org.bson.BsonBinarySubType;
+import org.bson.types.Binary;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
+import java.util.Base64;
 import java.util.Optional;
 import java.util.logging.Logger;
 
@@ -32,6 +36,9 @@ public class ClientLog {
 
     @Autowired
     private ClientsService service;
+
+    @Autowired
+    private ImageService imageService;
 
     @GetMapping("/registration")
     public String viewRegistrationPage(Model model, HttpServletRequest request) {
@@ -288,7 +295,12 @@ public class ClientLog {
 
         Client client = (Client) request.getSession().getAttribute(GLOBAL_CLIENT);
 
+        System.out.println(client);
+
         model.addAttribute("current_client", client);
+        model.addAttribute("image", client.getClient_image());
+
+
         if (client.getAddress() == null) {
             model.addAttribute("address", null);
         } else {
@@ -416,6 +428,38 @@ public class ClientLog {
     }
 
 
+    @GetMapping("/account/{id}/edit/image")
+    public String displayClientEditImagePage(@PathVariable(value = "id") String id, Model model, HttpServletRequest request) {
+        logger.info("upload image page has been shown successfully");
+
+        Client client = (Client) request.getSession().getAttribute(GLOBAL_CLIENT);
+
+        model.addAttribute("global_client", client);
+
+        return "/shop/client/client_edit_image";
+    }
+
+    @Transactional
+    @PostMapping("/account/{id}/edit/image")
+    public String uploadImage(@PathVariable(value = "id") String id, @RequestParam(value = "image") MultipartFile image, RedirectAttributes attributes, HttpServletRequest request) throws IOException {
+        Client client = (Client) request.getSession().getAttribute(GLOBAL_CLIENT);
+        if (image != null) {
+            imageService.uploadPhoto(image, client);
+            UpdateGlobalClient.updateGlobalClient(GLOBAL_CLIENT, client, request.getSession());
+            attributes.addAttribute("imageUpdated", true);
+            return "redirect:/shop/client/account/" + id + "/edit/image";
+        } else {
+            attributes.addAttribute("issue", "SMTH_BAD");
+            return "redirect:/shop/client/account/" + id + "/edit/image";
+        }
+    }
+
+
+    @GetMapping("/account/{id}/logout")
+    public String logOutPage(@PathVariable(value = "id") String id, HttpServletRequest request) {
+        UpdateGlobalClient.updateGlobalClient(GLOBAL_CLIENT, null, request.getSession());
+        return "redirect:/shop/client/login";
+    }
 }
 
 

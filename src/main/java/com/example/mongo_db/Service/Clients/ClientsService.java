@@ -52,9 +52,17 @@ public class ClientsService {
 
     public void saveNewClient(Client client) {
         Bucket client_bucket = new Bucket();
+        Image image = new Image();
+
+        image.setImage("");
         client_bucket.setItems(null);
+
+        client.setClient_image(image);
         client.setBucket(client_bucket);
+
         bucketRepo.save(client_bucket);
+        imagesRepo.save(image);
+
         clientsRepo.save(client);
     }
 
@@ -104,7 +112,6 @@ public class ClientsService {
     }
 
 
-
     public ArrayList<String> getCountries() throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         Countries countries = objectMapper.readValue(new File("src/main/java/com/example/mongo_db/Entity/Parse/countries.json"), Countries.class);
@@ -131,8 +138,6 @@ public class ClientsService {
     public void updateClient(Client updatedClient) {
         clientsRepo.save(updatedClient);
     }
-
-
 
 
 }
