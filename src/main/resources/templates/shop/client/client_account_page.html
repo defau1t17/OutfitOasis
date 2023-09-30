@@ -17,16 +17,25 @@
     <div class="personal-information" th:object="${current_client}">
         <div class="block_1">
             <div class="image_block">
-                <img class="client_personal_info"
-                     src="https://i0.wp.com/www.repol.copl.ulaval.ca/wp-content/uploads/2019/01/default-user-icon.jpg">
-            </div>
+                <a th:href="@{/shop/client/account/__${current_client.id}__/edit/image}"
+                   th:if="${current_client.client_image.image == ''}">
+                    <img class="client_personal_info"
+                         th:src="@{/images/default-client-icon.jpg}">
+                </a>
+                <a th:href="@{/shop/client/account/__${current_client.id}__/edit/image}"
+                   th:if="${current_client.client_image.image != ''}">
+                    <img class="client_personal_info"
+                         th:src="@{'data:image/*;base64,'+ ${session.get('global_client').client_image.image}}"/>
+                </a>
 
-            <div class="info_block">
-                <p class="client_name" th:text="${current_client.name}"></p>
+
+                <div class="info_block">
+                    <p class="client_name" th:text="${current_client.name}"></p>
+                </div>
+
             </div>
 
         </div>
-
         <div class="block_2">
 
             <p id="info-main-text">INFORMATION</p>

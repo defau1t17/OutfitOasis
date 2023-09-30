@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div th:object="${global_client}">
+
+
+    <form method="post" th:action="@{/shop/client/account/__${global_client.id}__/edit/image}"
+          enctype="multipart/form-data">
+        <input type="file" name="image"/>
+        <input type="submit" value="Upload"/>
+    </form>
+
+    <img class="client_personal_info" th:if="${global_client.client_image.image == ''}"
+         th:src="@{/images/default-client-icon.jpg}">
+    <img class="client_personal_info" th:if="${global_client.client_image.image != ''}"
+         th:src="@{'data:image/*;base64,' + ${global_client.client_image.image}}"/>
+
+    <button type="button"><a th:href="@{/shop/client/account/__${global_client.id}__}">Back</a></button>
+
+</div>
+
+</body>
+</html>
