@@ -34,7 +34,8 @@
                 </div>
 
                 <div class="logout-block">
-                    <button id="logout-button"><a th:href="@{/shop/client/account/__${current_client.id}__/logout}" id="logout-button-link">LOGOUT</a></button>
+                    <button id="logout-button"><a th:href="@{/shop/client/account/__${current_client.id}__/logout}"
+                                                  id="logout-button-link">LOGOUT</a></button>
                 </div>
 
             </div>
@@ -64,7 +65,7 @@
                     <div class="delivery_info">
                         <label class="labels">Delivery Information</label>
                         <p class="inner_info" th:if="${address !=null}"
-                           th:text="${current_client.address.country} + ',' +  ${current_client.address.city} +  ',' +  ${current_client.address.address} + ' ' +  ${current_client.address.flat} + ' (' + ${current_client.address.postcode} + ')'"></p>
+                           th:text="${current_client.address.country } + ',' +  ${current_client.address.city != null} +  ',' +  ${current_client.address.address != null} + ' ' +  ${current_client.address.flat !=null} + ' (' + ${current_client.address.postcode != null} + ')'"></p>
                         <p class="inner_info" th:if="${address == null}">No information</p>
                     </div>
                 </div>

@@ -292,16 +292,12 @@ public class ClientLog {
     @GetMapping("/account/{id}")
     public String displayClientAccountPage(@PathVariable(value = "id") String id, Model model, HttpServletRequest request) {
 
-
         Client client = (Client) request.getSession().getAttribute(GLOBAL_CLIENT);
 
-        System.out.println(client);
-
         model.addAttribute("current_client", client);
-        model.addAttribute("image", client.getClient_image());
 
 
-        if (client.getAddress() == null) {
+        if (CheckForAddress.isAddressNull(client.getAddress())) {
             model.addAttribute("address", null);
         } else {
             model.addAttribute("address", client.getAddress());
