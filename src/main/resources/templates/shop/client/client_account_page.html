@@ -33,9 +33,14 @@
                     <p class="client_name" th:text="${current_client.name}"></p>
                 </div>
 
+                <div class="logout-block">
+                    <button id="logout-button"><a th:href="@{/shop/client/account/__${current_client.id}__/logout}" id="logout-button-link">LOGOUT</a></button>
+                </div>
+
             </div>
 
         </div>
+
         <div class="block_2">
 
             <p id="info-main-text">INFORMATION</p>

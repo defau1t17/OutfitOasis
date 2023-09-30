@@ -446,16 +446,20 @@ public class ClientLog {
         if (image != null) {
             imageService.uploadPhoto(image, client);
             UpdateGlobalClient.updateGlobalClient(GLOBAL_CLIENT, client, request.getSession());
+            attributes.addAttribute("imageUpdated", true);
             return "redirect:/shop/client/account/" + id + "/edit/image";
         } else {
             attributes.addAttribute("issue", "SMTH_BAD");
             return "redirect:/shop/client/account/" + id + "/edit/image";
         }
-
-
     }
 
 
+    @GetMapping("/account/{id}/logout")
+    public String logOutPage(@PathVariable(value = "id") String id, HttpServletRequest request) {
+        UpdateGlobalClient.updateGlobalClient(GLOBAL_CLIENT, null, request.getSession());
+        return "redirect:/shop/client/login";
+    }
 }
 
 

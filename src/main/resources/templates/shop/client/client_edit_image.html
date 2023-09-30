@@ -2,27 +2,77 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Edit Image</title>
+    <link rel="stylesheet" th:href="@{/client/client_edit_image_style.css}">
+    <link rel="stylesheet" th:href="@{/header_style.css}">
+    <link rel="stylesheet" th:href="@{/footer_style.css}">
 </head>
 <body>
 
-<div th:object="${global_client}">
+<div th:replace="header :: header"></div>
 
 
-    <form method="post" th:action="@{/shop/client/account/__${global_client.id}__/edit/image}"
-          enctype="multipart/form-data">
-        <input type="file" name="image"/>
-        <input type="submit" value="Upload"/>
-    </form>
-
+<div class="container" th:object="${global_client}">
     <img class="client_personal_info" th:if="${global_client.client_image.image == ''}"
          th:src="@{/images/default-client-icon.jpg}">
     <img class="client_personal_info" th:if="${global_client.client_image.image != ''}"
          th:src="@{'data:image/*;base64,' + ${global_client.client_image.image}}"/>
 
-    <button type="button"><a th:href="@{/shop/client/account/__${global_client.id}__}">Back</a></button>
+    <form method="post" th:action="@{/shop/client/account/__${global_client.id}__/edit/image}"
+          enctype="multipart/form-data" id="insert-image-form">
+        <div class="inner-container">
+            <input id="input-file-button" type="file" name="image" accept="image/*" required/>
+
+        </div>
+    </form>
+    <button id="back-button" type="button"><a id="back-button-link"
+                                              th:href="@{/shop/client/account/__${global_client.id}__}">BACK</a>
+    </button>
+
+    <div id="notification" class="notification">
+
+    </div>
+
 
 </div>
+
+
+<div th:replace="footer :: footer"></div>
+
+
+<script>
+
+    const inputFile = document.getElementById('input-file-button');
+    var form = document.getElementById('insert-image-form');
+    const notification = document.getElementById('notification');
+
+    inputFile.addEventListener('change', (event) => {
+        console.log("image uploaded");
+        notification.disbabled
+        showNotification('Image has been updated', 3000);
+        form.submit();
+
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        const imageUpdated = urlParams.get('imageUpdated');
+
+        if (imageUpdated === 'true') {
+            showNotification('Image has been updated', 3000);
+        }
+    });
+
+    function showNotification(message, duration) {
+        notification.textContent = message;
+        notification.style.opacity = '1';
+
+        setTimeout(() => {
+            notification.style.opacity = '0';
+        }, duration);
+    }
+
+</script>
 
 </body>
 </html>
