@@ -3,12 +3,16 @@ package com.example.mongo_db.Controller.Shop.Items;
 
 import com.example.mongo_db.Entity.Items.Item.ShopItem;
 import com.example.mongo_db.Service.Items.CatalogService;
+import jakarta.annotation.security.PermitAll;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 @Controller
@@ -18,11 +22,14 @@ public class CatalogController {
     @Autowired
     private CatalogService catalogService;
 
-    @GetMapping
-    public String displayAllItems(Model model) {
+    @GetMapping()
+    public String displayAllItems(Model model, HttpServletRequest request, RedirectAttributes attributes) {
         model.addAttribute("all_items", catalogService.findAllItems());
+
+
         return "shop/items/catalog_page";
     }
+
 
     @GetMapping("/categories")
     public String displayCategoriesPage(Model model) {
@@ -45,5 +52,10 @@ public class CatalogController {
             model.addAttribute("item", item);
         }
         return "shop/items/item_page";
+    }
+
+    @PostMapping("/item/{id}/add")
+    public ResponseEntity addItemToCart(@RequestParam("id") String id) {
+        return ResponseEntity.ok().build();
     }
 }

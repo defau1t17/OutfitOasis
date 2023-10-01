@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -157,6 +158,7 @@ public class ClientController {
                 logger.info("model was added successfully");
             }
         }
+
         return "shop/client/client_login";
     }
 
@@ -165,11 +167,18 @@ public class ClientController {
 
         Client client = service.findClientByUserName(username);
 
+
         if (client != null) {
             if (client.getClient_password().equals(password)) {
                 logger.info("Client was found successfully!");
                 request.getSession().setAttribute("global_client", client);
+
+                CsrfToken csrfToken = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
+
+                attributes.addFlashAttribute("_csrf", csrfToken);
+
                 return "redirect:/shop/client/account/" + client.getId();
+
             } else {
                 logger.info("Client wrote wrong password");
                 attributes.addAttribute("client_user_name", username);
