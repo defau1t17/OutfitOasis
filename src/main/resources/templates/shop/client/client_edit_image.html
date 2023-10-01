@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <title>Edit Image</title>
     <link rel="stylesheet" th:href="@{/client/client_edit_image_style.css}">
-    <link rel="stylesheet" th:href="@{/header_style.css}">
-    <link rel="stylesheet" th:href="@{/footer_style.css}">
+    <link rel="stylesheet" th:href="@{/includes/header_style.css}">
+    <link rel="stylesheet" th:href="@{/includes/footer_style.css}">
 </head>
 <body>
 
-<div th:replace="header :: header"></div>
+<div th:replace="includes/header :: header"></div>
 
 
 <div class="container" th:object="${global_client}">
@@ -37,7 +37,7 @@
 </div>
 
 
-<div th:replace="footer :: footer"></div>
+<div th:replace="includes/footer :: footer"></div>
 
 
 <script>

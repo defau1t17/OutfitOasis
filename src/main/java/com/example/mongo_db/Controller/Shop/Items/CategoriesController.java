@@ -18,7 +18,7 @@ public class CategoriesController {
     @GetMapping
     public String displayCategoriesPage(Model model) {
         model.addAttribute("categories", categoriesService.findAllCategories());
-        return "/items/categories_page";
+        return "/shop/items/categories_page";
     }
 
 }

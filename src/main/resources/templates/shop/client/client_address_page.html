@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <title>Configure Address</title>
     <link rel="stylesheet" th:href="@{/client/client_set_address_style.css}">
-    <link rel="stylesheet" th:href="@{/header_style.css}">
-    <link rel="stylesheet" th:href="@{/footer_style.css}">
+    <link rel="stylesheet" th:href="@{/includes/header_style.css}">
+    <link rel="stylesheet" th:href="@{/includes/footer_style.css}">
 </head>
 <body>
 
-<div th:replace="header :: header"></div>
+<div th:replace="includes/header :: header"></div>
 
 <div class="main-text-container">
     <p id="main-text">INPUT YOUR LOCAL ADDRESS</p>
@@ -57,7 +57,7 @@
 </div>
 
 
-<div th:replace="footer :: footer"></div>
+<div th:replace="includes/footer :: footer"></div>
 
 
 <script>

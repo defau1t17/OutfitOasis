@@ -2,9 +2,9 @@ package com.example.mongo_db.Entity.Items.models;
 
 import java.util.ArrayList;
 
-public class Brand<T> {
+public class Producer<T> {
 
-    private String brand_name;
+    private String producer_name;
     private ArrayList<T> items;
 
 }

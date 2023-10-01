@@ -85,7 +85,7 @@ public class ClientLog {
 
         model.addAttribute("info", newClient.getMail());
 
-        return "/shop/client/client_account_verification";
+        return "shop/client/client_account_verification";
     }
 
     @Transactional
@@ -120,7 +120,7 @@ public class ClientLog {
 
         logger.info("new address page has been loaded successfully");
 
-        return "/shop/client/client_address_page";
+        return "shop/client/client_address_page";
     }
 
     @PatchMapping("/registration/address")
@@ -161,7 +161,7 @@ public class ClientLog {
                 logger.info("model was added successfully");
             }
         }
-        return "/shop/client/client_login";
+        return "shop/client/client_login";
     }
 
     @PostMapping("/login")
@@ -270,7 +270,7 @@ public class ClientLog {
             model.addAttribute("issue", "Password must not be the same!");
         }
 
-        return "/shop/client/client_new_password";
+        return "shop/client/client_new_password";
     }
 
     @Transactional
@@ -305,7 +305,7 @@ public class ClientLog {
 
         logger.info("client account page was shown successfully!");
 
-        return "/shop/client/client_account_page";
+        return "shop/client/client_account_page";
 
     }
 
@@ -329,7 +329,7 @@ public class ClientLog {
         if (request.getParameter("issue") != null) {
             model.addAttribute("issue", "SOMETHING WENT WRONG!");
         }
-        return "/shop/client/client_edit_account";
+        return "shop/client/client_edit_account";
 
     }
 
@@ -359,7 +359,7 @@ public class ClientLog {
             model.addAttribute("issue", "This email is used by another Client!");
         }
         logger.info("client edit mail page was shown successfully!");
-        return "/shop/client/client_edit_mail_page";
+        return "shop/client/client_edit_mail_page";
     }
 
 
@@ -398,7 +398,7 @@ public class ClientLog {
 
         logger.info("client edit mail verification page was shown successfully!");
 
-        return "/shop/client/client_account_verification";
+        return "shop/client/client_account_verification";
 
     }
 
@@ -432,7 +432,7 @@ public class ClientLog {
 
         model.addAttribute("global_client", client);
 
-        return "/shop/client/client_edit_image";
+        return "shop/client/client_edit_image";
     }
 
     @Transactional

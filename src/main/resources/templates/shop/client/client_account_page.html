@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <title>My Account</title>
     <link rel="stylesheet" th:href="@{/client/client_account_style.css}">
-    <link rel="stylesheet" th:href="@{/header_style.css}">
-    <link rel="stylesheet" th:href="@{/footer_style.css}">
+    <link rel="stylesheet" th:href="@{/includes/header_style.css}">
+    <link rel="stylesheet" th:href="@{/includes/footer_style.css}">
 
 
 </head>
 <body>
-<div th:replace="header :: header"></div>
+<div th:replace="includes/header :: header"></div>
 
 <div class="client-account-container">
 
@@ -100,7 +100,7 @@
 </div>
 
 
-<div th:replace="footer :: footer"></div>
+<div th:replace="includes/footer :: footer"></div>
 
 
 </body>
