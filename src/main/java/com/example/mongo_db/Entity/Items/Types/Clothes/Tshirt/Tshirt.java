@@ -1,8 +1,7 @@
-package com.example.mongo_db.Entity.Items.Types.Clothes;
+package com.example.mongo_db.Entity.Items.Types.Clothes.Tshirt;
 
 import com.example.mongo_db.Entity.Gender;
-import com.example.mongo_db.Entity.Items.models.Item;
-import com.example.mongo_db.Entity.Items.models.ShopItem;
+import com.example.mongo_db.Entity.Items.Item.Item;
 import com.example.mongo_db.Entity.Items.models.Size;
 import lombok.Data;
 
@@ -17,5 +16,7 @@ public class Tshirt extends Item {
     private int height;
 
     private Gender gender;
+
+
 
 }
