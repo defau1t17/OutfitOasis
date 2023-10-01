@@ -39,7 +39,7 @@ public class EmployeeController {
     @GetMapping("/add")
     public String addEmployee(Model model) {
         model.addAttribute("employee", new Employee());
-        return "employee_add";
+        return "/shop/employee/employee_add";
     }
 
     @Transactional
@@ -52,7 +52,7 @@ public class EmployeeController {
 
 
         logger.log(Level.INFO, "new employee has been added successfully with params : " + employee);
-        return "employee_add";
+        return "/shop/employee/employee_add";
 
     }
 
@@ -62,7 +62,7 @@ public class EmployeeController {
         model.addAttribute("members", service.findAllEmployees());
 
         logger.log(Level.INFO, "all members was displayed successfully");
-        return "employee_members";
+        return "/shop/employee/employee_members";
     }
 
 
@@ -73,7 +73,7 @@ public class EmployeeController {
 
         logger.log(Level.INFO, "all members was displayed successfully");
 
-        return "employees_search";
+        return "/shop/employee/employees_search";
     }
 
     @PostMapping("/search")
@@ -136,7 +136,7 @@ public class EmployeeController {
                 }
             }
         }
-        return "filtered_employees";
+        return "/shop/employee/filtered_employees";
     }
 
 

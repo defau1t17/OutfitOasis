@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <title>My Account</title>
     <link rel="stylesheet" th:href="@{/client/client_account_style.css}">
-    <link rel="stylesheet" th:href="@{/header_style.css}">
-    <link rel="stylesheet" th:href="@{/footer_style.css}">
+    <link rel="stylesheet" th:href="@{/includes/header_style.css}">
+    <link rel="stylesheet" th:href="@{/includes/footer_style.css}">
 
 
 </head>
 <body>
-<div th:replace="header :: header"></div>
+<div th:replace="includes/header :: header"></div>
 
 <div class="client-account-container">
 
@@ -34,7 +34,8 @@
                 </div>
 
                 <div class="logout-block">
-                    <button id="logout-button"><a th:href="@{/shop/client/account/__${current_client.id}__/logout}" id="logout-button-link">LOGOUT</a></button>
+                    <button id="logout-button"><a th:href="@{/shop/client/account/__${current_client.id}__/logout}"
+                                                  id="logout-button-link">LOGOUT</a></button>
                 </div>
 
             </div>
@@ -64,7 +65,7 @@
                     <div class="delivery_info">
                         <label class="labels">Delivery Information</label>
                         <p class="inner_info" th:if="${address !=null}"
-                           th:text="${current_client.address.country} + ',' +  ${current_client.address.city} +  ',' +  ${current_client.address.address} + ' ' +  ${current_client.address.flat} + ' (' + ${current_client.address.postcode} + ')'"></p>
+                           th:text="${current_client.address.country } + ',' +  ${current_client.address.city != null} +  ',' +  ${current_client.address.address != null} + ' ' +  ${current_client.address.flat !=null} + ' (' + ${current_client.address.postcode != null} + ')'"></p>
                         <p class="inner_info" th:if="${address == null}">No information</p>
                     </div>
                 </div>
@@ -80,15 +81,18 @@
         <div class="stuff">
             <div class="stuff-inner-block">
                 <div class="bucket">
-                    <a class="link_block" href="https://www.youtube.com/">BUCKET</a>
+                    <a class="link_block"
+                       th:href="@{/shop/client/account/__${current_client.id}__/bucket}">BUCKET</a>
                 </div>
 
                 <div class="purchases">
-                    <a class="link_block">PURCHASES</a>
+                    <a class="link_block"
+                       th:href="@{/shop/client/account/__${current_client.id}__/purchases}">PURCHASES</a>
                 </div>
 
                 <div class="remove_account">
-                    <a class="link_block">REMOVE ACCOUNT</a>
+                    <a class="link_block"
+                       th:href="@{/shop/client/account/__${current_client.id}__/options}">OPTIONS</a>
 
                 </div>
             </div>
@@ -99,7 +103,8 @@
 </div>
 
 
-<div th:replace="footer :: footer"></div>
+<div th:replace="includes/footer :: footer">
+</div>
 
 
 </body>

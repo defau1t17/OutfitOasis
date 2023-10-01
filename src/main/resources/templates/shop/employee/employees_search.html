@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <link rel="stylesheet" th:href="@{/employee/search_members_style.css}">
+</head>
+<body>
+
+
+<div class="links-container">
+    <button class="button-link">
+        <a class="link" th:href="@{/static}">move to main page</a>
+    </button>
+
+    <button class="button-link">
+        <a class="link" th:href="@{/employee/members}">view all users</a>
+    </button>
+
+    <button class="button-link">
+        <a class="link" th:href="@{/employee/add}">add</a>
+    </button>
+</div>
+
+
+<div class="container">
+    <form th:action="@{/employee/search}" method="post" th:object="${filter}">
+
+
+        <div class="input-container">
+            <input class="input_search_param" type="text" th:field="*{name}" placeholder="employee name">
+            <br>
+            <input class="input_search_param" type="text" th:field="*{second_name}" placeholder="employee second name">
+            <br>
+            <input class="input_search_param" type="number" th:field="*{age}" placeholder="employee age" min="0"
+                   max="100" maxlength="2"
+                   oninput="replaceNumberIfOutOfMax(this),setDefaultZeroIfEmpty(this)">
+            <br>
+            <input class="input_search_param" type="number" th:field="*{experience}" placeholder="employee age of exp "
+                   min="0" max="60" maxlength="2"
+                   oninput="setDefaultZeroIfEmpty(this),replaceNumberIfOutOfMax(this)">
+            <br>
+        </div>
+
+
+        <div class="select-container">
+            <select class="select-search-field" th:field="*{gender}">
+                <option value="">-- Выберите пол --</option>
+                <option th:each="gender : ${T(com.example.mongo_db.Entity.Gender).values()}" th:value="${gender}"
+                        th:text="${gender}"></option>
+            </select>
+            <br>
+
+            <select class="select-search-field" th:field="*{rank}">
+                <option value="">-- Выберите ранг --</option>
+                <option th:each="rank : ${T(com.example.mongo_db.Entity.Rank).values()}" th:value="${rank}"
+                        th:text="${rank}"></option>
+            </select>
+            <br>
+            <select class="select-search-field" th:field="*{post}">
+                <option value="">-- Выберите должность --</option>
+                <option th:each="post : ${T(com.example.mongo_db.Entity.Employee.Post).values()}" th:value="${post}"
+                        th:text="${post}"></option>
+            </select>
+            <br>
+        </div>
+
+
+        <div class="filter-container">
+            <button id="filter-button">Filter</button>
+        </div>
+
+    </form>
+</div>
+
+
+<div class="members-container">
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Second Name</th>
+            <th>Age</th>
+            <th>Experience</th>
+            <th>Phone Number</th>
+            <th>Gender</th>
+            <th>Rank</th>
+            <th>Post</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="member : ${members}">
+            <td th:text="${member.id}"></td>
+            <td th:text="${member.name}"></td>
+            <td th:text="${member.second_name}"></td>
+            <td th:text="${member.age}"></td>
+            <td th:text="${member.experience}"></td>
+            <td th:text="${member.phone_number}"></td>
+            <td th:text="${member.gender}"></td>
+            <td th:text="${member.rank}"></td>
+            <td th:text="${member.post}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+
+
+<script>
+    function replaceNumberIfOutOfMax(inputElement) {
+
+        if (inputElement.value.startsWith(0) && !inputElement.value.endsWith(0)) {
+            inputElement.value = inputElement.value.substring(1, inputElement.value.length);
+        }
+        if (inputElement.value > 100) {
+            inputElement.value = ''
+        }
+        if (inputElement.value === '') {
+            inputElement.value = '0';
+        }
+    }
+
+    function setDefaultZeroIfEmpty(inputElement) {
+
+
+        if (inputElement.value === '') {
+            inputElement.value = '0';
+        }
+    }
+
+
+</script>
+</body>
+</html>

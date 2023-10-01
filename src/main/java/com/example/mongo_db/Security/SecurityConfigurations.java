@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 @Configuration
 @EnableWebSecurity
@@ -23,11 +24,9 @@ public class SecurityConfigurations {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
                 .authorizeHttpRequests()
-//                .requestMatchers("/employee/search").authenticated()
                 .anyRequest().permitAll()
                 .and()
-                .formLogin().loginPage("/workers/login").usernameParameter("employeeUserName").passwordParameter("password").permitAll()
-                .and().build();
+                .build();
     }
 
 }

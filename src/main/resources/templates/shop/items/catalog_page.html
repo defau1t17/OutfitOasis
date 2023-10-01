@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+
+    <title>Catalog</title>
+    <link rel="stylesheet" th:href="@{/includes/header_style.css}">
+    <link rel="stylesheet" th:href="@{/includes/footer_style.css}">
+</head>
+<body>
+<div th:replace="includes/header :: header"></div>
+
+
+<div>
+
+    <div th:if="${all_items != null}">
+        <ul th:each="item : ${all_items}">
+
+            <li id="element" th:value="${item.id}" onclick="getid()">test</li>
+
+
+        </ul>
+    </div>
+</div>
+
+
+<div th:if="${items_by_category != null}">
+    <ul th:each="item : ${items_by_category}">
+        <a th:href="@{/shop/catalog/item/__${item.id}__}">
+            <li th:text="${item.item.category}"></li>
+        </a>
+    </ul>
+
+</div>
+
+
+<div th:replace="includes/footer :: footer">
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    function getid() {
+        var item_id = $('#element').attr('value');
+        var token = $("meta[name='_csrf']").attr("content");
+
+        console.log(token);
+
+        $.ajax({
+            url: '/shop/catalog/add/item/' + item_id,
+            type: 'POST',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader('X-CSRF-TOKEN', token);
+            },
+            success: function (data, textStatus, xhr) {
+                if (xhr.status === 200) {
+                    console.log("Элемент добавлен в корзину");
+                } else if (xhr.status === 409) {
+                    console.log("client not authorized");
+                    console.log("Ошибка при добавлении элемента в корзину");
+                    window.location.href = 'http://localhost:8081/shop/client/login';
+                }
+            },
+            error: function () {
+                console.log("Ошибка при отправке запроса");
+            }
+        });
+    }
+</script>
+
+
+</body>
+</html>

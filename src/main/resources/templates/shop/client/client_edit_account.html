@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <title>Edit Account</title>
     <link rel="stylesheet" th:href="@{/client/client_edit_account_style.css}">
-    <link rel="stylesheet" th:href="@{/header_style.css}">
-    <link rel="stylesheet" th:href="@{/footer_style.css}">
+    <link rel="stylesheet" th:href="@{/includes/header_style.css}">
+    <link rel="stylesheet" th:href="@{/includes/footer_style.css}">
 </head>
 <body>
 
 
-<div th:replace="header :: header"></div>
+<div th:replace="includes/header :: header"></div>
 
 
 <div class="container">
@@ -125,7 +125,7 @@
 <p class="issue-text" th:if="${issue != null}" th:text="${issue}"></p>
 
 
-<div th:replace="footer :: footer"></div>
+<div th:replace="includes/footer :: footer"></div>
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {

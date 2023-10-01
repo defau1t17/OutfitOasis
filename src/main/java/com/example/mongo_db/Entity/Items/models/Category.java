@@ -1,5 +1,5 @@
 package com.example.mongo_db.Entity.Items.models;
 
 public enum Category {
-    Clothes, Technique, Furniture, Books, Food;
+    Jackets, Hoodies, Sweaters, Dress, TShirt, Shirt, Pants, Shorts, Skirts, Underwear, Socks, Shoes, Suit,Accessories;
 }
