@@ -6,6 +6,7 @@
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 
     <title>Catalog</title>
+    <link rel="stylesheet" th:href="@{/items/catelog_items_style.css}">
     <link rel="stylesheet" th:href="@{/includes/header_style.css}">
     <link rel="stylesheet" th:href="@{/includes/footer_style.css}">
 </head>
@@ -13,26 +14,36 @@
 <div th:replace="includes/header :: header"></div>
 
 
-<div>
-
-    <div th:if="${all_items != null}">
-        <ul th:each="item : ${all_items}">
-
-            <li id="element" th:value="${item.id}" onclick="getid()">test</li>
-
-
+<div class="container" th:if="${all_items != null}">
+    <div class="items-block">
+        <ul class="list-of-items" th:each="item : ${all_items}">
+            <a class="item-link" th:href="@{/shop/catalog/item/__${item.id}__}">
+                <div class="item">
+                    <li class="item-info" id="element-in-all" th:text="${item.item.name}" th:value="${item.id}">name
+                    </li>
+                    <li class="item-info" th:text="${item.item.price}">price</li>
+                    <li class="item-info" th:text="${item.item.gender}"></li>
+                </div>
+            </a>
+            <button class="add-to-bucket-button" onclick="addToBucket()">ADD TO BUCKET</button>
         </ul>
     </div>
 </div>
 
+<div class="container" th:if="${items_by_category != null}">
+    <div class="items-block">
+        <ul class="list-of-items" th:each="item : ${items_by_category}">
+            <a class="item-link" th:href="@{/shop/catalog/item/__${item.id}__}">
+                <div class="item">
+                    <li id="element-in-category" th:text="${item.item.name}" th:value="${item.id}">name</li>
+                    <li th:text="${item.item.price}">price</li>
+                    <li th:text="${item.item.gender}"></li>
+                </div>
+            </a>
+            <button class="add-to-bucket-button" onclick="addToBucket()">ADD TO BUCKET</button>
+        </ul>
 
-<div th:if="${items_by_category != null}">
-    <ul th:each="item : ${items_by_category}">
-        <a th:href="@{/shop/catalog/item/__${item.id}__}">
-            <li th:text="${item.item.category}"></li>
-        </a>
-    </ul>
-
+    </div>
 </div>
 
 
@@ -41,8 +52,10 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    function getid() {
-        var item_id = $('#element').attr('value');
+    function addToBucket() {
+        var item = $('#element-in-category').attr('value');
+        console.log(item);
+        var item_id = $('#element-in-all').attr('value');
         var token = $("meta[name='_csrf']").attr("content");
 
         console.log(token);
@@ -56,7 +69,8 @@
             success: function (data, textStatus, xhr) {
                 if (xhr.status === 200) {
                     console.log("Элемент добавлен в корзину");
-                } else if (xhr.status === 409) {
+                }
+                if (xhr.status === 226) {
                     console.log("client not authorized");
                     console.log("Ошибка при добавлении элемента в корзину");
                     window.location.href = 'http://localhost:8081/shop/client/login';

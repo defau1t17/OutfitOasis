@@ -151,6 +151,11 @@ public class ClientController {
         String total_issue = request.getParameter("issue");
 
 
+        String referringPage = request.getHeader("referer");
+        if (referringPage != null) {
+            referringPage = referringPage.substring(referringPage.lastIndexOf('1') + 1, referringPage.length());
+            request.getSession().setAttribute("client_has_been_redirected_from_page", referringPage);
+        }
         if (total_client != null) {
             if (LoginRedirection.addModels(total_client)) {
                 model.addAttribute("client_user_name", total_client);
@@ -173,11 +178,11 @@ public class ClientController {
                 logger.info("Client was found successfully!");
                 request.getSession().setAttribute("global_client", client);
 
-                CsrfToken csrfToken = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
-
-                attributes.addFlashAttribute("_csrf", csrfToken);
-
-                return "redirect:/shop/client/account/" + client.getId();
+                if (request.getSession().getAttribute("client_has_been_redirected_from_page") != null) {
+                    return "redirect:" + request.getSession().getAttribute("client_has_been_redirected_from_page");
+                } else {
+                    return "redirect:/shop/client/account/" + client.getId();
+                }
 
             } else {
                 logger.info("Client wrote wrong password");

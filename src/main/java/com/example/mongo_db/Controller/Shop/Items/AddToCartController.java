@@ -27,7 +27,7 @@ public class AddToCartController {
         if (itemRepo.findShopItemById(id).isPresent() && request.getSession().getAttribute("global_client") != null) {
             System.out.println("found");
             return ResponseEntity.ok().build();
-        } else return ResponseEntity.status(409).build();
+        } else return ResponseEntity.status(226).build();
     }
 
 }

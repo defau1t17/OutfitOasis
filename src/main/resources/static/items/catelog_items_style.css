@@ -1,0 +1,59 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    /*width: 100%;*/
+    /*background: url("https://cdn.wallpapersafari.com/13/58/8NWFSa.jpg") no-repeat center center fixed;*/
+    /*background-size: cover;*/
+    /*backdrop-filter: blur(3px);*/
+    /*background-color: #f0f0f0;*/
+}
+
+.container {
+    width: 100%;
+}
+
+.items-block {
+    margin: 10px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(16.66%, 1fr)); /* Определяем 6 элементов в строке */
+    gap: 5px; /* Промежуток между элементами */
+    justify-content: center; /* Центрируем элементы по горизонтали */
+}
+
+.item {
+    height: 100px;
+    border: 1px solid #ccc;
+    text-align: center;
+    /* Дополнительные стили по вашему усмотрению */
+}
+
+.add-to-bucket-button {
+    margin-top: 10px;
+}
+
+.add-to-bucket-button {
+    margin-top: 10px;
+}
+
+.list-of-items {
+    display: flex;
+    flex-direction: column;
+    height: 300px;
+    text-decoration: none;
+
+}
+
+.item-link {
+    text-decoration: none;
+}
+
+.item-info {
+
+    list-style-type: none;
+    color: black;
+}
+

@@ -54,8 +54,5 @@ public class CatalogController {
         return "shop/items/item_page";
     }
 
-    @PostMapping("/item/{id}/add")
-    public ResponseEntity addItemToCart(@RequestParam("id") String id) {
-        return ResponseEntity.ok().build();
-    }
+
 }
