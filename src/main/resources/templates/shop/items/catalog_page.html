@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+
+<div th:if="${all_items != null}">
+    <ul th:each="item : ${all_items}">
+        <a th:href="@{/shop/catalog/item/__${item.id}__}">
+            <li th:text="${item.item.category}"></li>
+        </a>
+
+
+    </ul>
+</div>
+
+
+<div th:if="${items_by_category != null}">
+    <ul th:each="item : ${items_by_category}">
+        <a th:href="@{/shop/catalog/item/__${item.id}__}">
+            <li th:text="${item.item.category}"></li>
+        </a>
+    </ul>
+
+</div>
+
+
+</body>
+</html>

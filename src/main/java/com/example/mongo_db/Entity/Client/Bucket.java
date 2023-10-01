@@ -1,6 +1,7 @@
 package com.example.mongo_db.Entity.Client;
 
 import com.example.mongo_db.Entity.Items.Item.Item;
+import com.example.mongo_db.Entity.Items.Item.ShopItem;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,12 +14,12 @@ import java.util.HashMap;
 @Document(collection = "bucket")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Bucket  {
+public class Bucket {
 
     @Id
     private String id;
 
-    private HashMap<Item, Integer> items;
+    private HashMap<ShopItem, Integer> items;
 
 
 }

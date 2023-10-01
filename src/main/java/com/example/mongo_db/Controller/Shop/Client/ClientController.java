@@ -1,9 +1,8 @@
-package com.example.mongo_db.Controller.Shop.Log;
+package com.example.mongo_db.Controller.Shop.Client;
 
 
 import com.example.mongo_db.Entity.Client.Address;
 import com.example.mongo_db.Entity.Client.Client;
-import com.example.mongo_db.Entity.Client.Image;
 import com.example.mongo_db.Service.Clients.CheckForAddress;
 import com.example.mongo_db.Service.Clients.ClientsService;
 import com.example.mongo_db.Service.Clients.LoginRedirection;
@@ -12,8 +11,6 @@ import com.example.mongo_db.Service.Image.ImageService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
-import org.bson.BsonBinarySubType;
-import org.bson.types.Binary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,13 +20,12 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
-import java.util.Base64;
 import java.util.Optional;
 import java.util.logging.Logger;
 
 @Controller
 @RequestMapping("/shop/client/")
-public class ClientLog {
+public class ClientController {
     private static final Logger logger = Logger.getGlobal();
 
     private static final String GLOBAL_CLIENT = "global_client";

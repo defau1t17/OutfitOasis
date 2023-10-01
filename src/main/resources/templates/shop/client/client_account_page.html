@@ -81,15 +81,18 @@
         <div class="stuff">
             <div class="stuff-inner-block">
                 <div class="bucket">
-                    <a class="link_block" href="https://www.youtube.com/">BUCKET</a>
+                    <a class="link_block"
+                       th:href="@{/shop/client/account/__${current_client.id}__/bucket}">BUCKET</a>
                 </div>
 
                 <div class="purchases">
-                    <a class="link_block">PURCHASES</a>
+                    <a class="link_block"
+                       th:href="@{/shop/client/account/__${current_client.id}__/purchases}">PURCHASES</a>
                 </div>
 
                 <div class="remove_account">
-                    <a class="link_block">REMOVE ACCOUNT</a>
+                    <a class="link_block"
+                       th:href="@{/shop/client/account/__${current_client.id}__/options}">OPTIONS</a>
 
                 </div>
             </div>
@@ -100,7 +103,8 @@
 </div>
 
 
-<div th:replace="includes/footer :: footer"></div>
+<div th:replace="includes/footer :: footer">
+</div>
 
 
 </body>
