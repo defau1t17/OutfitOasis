@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.HashMap;
 
@@ -18,8 +19,8 @@ public class Bucket {
 
     @Id
     private String id;
-
-    private HashMap<ShopItem, Integer> items;
+    @Field(name = "items")
+    private HashMap<Integer, ShopItem> items;
 
 
 }

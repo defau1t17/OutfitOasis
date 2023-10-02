@@ -10,34 +10,70 @@
     <link rel="stylesheet" th:href="@{/includes/header_style.css}">
     <link rel="stylesheet" th:href="@{/includes/footer_style.css}">
 </head>
-<body>
+<body >
 <div th:replace="includes/header :: header"></div>
 
 
 <div class="container" th:if="${all_items != null}">
     <div class="items-block">
-        <ul class="list-of-items" th:each="item : ${all_items}">
+        <ul class="list-of-items" th:each="item : ${all_items}" onmouseenter="displayAddToCartButton(event)"
+            onmouseleave="hideAddToCartButton(event)">
             <a class="item-link" th:href="@{/shop/catalog/item/__${item.id}__}">
                 <div class="item">
-                    <li class="item-info" id="element-in-all" th:text="${item.item.name}" th:value="${item.id}">name
-                    </li>
-                    <li class="item-info" th:text="${item.item.price}">price</li>
-                    <li class="item-info" th:text="${item.item.gender}"></li>
+                    <div class="product-image-block">
+                        <img class="product-image" th:src="@{/images/default_item_icon.png}">
+                    </div>
+                    <div class="product-info-block">
+                        <div class="product-name-block">
+                            <span class="product-item-info" id="element-in-all" th:text="${item.item.name}"
+                                  th:value="${item.id}">name</span>
+                        </div>
+
+                        <div class="product-producer-block">
+                            <span class="product-item-info" th:text="${item.item.producer}">producer</span>
+                            <span class="product-item-info"> / </span>
+                            <span class="product-item-info" th:text="${item.item.gender}">gender</span>
+                        </div>
+
+                        <div class="product-bottom-block">
+                            <span class="product-item-info" th:text="${item.item.price}">price</span>
+                        </div>
+                    </div>
+
                 </div>
             </a>
-            <button class="add-to-bucket-button" onclick="addToBucket()">ADD TO BUCKET</button>
+            <button class="add-to-bucket-button" id="add-to-bucket" disabled onclick="addToBucket()">ADD TO BUCKET
+            </button>
         </ul>
     </div>
 </div>
 
 <div class="container" th:if="${items_by_category != null}">
     <div class="items-block">
-        <ul class="list-of-items" th:each="item : ${items_by_category}">
+        <ul class="list-of-items" th:each="item : ${items_by_category}" onmouseenter="displayAddToCartButton(event)"
+            onmouseleave="hideAddToCartButton(event)">
             <a class="item-link" th:href="@{/shop/catalog/item/__${item.id}__}">
                 <div class="item">
-                    <li id="element-in-category" th:text="${item.item.name}" th:value="${item.id}">name</li>
-                    <li th:text="${item.item.price}">price</li>
-                    <li th:text="${item.item.gender}"></li>
+                    <div class="product-image-block">
+                        <img class="product-image" th:src="@{/images/default_item_icon.png}">
+                    </div>
+                    <div class="product-info-block">
+                        <div class="product-name-block">
+                            <span class="product-item-info" id="element-in-category" th:text="${item.item.name}"
+                                  th:value="${item.id}">name</span>
+                        </div>
+
+                        <div class="product-producer-block">
+                            <span class="product-item-info" th:text="${item.item.producer}">producer</span>
+                            <span class="product-item-info"> / </span>
+                            <span class="product-item-info" th:text="${item.item.gender}">gender</span>
+                        </div>
+
+                        <div class="product-bottom-block">
+                            <span class="product-item-info" th:text="${item.item.price}">price</span>
+                        </div>
+                    </div>
+
                 </div>
             </a>
             <button class="add-to-bucket-button" onclick="addToBucket()">ADD TO BUCKET</button>
@@ -53,15 +89,23 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     function addToBucket() {
-        var item = $('#element-in-category').attr('value');
-        console.log(item);
-        var item_id = $('#element-in-all').attr('value');
+        var category_item = $('#element-in-category').attr('value');
+        var all_item = $('#element-in-all').attr('value');
         var token = $("meta[name='_csrf']").attr("content");
+
+        var id;
+
+        if (category_item === undefined) {
+            id = all_item;
+        } else if (all_item === undefined) {
+            id = category_item;
+        }
+
 
         console.log(token);
 
         $.ajax({
-            url: '/shop/catalog/add/item/' + item_id,
+            url: '/shop/catalog/add/item/' + id,
             type: 'POST',
             beforeSend: function (xhr) {
                 xhr.setRequestHeader('X-CSRF-TOKEN', token);
@@ -81,6 +125,25 @@
             }
         });
     }
+
+    function displayAddToCartButton(event) {
+        var $ul = $(event.currentTarget);
+        var $button = $ul.find('.add-to-bucket-button');
+
+        $ul.css('height', '350px');
+        $button.prop('disabled', false);
+        $button.css('opacity', '1');
+    }
+
+    function hideAddToCartButton(event) {
+        var $ul = $(event.currentTarget);
+        var $button = $ul.find('.add-to-bucket-button');
+
+        $ul.css('height', '300px');
+        $button.prop('disabled', true);
+        $button.css('opacity', '0');
+    }
+
 </script>
 
 
