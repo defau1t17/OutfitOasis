@@ -6,6 +6,7 @@
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 
     <title>Catalog</title>
+    <link rel="stylesheet" th:href="@{/items/catalog_items_style.css}">
     <link rel="stylesheet" th:href="@{/includes/header_style.css}">
     <link rel="stylesheet" th:href="@{/includes/footer_style.css}">
 </head>
@@ -13,26 +14,74 @@
 <div th:replace="includes/header :: header"></div>
 
 
-<div>
+<div class="container" th:if="${all_items != null}">
+    <div class="items-block">
+        <ul class="list-of-items" th:each="item : ${all_items}" onmouseenter="displayAddToCartButton(event)"
+            onmouseleave="hideAddToCartButton(event)">
+            <a class="item-link" th:href="@{/shop/catalog/item/__${item.id}__}">
+                <div class="item">
+                    <div class="product-image-block">
+                        <img class="product-image" th:src="@{/images/default_item_icon.png}">
+                    </div>
+                    <div class="product-info-block">
+                            <span class="product-item-info" th:class="item-id" th:data-item-id="${item.id}"
+                                  th:text="${item.item.name}"
+                                  th:value="${item.id}">name</span>
+                        <div class="product-name-block">
+                        </div>
 
-    <div th:if="${all_items != null}">
-        <ul th:each="item : ${all_items}">
+                        <div class="product-producer-block">
+                            <span class="product-item-info" th:text="${item.item.producer}">producer</span>
+                            <span class="product-item-info"> / </span>
+                            <span class="product-item-info" th:text="${item.item.gender}">gender</span>
+                        </div>
 
-            <li id="element" th:value="${item.id}" onclick="getid()">test</li>
+                        <div class="product-bottom-block">
+                            <span class="product-item-info" th:text="${item.item.price}">price</span>
+                        </div>
+                    </div>
 
-
+                </div>
+            </a>
+            <button class="add-to-bucket-button" id="add-to-bucket" disabled onclick="addToBucket(this)">ADD TO BUCKET
+            </button>
         </ul>
     </div>
 </div>
 
+<div class="container" th:if="${items_by_category != null}">
+    <div class="items-block">
+        <ul class="list-of-items" th:each="item : ${items_by_category}" onmouseenter="displayAddToCartButton(event)"
+            onmouseleave="hideAddToCartButton(event)">
+            <a class="item-link" th:href="@{/shop/catalog/item/__${item.id}__}">
+                <div class="item">
+                    <div class="product-image-block">
+                        <img class="product-image" th:src="@{/images/default_item_icon.png}">
+                    </div>
+                    <div class="product-info-block">
+                        <div class="product-name-block">
+                            <span class="product-item-info" th:class="item-id"
+                                  th:text="${item.item.name}"
+                                  th:value="${item.id}">name</span>
+                        </div>
 
-<div th:if="${items_by_category != null}">
-    <ul th:each="item : ${items_by_category}">
-        <a th:href="@{/shop/catalog/item/__${item.id}__}">
-            <li th:text="${item.item.category}"></li>
-        </a>
-    </ul>
+                        <div class="product-producer-block">
+                            <span class="product-item-info" th:text="${item.item.producer}">producer</span>
+                            <span class="product-item-info"> / </span>
+                            <span class="product-item-info" th:text="${item.item.gender}">gender</span>
+                        </div>
 
+                        <div class="product-bottom-block">
+                            <span class="product-item-info" th:text="${item.item.price}">price</span>
+                        </div>
+                    </div>
+
+                </div>
+            </a>
+            <button class="add-to-bucket-button" onclick="addToBucket(this)">ADD TO BUCKET</button>
+        </ul>
+
+    </div>
 </div>
 
 
@@ -41,14 +90,22 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    function getid() {
-        var item_id = $('#element').attr('value');
+    function addToBucket(element) {
+
+        var $button = $(element);
+        var $container = $button.closest('ul.list-of-items');
+        var $find_item_id = $container.find('.item-id');
+
+        var id = $find_item_id.attr('value');
+
+
         var token = $("meta[name='_csrf']").attr("content");
 
-        console.log(token);
+
+        console.log('item id - ', id);
 
         $.ajax({
-            url: '/shop/catalog/add/item/' + item_id,
+            url: '/shop/catalog/add/item/' + id,
             type: 'POST',
             beforeSend: function (xhr) {
                 xhr.setRequestHeader('X-CSRF-TOKEN', token);
@@ -56,7 +113,8 @@
             success: function (data, textStatus, xhr) {
                 if (xhr.status === 200) {
                     console.log("Элемент добавлен в корзину");
-                } else if (xhr.status === 409) {
+                }
+                if (xhr.status === 226) {
                     console.log("client not authorized");
                     console.log("Ошибка при добавлении элемента в корзину");
                     window.location.href = 'http://localhost:8081/shop/client/login';
@@ -67,6 +125,25 @@
             }
         });
     }
+
+    function displayAddToCartButton(event) {
+        var $ul = $(event.currentTarget);
+        var $button = $ul.find('.add-to-bucket-button');
+
+        $ul.css('height', '350px');
+        $button.prop('disabled', false);
+        $button.css('opacity', '1');
+    }
+
+    function hideAddToCartButton(event) {
+        var $ul = $(event.currentTarget);
+        var $button = $ul.find('.add-to-bucket-button');
+
+        $ul.css('height', '300px');
+        $button.prop('disabled', true);
+        $button.css('opacity', '0');
+    }
+
 </script>
 
 

@@ -2,17 +2,32 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Categories</title>
+    <link rel="stylesheet" th:href="@{/items/catalog_category_items_style.css}">
+    <link rel="stylesheet" th:href="@{/includes/header_style.css}">
+    <link rel="stylesheet" th:href="@{/includes/footer_style.css}">
 </head>
+
 <body>
 
-<ul th:each="category : ${categories}">
+<div th:replace="includes/header :: header"></div>
 
-    <a th:href="@{/shop/catalog/categories/__${category}__}">
-        <li th:text="${category}"></li>
-    </a>
 
-</ul>
+<div class="container">
+    <div class="category-container">
+        <ul class="list-of-categories" th:each="category : ${categories}">
+            <a class="category-link" th:href="@{/shop/catalog/categories/__${category}__}">
+                <div class="category">
+                    <img class="category-background-image" th:src="@{/images/category/__${category}__.png}">
+                    <span class="category-background-text" th:text="${category}"></span>
+                </div>
+            </a>
+
+        </ul>
+    </div>
+</div>
+
+<div th:replace="includes/footer :: footer"></div>
 
 </body>
 </html>

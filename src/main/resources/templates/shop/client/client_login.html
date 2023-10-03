@@ -15,13 +15,12 @@
 
 <div class="login-container">
 
-    <p id="login-main-text">WELCOME BACK!</p>
-
-
-    <h5 th:if="${issue != null}" th:text="${issue}"></h5>
+    <div class="main-text-container">
+        <p id="login-main-text">WELCOME BACK!</p>
+        <h5 th:if="${issue != null}" th:text="${issue}"></h5>
+    </div>
 
     <div class="container">
-
         <form th:action="@{/shop/client/login}" method="post">
 
             <div class="form-login">
@@ -48,6 +47,7 @@
 
 
 </div>
+
 
 <div th:replace="includes/footer :: footer"></div>
 

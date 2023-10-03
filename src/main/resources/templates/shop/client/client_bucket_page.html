@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Bucket</title>
+</head>
+<body>
+
+
+<div class="container">
+
+    <div class="items-block">
+        <ul class="list-of-items" th:each="current_item : ${clients_bucket_items}">
+            <a class="item-link" th:href="@{/shop/catalog/item/__${current_item.item.id}__}">
+                <div class="item">
+                    <div class="item-image-block">
+
+<!--                        <img th:href="">-->
+                    </div>
+
+                    <div class="item-text-block">
+                        <p th:text="${current_item.item.item.gender}"></p>
+                    </div>
+                </div>
+            </a>
+
+        </ul>
+    </div>
+
+</div>
+
+
+</body>
+</html>
