@@ -56,7 +56,7 @@ public class ClientsService {
         Image image = new Image();
 
         ArrayList<ClientShopItemDAO> items = new ArrayList<>();
-        client_bucket.setItems(items);
+        client_bucket.setClient_items(items);
         image.setImage("");
 
 

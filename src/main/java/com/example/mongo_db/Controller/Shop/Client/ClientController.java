@@ -344,6 +344,14 @@ public class ClientController {
 
     }
 
+    @GetMapping("/account/{id}/bucket")
+    public String displayClientBucketPage(@PathVariable(value = "id") String id, Model model, HttpServletRequest request) {
+        Client client = (Client) request.getSession().getAttribute(GLOBAL_CLIENT);
+        model.addAttribute("clients_bucket_items", client.getBucket().getClient_items());
+
+        return "shop/client/client_bucket_page";
+    }
+
     @GetMapping("/account/{id}/edit")
     public String displayEditAccountPage(@PathVariable(value = "id") String id, Model model, HttpServletRequest request) {
 

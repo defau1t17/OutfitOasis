@@ -23,7 +23,7 @@ public class Bucket {
     @Id
     private String id;
     @Field(name = "items")
-    private ArrayList<ClientShopItemDAO> items;
+    private ArrayList<ClientShopItemDAO> client_items;
 
 
 }

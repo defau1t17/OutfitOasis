@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -36,6 +37,7 @@ public class AddToCartController {
     @Autowired
     private BucketService bucketService;
 
+    @Transactional
     @PostMapping("/item/{id}")
     public ResponseEntity test(@PathVariable(value = "id") String id, HttpServletRequest request) {
         Client client = (Client) request.getSession().getAttribute("global_client");
@@ -44,7 +46,7 @@ public class AddToCartController {
         if (shopItemById.isPresent() && client != null) {
             shopItemDAO = new ClientShopItemDAO();
             client_bucket = client.getBucket();
-            list_of_clients_items = client_bucket.getItems();
+            list_of_clients_items = client_bucket.getClient_items();
 
             shopItemDAO.setItem(shopItemById.get());
 
@@ -60,8 +62,7 @@ public class AddToCartController {
             }
 
 
-
-            client_bucket.setItems(list_of_clients_items);
+            client_bucket.setClient_items(list_of_clients_items);
 
             client.setBucket(client_bucket);
 

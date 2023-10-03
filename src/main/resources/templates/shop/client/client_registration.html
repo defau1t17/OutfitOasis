@@ -12,68 +12,67 @@
 <div th:replace="includes/header :: header"></div>
 
 
-<div class="header-text">
-    <h1 id="main-header-text">CREATE ACCOUNT</h1>
-</div>
+<div class="main-container">
 
-
-<div class="container">
-
-    <div class="registration">
-        <form th:action="@{/shop/client/registration}" method="post" th:object="${newClient}">
-
-            <input class="input_field" type="text" th:field="*{name}" placeholder="name" required maxlength="25">
-            <input class="input_field" type="text" th:field="*{second_name}" placeholder="second name" required
-                   maxlength="25">
-
-            <input class="input_field" type="number" th:field="*{age}" placeholder="age" min="12" max="100" required
-                   maxlength="3" oninput="replaceNumberIfOutOfMax(this),setDefaultZeroIfEmpty(this)">
-
-            <div class="select-gender-container">
-                <select class="select-field" th:field="*{gender}" required>
-                    <option value="">-- Select gender --</option>
-                    <option th:each="gender : ${T(com.example.mongo_db.Entity.Gender).values()}" th:value="${gender}"
-                            th:text="${gender}"></option>
-                </select>
-            </div>
-
-
-            <input class="input_field" type="email" th:field="*{mail}" placeholder="email address" required
-                   minlength="5" maxlength="40">
-            <input class="input_field" type="tel" th:field="*{phone_number}" placeholder="phone number" min="0"
-                   maxlength="12" required oninput="addPlusToNumber(this)">
-            <input class="input_field" type="text" th:field="*{client_user_name}" placeholder="user name"
-                   maxlength="40"
-                   required>
-            <br>
-            <input class="input_field" type="password" th:field="*{client_password}" placeholder="password"
-                   required maxlength="40">
-            <br>
-            <div class="create-new-client-confirm">
-                <button id="create-new-client-button">Create Account</button>
-            </div>
-        </form>
+    <div class="header-text">
+        <h1 id="main-header-text">CREATE ACCOUNT</h1>
     </div>
 
+    <div class="container">
 
-    <div class="login">
-        <h1 id="login-main-text">WELCOME!</h1>
-        <h2 id="login-secondary-text">If you already have an account, please LOG IN</h2>
-        <div class="links-container">
-            <button id="login-button"><a id="login-link" th:href="@{/shop/client/login}">LOG IN</a></button>
+        <div class="registration">
+            <form th:action="@{/shop/client/registration}" method="post" th:object="${newClient}">
+
+                <input class="input_field" type="text" th:field="*{name}" placeholder="name" required maxlength="25">
+                <input class="input_field" type="text" th:field="*{second_name}" placeholder="second name" required
+                       maxlength="25">
+
+                <input class="input_field" type="number" th:field="*{age}" placeholder="age" min="12" max="100" required
+                       maxlength="3" oninput="replaceNumberIfOutOfMax(this),setDefaultZeroIfEmpty(this)">
+
+                <div class="select-gender-container">
+                    <select class="select-field" th:field="*{gender}" required>
+                        <option value="">-- Select gender --</option>
+                        <option th:each="gender : ${T(com.example.mongo_db.Entity.Gender).values()}"
+                                th:value="${gender}"
+                                th:text="${gender}"></option>
+                    </select>
+                </div>
+
+
+                <input class="input_field" type="email" th:field="*{mail}" placeholder="email address" required
+                       minlength="5" maxlength="40">
+                <input class="input_field" type="tel" th:field="*{phone_number}" placeholder="phone number" min="0"
+                       maxlength="12" required oninput="addPlusToNumber(this)">
+                <input class="input_field" type="text" th:field="*{client_user_name}" placeholder="user name"
+                       maxlength="40"
+                       required>
+                <br>
+                <input class="input_field" type="password" th:field="*{client_password}" placeholder="password"
+                       required maxlength="40">
+                <br>
+                <div class="create-new-client-confirm">
+                    <button id="create-new-client-button">Create Account</button>
+                </div>
+            </form>
         </div>
 
 
+        <div class="login">
+            <h1 id="login-main-text">WELCOME!</h1>
+            <h2 id="login-secondary-text">If you already have an account, please LOG IN</h2>
+            <div class="links-container">
+                <button id="login-button"><a id="login-link" th:href="@{/shop/client/login}">LOG IN</a></button>
+            </div>
+
+
+        </div>
     </div>
+    <p th:if="${error_message} != null" th:text="${error_message}"></p>
+
 </div>
-<p th:if="${error_message} != null" th:text="${error_message}"></p>
-
-
 
 <div th:replace="includes/footer :: footer"></div>
-
-
-
 
 
 <script>

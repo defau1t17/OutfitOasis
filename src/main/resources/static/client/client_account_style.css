@@ -6,7 +6,7 @@ html, body {
 
 body {
     width: 100%;
-    background: url("https://cdn.wallpapersafari.com/13/58/8NWFSa.jpg") no-repeat center center fixed;
+    background: url('/images/client_background.jpg') no-repeat center center fixed;
     background-size: cover;
     backdrop-filter: blur(3px);
     background-color: #f0f0f0;
