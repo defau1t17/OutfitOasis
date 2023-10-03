@@ -10,7 +10,7 @@
     <link rel="stylesheet" th:href="@{/includes/header_style.css}">
     <link rel="stylesheet" th:href="@{/includes/footer_style.css}">
 </head>
-<body >
+<body>
 <div th:replace="includes/header :: header"></div>
 
 
@@ -24,9 +24,10 @@
                         <img class="product-image" th:src="@{/images/default_item_icon.png}">
                     </div>
                     <div class="product-info-block">
-                        <div class="product-name-block">
-                            <span class="product-item-info" id="element-in-all" th:text="${item.item.name}"
+                            <span class="product-item-info" th:class="item-id" th:data-item-id="${item.id}"
+                                  th:text="${item.item.name}"
                                   th:value="${item.id}">name</span>
+                        <div class="product-name-block">
                         </div>
 
                         <div class="product-producer-block">
@@ -42,7 +43,7 @@
 
                 </div>
             </a>
-            <button class="add-to-bucket-button" id="add-to-bucket" disabled onclick="addToBucket()">ADD TO BUCKET
+            <button class="add-to-bucket-button" id="add-to-bucket" disabled onclick="addToBucket(this)">ADD TO BUCKET
             </button>
         </ul>
     </div>
@@ -59,7 +60,8 @@
                     </div>
                     <div class="product-info-block">
                         <div class="product-name-block">
-                            <span class="product-item-info" id="element-in-category" th:text="${item.item.name}"
+                            <span class="product-item-info" th:class="item-id"
+                                  th:text="${item.item.name}"
                                   th:value="${item.id}">name</span>
                         </div>
 
@@ -76,7 +78,7 @@
 
                 </div>
             </a>
-            <button class="add-to-bucket-button" onclick="addToBucket()">ADD TO BUCKET</button>
+            <button class="add-to-bucket-button" onclick="addToBucket(this)">ADD TO BUCKET</button>
         </ul>
 
     </div>
@@ -88,21 +90,19 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    function addToBucket() {
-        var category_item = $('#element-in-category').attr('value');
-        var all_item = $('#element-in-all').attr('value');
+    function addToBucket(element) {
+
+        var $button = $(element);
+        var $container = $button.closest('ul.list-of-items');
+        var $find_item_id = $container.find('.item-id');
+
+        var id = $find_item_id.attr('value');
+
+
         var token = $("meta[name='_csrf']").attr("content");
 
-        var id;
 
-        if (category_item === undefined) {
-            id = all_item;
-        } else if (all_item === undefined) {
-            id = category_item;
-        }
-
-
-        console.log(token);
+        console.log('item id - ', id);
 
         $.ajax({
             url: '/shop/catalog/add/item/' + id,

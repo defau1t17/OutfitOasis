@@ -1,5 +1,6 @@
 package com.example.mongo_db.Entity.Client;
 
+import com.example.mongo_db.Entity.Role;
 import com.example.mongo_db.Entity.User;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -46,5 +47,6 @@ public class Client extends User {
     @Field(name = "client_image")
     private Image client_image;
 
-
+    @Field(name = "role")
+    private Role role = Role.ROLE_USER;
 }

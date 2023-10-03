@@ -7,7 +7,6 @@
 
 body {
     background: url('/images/static_background.jpg');
-    backdrop-filter: blur(3px);
     background-size: cover;
     background-color: #f0f0f0;
     min-height: 100vh;
@@ -29,7 +28,6 @@ body {
 .item {
     height: 100px;
     text-align: center;
-    /* Дополнительные стили по вашему усмотрению */
 }
 
 .add-to-bucket-button {

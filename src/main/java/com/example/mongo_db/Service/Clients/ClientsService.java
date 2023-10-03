@@ -3,6 +3,7 @@ package com.example.mongo_db.Service.Clients;
 import com.example.mongo_db.Entity.Client.Bucket;
 import com.example.mongo_db.Entity.Client.Client;
 import com.example.mongo_db.Entity.Client.Image;
+import com.example.mongo_db.Entity.DAO.ClientShopItemDAO;
 import com.example.mongo_db.Entity.Parse.Countries;
 import com.example.mongo_db.Entity.Parse.Country;
 import com.example.mongo_db.Repository.ClientsRepoes.BucketRepo;
@@ -54,8 +55,10 @@ public class ClientsService {
         Bucket client_bucket = new Bucket();
         Image image = new Image();
 
+        ArrayList<ClientShopItemDAO> items = new ArrayList<>();
+        client_bucket.setItems(items);
         image.setImage("");
-        client_bucket.setItems(null);
+
 
         client.setClient_image(image);
         client.setBucket(client_bucket);

@@ -51,18 +51,18 @@ public class ClientController {
             model.addAttribute("error_message", request.getSession().getAttribute("existed_params"));
         }
 
-        String referringPage = request.getHeader("referer");
-        if (referringPage != null) {
-            referringPage = referringPage.substring(referringPage.lastIndexOf('1') + 1, referringPage.length());
-            System.out.println(referringPage + " page");
-
-            if (referringPage.equals("/shop/client/login") || referringPage.equals("/shop/client/registration")) {
-//                request.getSession().setAttribute("client_has_been_redirected_from_page", null);
-            } else {
-                request.getSession().setAttribute("client_has_been_redirected_from_page", referringPage);
-
-            }
-        }
+//        String referringPage = request.getHeader("referer");
+//        if (referringPage != null) {
+//            referringPage = referringPage.substring(referringPage.lastIndexOf('1') + 1, referringPage.length());
+//            System.out.println(referringPage + " page");
+//
+//            if (referringPage.equals("/shop/client/login") || referringPage.equals("/shop/client/registration")) {
+////                request.getSession().setAttribute("client_has_been_redirected_from_page", null);
+//            } else {
+//                request.getSession().setAttribute("client_has_been_redirected_from_page", referringPage);
+//
+//            }
+//        }
 
         logger.info("create new client page was shown successfully!");
         return "shop/client/client_registration";
@@ -151,12 +151,12 @@ public class ClientController {
         }
         UpdateGlobalClient.updateGlobalClient(GLOBAL_CLIENT, client, request.getSession());
 
-        if (request.getSession().getAttribute("client_has_been_redirected_from_page") != null) {
-            return "redirect:" + request.getSession().getAttribute("client_has_been_redirected_from_page");
-        } else {
-            return "redirect:/shop/client/account/" + client.getId();
-        }
+//        if (request.getSession().getAttribute("client_has_been_redirected_from_page") != null) {
+//            return "redirect:" + request.getSession().getAttribute("client_has_been_redirected_from_page");
+//        } else {
+        return "redirect:/shop/client/account/" + client.getId();
     }
+//    }
 
 
     @GetMapping("/login")
@@ -170,17 +170,17 @@ public class ClientController {
         String total_client = request.getParameter("client_user_name");
         String total_issue = request.getParameter("issue");
 
-        String referringPage = request.getHeader("referer");
-        if (referringPage != null) {
-            referringPage = referringPage.substring(referringPage.lastIndexOf('1') + 1, referringPage.length());
-            System.out.println(referringPage + " page");
-            if (referringPage.equals("/shop/client/login") || referringPage.equals("/shop/client/registration")) {
-//                request.getSession().setAttribute("client_has_been_redirected_from_page", null);
-            } else {
-                request.getSession().setAttribute("client_has_been_redirected_from_page", referringPage);
-
-            }
-        }
+//        String referringPage = request.getHeader("referer");
+//        if (referringPage != null) {
+//            referringPage = referringPage.substring(referringPage.lastIndexOf('1') + 1, referringPage.length());
+//            System.out.println(referringPage + " page");
+//            if (referringPage.equals("/shop/client/login") || referringPage.equals("/shop/client/registration")) {
+////                request.getSession().setAttribute("client_has_been_redirected_from_page", null);
+//            } else {
+//                request.getSession().setAttribute("client_has_been_redirected_from_page", referringPage);
+//
+//            }
+//        }
         if (total_client != null) {
             if (LoginRedirection.addModels(total_client)) {
                 model.addAttribute("client_user_name", total_client);
@@ -203,11 +203,11 @@ public class ClientController {
                 logger.info("Client was found successfully!");
                 request.getSession().setAttribute("global_client", client);
 
-                if (request.getSession().getAttribute("client_has_been_redirected_from_page") != null) {
-                    return "redirect:" + request.getSession().getAttribute("client_has_been_redirected_from_page");
-                } else {
-                    return "redirect:/shop/client/account/" + client.getId();
-                }
+//                if (request.getSession().getAttribute("client_has_been_redirected_from_page") != null) {
+//                    return "redirect:" + request.getSession().getAttribute("client_has_been_redirected_from_page");
+//                } else {
+                return "redirect:/shop/client/account/" + client.getId();
+//                }
 
             } else {
                 logger.info("Client wrote wrong password");
