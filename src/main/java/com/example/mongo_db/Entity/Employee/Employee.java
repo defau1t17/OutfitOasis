@@ -1,6 +1,5 @@
 package com.example.mongo_db.Entity.Employee;
 
-import com.example.mongo_db.Entity.Rank;
 import com.example.mongo_db.Entity.User;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;

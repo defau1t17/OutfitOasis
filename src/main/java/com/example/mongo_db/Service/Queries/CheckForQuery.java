@@ -2,7 +2,7 @@ package com.example.mongo_db.Service.Queries;
 
 import com.example.mongo_db.Entity.Gender;
 import com.example.mongo_db.Entity.Employee.Post;
-import com.example.mongo_db.Entity.Rank;
+import com.example.mongo_db.Entity.Employee.Rank;
 import com.example.mongo_db.Filter.EmployeeFilterDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import org.assertj.core.error.ShouldBeAlphabetic;

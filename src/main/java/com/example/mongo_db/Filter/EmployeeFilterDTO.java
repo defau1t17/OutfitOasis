@@ -2,7 +2,7 @@ package com.example.mongo_db.Filter;
 
 import com.example.mongo_db.Entity.Gender;
 import com.example.mongo_db.Entity.Employee.Post;
-import com.example.mongo_db.Entity.Rank;
+import com.example.mongo_db.Entity.Employee.Rank;
 import lombok.Data;
 
 @Data

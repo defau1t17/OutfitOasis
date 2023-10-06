@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="main-text-container">
+        <h1 id="main-text">Do you need some help?</h1>
+    </div>
+
+    <div class="bug-container">
+        <div class="bug-main-text">
+            <p> Dear Client, if you found a bug, got some troubles in process of using our app, please write the issue
+                in
+                the
+                field
+                below
+            </p>
+        </div>
+
+        <div class="bug-send-block">
+            <!--            <form th:action="@{/shop/send/bug/report}" method="post" class="bug-form">-->
+
+            <textarea placeholder="You may describe your issue here :)" name="bug_text" class="input-bug-field"
+                      minlength="50" maxlength="700">
+
+</textarea>
+            <button type="submit" onclick="getClientStatus()" class="confirmation-button">SEND</button>
+            <!--            </form>-->
+        </div>
+    </div>
+
+    <div class="producer-container">
+        <div class="producer-main-text">
+            <p>
+                If you want to become a producer and sell the items of yours, press the button bellow and complete the
+                form
+            </p>
+        </div>
+        <div class="producer-redirection-container">
+            <button class="confirmation-button">
+                <a id="producer-link" th:href="@{/shop/send/producer/request}">
+                    I WANT TO BECOME A PRODUCER
+                </a>
+            </button>
+        </div>
+
+    </div>
+
+    <div class="client-qos-container">
+        <div class="qos-main-text">
+            <p>If you have some questions or suggestions, please write it bellow :)</p>
+        </div>
+        <div class="qos-send-block">
+            <form th:action="@{/shop/send/qos}" method="post" class="qos-form">
+
+            <textarea placeholder="You may describe your issue here :)" class="input-qos-field">
+
+            </textarea>
+                <button type="submit" class="confirmation-button">SEND</button>
+            </form>
+        </div>
+
+    </div>
+
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+
+    function sendBugRequest() {
+        var input = $('.input-bug-field').val();
+
+        var token = $("meta[name='_csrf']").attr("content");
+
+        var client = "<%= session.getAttribute('test2') %>";
+
+        console.log(client);
+
+        $.ajax({
+            url: '/shop/send/bug/report',
+            type: 'POST',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader('X-CSRF-TOKEN', token);
+            },
+            success: function (data, textStatus, xhr) {
+                if (xhr.status === 201) {
+                    console.log('message send')
+                }
+            },
+            error: function () {
+                console.log("Ошибка при отправке запроса");
+            }
+
+        });
+    }
+
+
+    function getClientStatus() {
+        $.ajax({
+            url: "/shop/request/api/client/status", // URL вашего REST-метода
+            type: "GET",
+            dataType: "json",
+            success: function (response) {
+                if (response === "FOUND") {
+                    console.log("Client found");
+                } else {
+                    // Клиент не авторизован
+                    console.log("Client not found");
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("Something went wrong: " + error);
+            }
+        });
+
+    }
+
+</script>
+
+
+</body>
+</html>
