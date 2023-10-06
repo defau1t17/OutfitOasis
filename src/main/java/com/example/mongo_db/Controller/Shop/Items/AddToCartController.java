@@ -2,22 +2,19 @@ package com.example.mongo_db.Controller.Shop.Items;
 
 import com.example.mongo_db.Entity.Client.Bucket;
 import com.example.mongo_db.Entity.Client.Client;
-import com.example.mongo_db.Entity.DAO.ClientShopItemDAO;
+import com.example.mongo_db.DAO.ClientShopItemDAO;
 import com.example.mongo_db.Entity.Items.Item.ShopItem;
 import com.example.mongo_db.Repository.ItemsRepoes.ItemRepo;
 import com.example.mongo_db.Service.Bucket.BucketService;
 import com.example.mongo_db.Service.Clients.ClientsService;
 import com.example.mongo_db.Service.Clients.UpdateGlobalClient;
-import jakarta.annotation.security.PermitAll;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Optional;
 
 @RestController

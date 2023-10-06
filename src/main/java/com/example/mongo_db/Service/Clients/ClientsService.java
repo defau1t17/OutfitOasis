@@ -3,7 +3,7 @@ package com.example.mongo_db.Service.Clients;
 import com.example.mongo_db.Entity.Client.Bucket;
 import com.example.mongo_db.Entity.Client.Client;
 import com.example.mongo_db.Entity.Client.Image;
-import com.example.mongo_db.Entity.DAO.ClientShopItemDAO;
+import com.example.mongo_db.DAO.ClientShopItemDAO;
 import com.example.mongo_db.Entity.Parse.Countries;
 import com.example.mongo_db.Entity.Parse.Country;
 import com.example.mongo_db.Repository.ClientsRepoes.BucketRepo;
@@ -11,16 +11,13 @@ import com.example.mongo_db.Repository.ClientsRepoes.ClientsRepo;
 import com.example.mongo_db.Repository.ClientsRepoes.ImagesRepo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.mongo.MongoProperties;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 

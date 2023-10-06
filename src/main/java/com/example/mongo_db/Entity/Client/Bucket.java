@@ -1,8 +1,6 @@
 package com.example.mongo_db.Entity.Client;
 
-import com.example.mongo_db.Entity.DAO.ClientShopItemDAO;
-import com.example.mongo_db.Entity.Items.Item.Item;
-import com.example.mongo_db.Entity.Items.Item.ShopItem;
+import com.example.mongo_db.DAO.ClientShopItemDAO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,8 +9,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 @Data
 @Document(collection = "bucket")

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <title>Become Producer</title>
+</head>
+<body>
+
+
+<div class="container" th:if="${onModeration == false}">
+
+    <div class="producer-main-text"
+    >
+        <h1>Fill in the form bellow to become a producer</h1>
+    </div>
+
+    <div class="data-fields">
+
+        <form>
+            <input class="brand-name-field" type="text" name="brand-name" required>
+            <select class="select-field" id="selected_country" required>
+                <option value="">-- Select country --</option>
+                <option th:each="country : ${countries}" th:value="${country}" th:text="${country}"></option>
+            </select>
+            <input class="producer-contact-mail" type="email" name="producer-mail">
+            <textarea placeholder="Write information about your product...." class="producer-description" required
+                      maxlength="700">
+
+        </textarea>
+
+            <button type="button" class="send-producer-request" onclick="checkData()">SEND</button>
+        </form>
+    </div>
+
+</div>
+
+<div class="container" th:if="${onModeration == true}">
+    <h1>Your request is in progress....Just wait</h1>
+
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    function checkData() {
+        var brand = $('.brand-name-field').val();
+        var country = $('.select-field').val();
+        var mail = $('.producer-contact-mail').val();
+        var desc = $('.producer-description').val();
+
+        var data;
+        if (brand.trim() !== '' && country !== '' && country !== null && mail.trim() !== '' && desc.trim() !== '') {
+            data = {
+                "request_brand_name": brand,
+                "request_producer_country": country,
+                "request_producer_mail": mail,
+                "request_producer_product_description": desc
+            };
+            sendProducerRequest(data);
+
+        } else {
+            console.log("waiting")
+        }
+    }
+
+    function sendProducerRequest(data) {
+
+        var token = $("meta[name='_csrf']").attr("content");
+
+        console.log(data)
+
+        var tag = "PRODUCER_NEW";
+
+        $.ajax({
+            url: '/shop/send/request/producer',
+            type: 'POST',
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json"
+            },
+            data: JSON.stringify({
+                tag: tag,
+                data_inf: data
+            }),
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader('X-CSRF-TOKEN', token);
+            },
+            success: function (data, textStatus, xhr) {
+                if (xhr.status === 201) {
+                    console.log('message send')
+                } else if (xhr.status === 403) {
+                    console.log('client is in progress')
+                }
+            },
+            error: function () {
+                console.log("Ошибка при отправке запроса");
+            }
+
+        });
+
+
+    }
+
+
+</script>
+
+</body>
+</html>

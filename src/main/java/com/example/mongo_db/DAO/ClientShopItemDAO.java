@@ -1,4 +1,4 @@
-package com.example.mongo_db.Entity.DAO;
+package com.example.mongo_db.DAO;
 
 import com.example.mongo_db.Entity.Items.Item.ShopItem;
 import lombok.Data;

@@ -13,7 +13,7 @@ public class FilterConfig {
     public FilterRegistrationBean<ClientFilter> clientFilter() {
         FilterRegistrationBean<ClientFilter> filter = new FilterRegistrationBean<>();
         filter.setFilter(new ClientFilter());
-        filter.addUrlPatterns("/shop/client/account/*", "/shop/client/registration/address","/shop/client");
+        filter.addUrlPatterns("/shop/client/account/*", "/shop/client/registration/address", "/shop/client", "/shop/producer/request/form");
         return filter;
     }
 

@@ -31,7 +31,7 @@
                         </div>
 
                         <div class="product-producer-block">
-                            <span class="product-item-info" th:text="${item.item.producer}">producer</span>
+<!--                            <span class="product-item-info" th:text="${item.item.producer}">producer</span>-->
                             <span class="product-item-info"> / </span>
                             <span class="product-item-info" th:text="${item.item.gender}">gender</span>
                         </div>
@@ -66,7 +66,7 @@
                         </div>
 
                         <div class="product-producer-block">
-                            <span class="product-item-info" th:text="${item.item.producer}">producer</span>
+<!--                            <span class="product-item-info" th:text="${item.item.producer}">producer</span>-->
                             <span class="product-item-info"> / </span>
                             <span class="product-item-info" th:text="${item.item.gender}">gender</span>
                         </div>
@@ -107,6 +107,7 @@
         $.ajax({
             url: '/shop/catalog/add/item/' + id,
             type: 'POST',
+
             beforeSend: function (xhr) {
                 xhr.setRequestHeader('X-CSRF-TOKEN', token);
             },

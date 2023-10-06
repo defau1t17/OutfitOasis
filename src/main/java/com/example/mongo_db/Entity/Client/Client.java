@@ -13,7 +13,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 
 @Data
 @Document(collection = "clients")
-public class Client extends User {
+public class Client<T> extends User {
 
     @Id
     private String id;
@@ -48,5 +48,5 @@ public class Client extends User {
     private Image client_image;
 
     @Field(name = "role")
-    private Role role = Role.ROLE_USER;
+    private T role =(T) Role.ROLE_CLIENT;
 }

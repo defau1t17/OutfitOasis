@@ -16,5 +16,5 @@ public class Employee_Account {
     private String accountId;
     private String username;
     private String password;
-    private Role role = Role.ROLE_USER;
+    private Role role = Role.ROLE_EMPLOYEE;
 }
