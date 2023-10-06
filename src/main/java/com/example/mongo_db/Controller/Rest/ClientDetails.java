@@ -12,7 +12,6 @@ public class ClientDetails {
 
     @GetMapping("/client/status")
     public HttpStatus isClientAuthorized(HttpServletRequest request) {
-        System.out.println(request.getSession().getAttribute("global_client"));
         if (request.getSession().getAttribute("global_client") != null) {
             return HttpStatus.FOUND;
         } else return HttpStatus.NOT_FOUND;

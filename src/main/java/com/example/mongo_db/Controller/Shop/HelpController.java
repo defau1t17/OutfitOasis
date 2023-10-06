@@ -12,9 +12,8 @@ public class HelpController {
 
 
     @GetMapping
-    public String displayHelpPage(Model model, HttpServletRequest request) {
-        model.addAttribute("test", "test");
-        request.getSession().setAttribute("test2"," gggg ");
+    public String displayHelpPage() {
         return "shop/help_page";
     }
+
 }

@@ -107,6 +107,7 @@
         $.ajax({
             url: '/shop/catalog/add/item/' + id,
             type: 'POST',
+
             beforeSend: function (xhr) {
                 xhr.setRequestHeader('X-CSRF-TOKEN', token);
             },

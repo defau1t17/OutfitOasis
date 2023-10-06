@@ -3,6 +3,7 @@ package com.example.mongo_db.Entity.Requests;
 import com.example.mongo_db.Entity.Client.Client;
 import com.example.mongo_db.Entity.Requests.Types.RequestTags;
 import jakarta.annotation.Nullable;
+import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -18,6 +19,6 @@ public class GlobalRequests<T> {
 
     private T data_inf;
 
-    private Client request_sender;
+    private Client<String> request_sender;
 
 }

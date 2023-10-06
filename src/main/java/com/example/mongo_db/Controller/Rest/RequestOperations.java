@@ -2,6 +2,7 @@ package com.example.mongo_db.Controller.Rest;
 
 import com.example.mongo_db.Entity.Client.Client;
 import com.example.mongo_db.Entity.Requests.GlobalRequests;
+import com.example.mongo_db.Entity.Requests.RequestData;
 import com.example.mongo_db.Entity.Requests.Types.RequestTags;
 import com.example.mongo_db.Repository.RequestsRepost.RequestRepo;
 import com.example.mongo_db.Service.Requests.RequestsService;
@@ -19,10 +20,18 @@ public class RequestOperations {
     private RequestsService requestsService;
 
     @RequestMapping(value = "/request/reports", method = RequestMethod.POST)
-    public ResponseEntity getRepost(@RequestBody GlobalRequests<String> bug_request, HttpServletRequest request) {
+    public ResponseEntity getRequestIssue(@RequestBody GlobalRequests<String> bug_request, HttpServletRequest request) {
         bug_request.setRequest_sender((Client) request.getSession().getAttribute("global_client"));
-        System.out.println(bug_request);
         requestsService.save_entity(bug_request);
+
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+
+    @RequestMapping(value = "/request/producer")
+    public ResponseEntity getRequestProducer(@RequestBody GlobalRequests<RequestData> producer_request, HttpServletRequest request) {
+        System.out.println(producer_request);
+
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 

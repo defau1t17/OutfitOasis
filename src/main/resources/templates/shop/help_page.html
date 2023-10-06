@@ -28,10 +28,10 @@
             <!--            <form th:action="@{/shop/send/bug/report}" method="post" class="bug-form">-->
 
             <textarea placeholder="You may describe your issue here :)" name="bug_text" class="input-bug-field"
-                      minlength="50" maxlength="700">
+                      minlength="50" maxlength="700" required>
 
 </textarea>
-            <button type="submit" onclick="getClientStatus()" class="confirmation-button">SEND</button>
+            <button type="submit" onclick="beginRequestChain(this)" class="confirmation-bug-button">SEND</button>
             <!--            </form>-->
         </div>
     </div>
@@ -45,7 +45,7 @@
         </div>
         <div class="producer-redirection-container">
             <button class="confirmation-button">
-                <a id="producer-link" th:href="@{/shop/send/producer/request}">
+                <a id="producer-link" th:href="@{/shop/producer/request/form}">
                     I WANT TO BECOME A PRODUCER
                 </a>
             </button>
@@ -58,12 +58,11 @@
             <p>If you have some questions or suggestions, please write it bellow :)</p>
         </div>
         <div class="qos-send-block">
-            <form th:action="@{/shop/send/qos}" method="post" class="qos-form">
 
             <textarea placeholder="You may describe your issue here :)" class="input-qos-field">
 
             </textarea>
-                <button type="submit" class="confirmation-button">SEND</button>
+            <button onclick="beginRequestChain(this)" class="confirmation-qos-button">SEND</button>
             </form>
         </div>
 
@@ -75,18 +74,76 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 
-    function sendBugRequest() {
-        var input = $('.input-bug-field').val();
+
+    function showMessage(classname) {
+
+
+    }
+
+    function sendRequest(classname) {
 
         var token = $("meta[name='_csrf']").attr("content");
 
-        var client = "<%= session.getAttribute('test2') %>";
+        console.log(classname)
 
-        console.log(client);
+        var text;
+        var tag;
+
+
+        if (classname === 'confirmation-bug-button') {
+            text = $('.input-bug-field').val();
+            tag = "BUG";
+            console.log('ready to send some bugsss......')
+        } else if (classname === 'confirmation-qos-button') {
+            text = $('.input-qos-field').val();
+            tag = "CLIENT_QOS";
+            console.log('ready to send qos')
+
+        }
+
+        $.ajax({
+            url: '/shop/send/request/reports',
+            type: 'POST',
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json"
+            },
+            data: JSON.stringify({
+                tag: tag,
+                data_inf: text
+            }),
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader('X-CSRF-TOKEN', token);
+            },
+            success: function (data, textStatus, xhr) {
+                if (xhr.status === 201) {
+                    showMessage()
+                    console.log('message send')
+                }
+            },
+            error: function () {
+                console.log("Ошибка при отправке запроса");
+            }
+
+        });
+    }
+
+
+    function sendQOSRequest(message) {
+        var token = $("meta[name='_csrf']").attr("content");
+
+        console.log('ready to send qos')
 
         $.ajax({
             url: '/shop/send/bug/report',
             type: 'POST',
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json"
+            },
+            data: JSON.stringify({
+                data_inf: bug_text
+            }),
             beforeSend: function (xhr) {
                 xhr.setRequestHeader('X-CSRF-TOKEN', token);
             },
@@ -104,23 +161,44 @@
 
 
     function getClientStatus() {
-        $.ajax({
-            url: "/shop/request/api/client/status", // URL вашего REST-метода
-            type: "GET",
-            dataType: "json",
-            success: function (response) {
-                if (response === "FOUND") {
-                    console.log("Client found");
-                } else {
-                    // Клиент не авторизован
-                    console.log("Client not found");
+        return new Promise(function (resolve, reject) {
+            $.ajax({
+                url: "/shop/request/api/client/status",
+                type: "GET",
+                dataType: "json",
+                success: function (response) {
+                    if (response === "FOUND") {
+                        console.log("Client found");
+                        resolve(true);
+                    } else {
+                        console.log("Client not found");
+                        resolve(false);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Something went wrong: " + error);
+                    reject(error);
                 }
-            },
-            error: function (xhr, status, error) {
-                console.error("Something went wrong: " + error);
-            }
+            });
         });
+    }
 
+    function beginRequestChain(element) {
+        console.log('chain begin');
+        getClientStatus()
+            .then(function (clientStatus) {
+                console.log('got status');
+                if (clientStatus) {
+                    console.log('authorized')
+                    sendRequest(element.className.valueOf())
+                } else {
+                    console.log('not authorized')
+                    window.location.href = 'http://localhost:8081/shop/client/login';
+                }
+            })
+            .catch(function (error) {
+                console.error("Error: " + error);
+            });
     }
 
 </script>

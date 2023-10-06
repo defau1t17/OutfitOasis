@@ -1,10 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta charset="UTF-8" xmlns:th="http://www.thymeleaf.org">
+    <title>Become Producer</title>
 </head>
 <body>
+
+
+<div class="container">
+
+    <div class="producer-main-text">
+        <h1>Fill in the form bellow to become a producer</h1>
+    </div>
+
+    <div class="data-fields">
+
+        <form>
+            <input class="brand-name-field" type="text" name="brand-name" required>
+            <select class="select-field" id="selected_country" required>
+                <option value="">-- Select country --</option>
+                <option th:each="country : ${countries}" th:value="${country}" th:text="${country}"></option>
+            </select>
+            <input class="producer-contact-mail" type="email" name="producer-mail">
+            <textarea placeholder="Write information about your product...." class="producer-description" required
+                      maxlength="700">
+
+        </textarea>
+
+            <button type="button" class="send-producer-request" onclick="checkData()">SEND</button>
+        </form>
+    </div>
+
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    function checkData() {
+        var brand = $('.brand-name-field').val();
+        var country = $('.select-field').val();
+        var mail = $('.producer-contact-mail').val();
+        var desc = $('.producer-description').val();
+
+        if (brand.trim() !== '' && country !== '' && country !== null && mail.trim() !== '' && desc.trim() !== '') {
+            console.log("Данные в полях заполнены");
+        } else {
+            console.log("Заполните все поля");
+        }
+    }
+
+    function sendProducerRequest() {
+
+    }
+
+
+</script>
 
 </body>
 </html>
