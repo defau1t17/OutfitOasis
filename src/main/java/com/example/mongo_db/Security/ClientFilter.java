@@ -1,5 +1,6 @@
 package com.example.mongo_db.Security;
 
+import com.example.mongo_db.Entity.Client.Client;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -17,11 +18,15 @@ public class ClientFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
-        if (request.getSession().getAttribute("global_client") == null) {
+        Client global_client = (Client) request.getSession().getAttribute("global_client");
+
+        if (global_client == null) {
             response.sendRedirect("/shop/client/login");
         } else {
-            filterChain.doFilter(request, response);
+            response.sendRedirect("shop/client/account/" + global_client.getId());
+
         }
+        filterChain.doFilter(request, response);
     }
 
     @Override

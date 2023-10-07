@@ -19,6 +19,6 @@ public class GlobalRequests<T> {
 
     private T data_inf;
 
-    private Client<T> request_sender;
+    private Client request_sender;
 
 }

@@ -2,6 +2,7 @@ package com.example.mongo_db.Service.Requests;
 
 import com.example.mongo_db.Entity.Client.Client;
 import com.example.mongo_db.Entity.Requests.GlobalRequests;
+import com.example.mongo_db.Entity.Requests.Types.RequestTags;
 import com.example.mongo_db.Entity.Role;
 import com.example.mongo_db.Repository.RequestsRepost.RequestsRepo;
 import com.example.mongo_db.Service.EntityOperations;
@@ -26,9 +27,16 @@ public class RequestsService implements EntityOperations {
 
 
     public boolean isClientOnModeration(Client client) {
-        if (!requestsRepo.findByRequest_sender(client).isPresent()) {
-            return false;
-        } else return true;
+        Optional<GlobalRequests> client_in_request = requestsRepo.findByRequest_sender(client);
+        if (client_in_request.isPresent()) {
+            GlobalRequests globalRequests = client_in_request.get();
+
+            if (globalRequests.getRequest_sender().getId().equals(client.getId()) &&
+                    globalRequests.getTag().equals(RequestTags.PRODUCER_NEW)) {
+                return true;
+            } else return false;
+        }
+        return false;
     }
 
     public boolean isClientAlreadyProducer(Client client) {
