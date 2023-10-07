@@ -106,7 +106,7 @@ public class ClientController {
 
         if (verification_code.equals(user_verification_code)) {
             logger.info("user verified successfully. Redirected to new password page");
-            service.saveNewClient((Client) request.getSession().getAttribute("newClient"));
+            service.save_entity((Client) request.getSession().getAttribute("newClient"));
             UpdateGlobalClient.updateGlobalClient(GLOBAL_CLIENT, (Client) request.getSession().getAttribute("newClient"), request.getSession());
 
             return "redirect:/shop/client/registration/address";
@@ -142,12 +142,12 @@ public class ClientController {
         if (CheckForAddress.isAddressNull(address)) {
             logger.info("client has skipped address page");
             client.setAddress(null);
-            service.updateClient(client);
+            service.update_entity(client);
 
         } else {
             logger.info("added new address to client");
             client.setAddress(address);
-            service.updateClient(client);
+            service.update_entity(client);
         }
         UpdateGlobalClient.updateGlobalClient(GLOBAL_CLIENT, client, request.getSession());
 
@@ -317,7 +317,7 @@ public class ClientController {
             return "redirect:/shop/client/account/" + id;
         } else {
             client.setClient_password(new_password);
-            service.updateClient(client);
+            service.update_entity(client);
             UpdateGlobalClient.updateGlobalClient(GLOBAL_CLIENT, client, request.getSession());
             return "redirect:/shop/client/account/" + id;
         }
@@ -381,7 +381,7 @@ public class ClientController {
     public String editClient(@PathVariable(value = "id") String id, @ModelAttribute Client client, RedirectAttributes attributes, HttpServletRequest request) {
         Client updated_client = service.requestClientUpdate(client, CheckForAddress.isAddressNull(client.getAddress()));
         if (updated_client != null) {
-            service.updateClient(updated_client);
+            service.update_entity(updated_client);
             UpdateGlobalClient.updateGlobalClient(GLOBAL_CLIENT, updated_client, request.getSession());
 
             logger.info("all client's data was updated successfully");
@@ -456,7 +456,7 @@ public class ClientController {
         if (verification_code_for_global_client.equals(user_verification_code)) {
             logger.info("client with id " + id + " changed mail from " + client.getMail() + " to " + mail_for_verification);
             client.setMail(mail_for_verification);
-            service.updateClient(client);
+            service.update_entity(client);
             UpdateGlobalClient.updateGlobalClient(GLOBAL_CLIENT, client, request.getSession());
             return "redirect:/shop/client/account/" + id;
         } else {

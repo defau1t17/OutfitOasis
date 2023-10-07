@@ -64,8 +64,8 @@ public class AddToCartController {
             client.setBucket(client_bucket);
 
 
-            bucketService.updateBucket(client_bucket);
-            clientsService.updateClient(client);
+            bucketService.update_entity(client_bucket);
+            clientsService.update_entity(client);
 
             UpdateGlobalClient.updateGlobalClient("global_client", client, request.getSession());
 

@@ -32,7 +32,7 @@ public class ImageService {
         image.setImage(Base64.getEncoder().encodeToString(file.getBytes()));
         imagesRepo.save(image);
         client.setClient_image(image);
-        service.updateClient(client);
+        service.update_entity(client);
         return image.getId();
     }
 

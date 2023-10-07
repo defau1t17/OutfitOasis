@@ -9,6 +9,7 @@ import com.example.mongo_db.Entity.Parse.Country;
 import com.example.mongo_db.Repository.ClientsRepoes.BucketRepo;
 import com.example.mongo_db.Repository.ClientsRepoes.ClientsRepo;
 import com.example.mongo_db.Repository.ClientsRepoes.ImagesRepo;
+import com.example.mongo_db.Service.EntityOperations;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
@@ -22,7 +23,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class ClientsService {
+public class ClientsService implements EntityOperations {
 
     @Autowired
     private JavaMailSender mailSender;
@@ -134,10 +135,36 @@ public class ClientsService {
 
     }
 
+    @Override
+    public void save_entity(Object obj) {
 
-    public void updateClient(Client updatedClient) {
-        clientsRepo.save(updatedClient);
+        Client client = (Client) obj;
+
+        Bucket client_bucket = new Bucket();
+        Image image = new Image();
+
+        ArrayList<ClientShopItemDAO> items = new ArrayList<>();
+        client_bucket.setClient_items(items);
+        image.setImage("");
+
+
+        client.setClient_image(image);
+        client.setBucket(client_bucket);
+
+        bucketRepo.save(client_bucket);
+        imagesRepo.save(image);
+
+        clientsRepo.save(client);
     }
 
+    @Override
+    public void update_entity(Object obj) {
+        clientsRepo.save((Client) obj);
 
+    }
+
+    @Override
+    public void remove_entity(Object obj) {
+        clientsRepo.delete((Client) obj);
+    }
 }
