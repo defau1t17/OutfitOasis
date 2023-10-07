@@ -10,7 +10,7 @@ public class MainController {
 
     @GetMapping
     public String displayMainPage() {
-        return "main";
+        return "redirect:/shop/catalog";
     }
 
 

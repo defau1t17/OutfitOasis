@@ -9,7 +9,7 @@
 <body>
 
 
-<div class="container" th:if="${onModeration == false}">
+<div class="container" th:if="${not_producer_and_not_in_list == true}">
 
     <div class="producer-main-text"
     >
@@ -39,6 +39,10 @@
 <div class="container" th:if="${onModeration == true}">
     <h1>Your request is in progress....Just wait</h1>
 
+</div>
+
+<div class="container" th:if="${alreadyProducer == true}">
+    <h1>Your are already a producer :)</h1>
 </div>
 
 

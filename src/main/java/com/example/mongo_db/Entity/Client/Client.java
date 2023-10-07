@@ -5,7 +5,6 @@ import com.example.mongo_db.Entity.User;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Null;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -13,7 +12,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 
 @Data
 @Document(collection = "clients")
-public class Client<T> extends User {
+public class Client extends User {
 
     @Id
     private String id;
@@ -48,5 +47,5 @@ public class Client<T> extends User {
     private Image client_image;
 
     @Field(name = "role")
-    private T role =(T) Role.ROLE_CLIENT;
+    private Role role = Role.ROLE_CLIENT;
 }

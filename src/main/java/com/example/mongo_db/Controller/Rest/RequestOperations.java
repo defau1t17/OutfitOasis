@@ -40,10 +40,11 @@ public class RequestOperations {
             requestsService.save_entity(producer_request);
             UpdateGlobalClient.updateGlobalClient("global_client", (Client) request.getSession().getAttribute("global_client"), request.getSession());
             logger.info("client added to moderation list successfully. Data updated");
+            requestsService.sendMessage(producer_request.getData_inf().getRequest_producer_mail());
+
             return ResponseEntity.status(HttpStatus.CREATED).build();
         } else return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
-
 
     //create mail message for client
 

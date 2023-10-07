@@ -2,6 +2,7 @@ package com.example.mongo_db.Entity.Client;
 
 import com.example.mongo_db.DAO.ClientShopItemDAO;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;

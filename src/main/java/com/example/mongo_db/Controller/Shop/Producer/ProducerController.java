@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.io.IOException;
@@ -29,8 +30,6 @@ public class ProducerController {
 
     @GetMapping("/request/form")
     public String displayProducerForm(Model model, HttpServletRequest request) {
-
-
         try {
             model.addAttribute(
 
@@ -41,8 +40,11 @@ public class ProducerController {
         if (requestsService.isClientOnModeration((Client) request.getSession().getAttribute("global_client"))) {
             model.addAttribute("onModeration", true);
             logger.info("client found in moderation list. All fields hidden");
+        } else if (requestsService.isClientAlreadyProducer((Client) request.getSession().getAttribute("global_client"))) {
+            model.addAttribute("alreadyProducer", true);
+            logger.info("client is already a producer. All fields hidden");
         } else {
-            model.addAttribute("onModeration", false);
+            model.addAttribute("not_producer_and_not_in_list", true);
             logger.info("client not found in moderation list.");
         }
 
@@ -50,5 +52,13 @@ public class ProducerController {
 
 
         return "shop/producer/producer_request_form_page";
+    }
+
+
+    @GetMapping("/account/{id}")
+    public String displayProducerPage(@PathVariable(value = "id") String id, Model model, HttpServletRequest request) {
+
+
+        return "shop/producer/producer_page";
     }
 }

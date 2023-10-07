@@ -1,6 +1,7 @@
 package com.example.mongo_db.Entity.Producer;
 
 
+import com.example.mongo_db.Entity.Client.Client;
 import com.example.mongo_db.Entity.Items.Item.ShopItem;
 import com.example.mongo_db.Entity.Role;
 import lombok.Data;
@@ -21,6 +22,8 @@ public class Producer {
     private String producer_country;
     @Field(name = "list_of_items")
     private ArrayList<ShopItem> producer_items;
-    @Field(name = "status")
-    private Role role = Role.ROLE_PRODUCER;
+
+    private Client client;
+
+
 }
