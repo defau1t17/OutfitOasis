@@ -23,10 +23,10 @@ public class ClientFilter implements Filter {
         if (global_client == null) {
             response.sendRedirect("/shop/client/login");
         } else {
-            response.sendRedirect("shop/client/account/" + global_client.getId());
-
+//            response.sendRedirect("shop/client/account/" + global_client.getId());
+            filterChain.doFilter(request, response);
         }
-        filterChain.doFilter(request, response);
+
     }
 
     @Override

@@ -21,7 +21,9 @@
             <a class="item-link" th:href="@{/shop/catalog/item/__${item.id}__}">
                 <div class="item">
                     <div class="product-image-block">
-                        <img class="product-image" th:src="@{/images/default_item_icon.png}">
+
+                        <img th:if="${item.item.image.image == ''}" class="product-image"
+                             th:src="@{/images/default_item_icon.png}">
                     </div>
                     <div class="product-info-block">
                             <span class="product-item-info" th:class="item-id" th:data-item-id="${item.id}"
@@ -31,7 +33,7 @@
                         </div>
 
                         <div class="product-producer-block">
-<!--                            <span class="product-item-info" th:text="${item.item.producer}">producer</span>-->
+                            <!--                            <span class="product-item-info" th:text="${item.item.producer}">producer</span>-->
                             <span class="product-item-info"> / </span>
                             <span class="product-item-info" th:text="${item.item.gender}">gender</span>
                         </div>
@@ -66,7 +68,7 @@
                         </div>
 
                         <div class="product-producer-block">
-<!--                            <span class="product-item-info" th:text="${item.item.producer}">producer</span>-->
+                            <!--                            <span class="product-item-info" th:text="${item.item.producer}">producer</span>-->
                             <span class="product-item-info"> / </span>
                             <span class="product-item-info" th:text="${item.item.gender}">gender</span>
                         </div>

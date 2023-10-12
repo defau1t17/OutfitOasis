@@ -328,7 +328,6 @@ public class ClientController {
     public String displayClientAccountPage(@PathVariable(value = "id") String id, Model model, HttpServletRequest request) {
 
         Client client = (Client) request.getSession().getAttribute(GLOBAL_CLIENT);
-
         model.addAttribute("current_client", client);
 
 
@@ -347,8 +346,9 @@ public class ClientController {
     @GetMapping("/account/{id}/bucket")
     public String displayClientBucketPage(@PathVariable(value = "id") String id, Model model, HttpServletRequest request) {
         Client client = (Client) request.getSession().getAttribute(GLOBAL_CLIENT);
+        logger.info("all clients items was added to page");
         model.addAttribute("clients_bucket_items", client.getBucket().getClient_items());
-
+        logger.info("clients bucket page was shown successfully");
         return "shop/client/client_bucket_page";
     }
 

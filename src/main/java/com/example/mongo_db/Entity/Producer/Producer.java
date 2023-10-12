@@ -20,7 +20,7 @@ public class Producer {
     private String producer_brand_name;
     @Field(name = "country")
     private String producer_country;
-    @Field(name = "list_of_items")
+    @Field(name = "produced_items")
     private ArrayList<ShopItem> producer_items;
 
     private Client client;

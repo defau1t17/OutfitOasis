@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Bucket</title>
+    <link rel="stylesheet" th:href="@{/client/client_bucket_style.css}">
+
 </head>
 <body>
 
@@ -14,13 +16,26 @@
             <a class="item-link" th:href="@{/shop/catalog/item/__${current_item.item.id}__}">
                 <div class="item">
                     <div class="item-image-block">
-
-<!--                        <img th:href="">-->
+                        <img th:if="${current_item.item.item.image.image == ''}"
+                             th:src="@{/images/default_item_icon.png}">
                     </div>
 
                     <div class="item-text-block">
-                        <p th:text="${current_item.item.item.gender}"></p>
+                        <div class="item-name-block">
+                            <p th:text="${current_item.item.item.name}"></p>
+                        </div>
+
+                        <div class="item-producer-block">
+                            <span th:text="${current_item.producer.producer_brand_name}"></span>
+                            <span> / </span>
+                            <p th:text="${current_item.item.item.gender}"></p>
+                        </div>
+                        <p th:text="${current_item.item.item.price}"></p>
+
+
                     </div>
+                    <span th:text="${current_item.quantity}"></span>
+
                 </div>
             </a>
 
