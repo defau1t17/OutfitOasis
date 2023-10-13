@@ -74,7 +74,7 @@ public class CatalogService {
         dress.setSize(Size.S);
         dress.setClothes_composition((HashMap<Composition, Integer>) new HashMap<>().put(Composition.Chiffon, 43));
         dress.setHeight(342);
-        dress.setImage(image);
+        dress.setItem_image(image);
         shopItem.setItem(dress);
 
         System.out.println(producer.getId());
@@ -82,6 +82,9 @@ public class CatalogService {
 
 
         items.add(shopItem);
+        items.add(shopItem);
+        items.add(shopItem);
+
 
         producer.setProducer_items(items);
 

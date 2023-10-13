@@ -23,7 +23,5 @@ public abstract class Item {
 
     private String country_producer;
 
-//    private Producer producer;
-
-    private Image image;
+    private Image item_image;
 }

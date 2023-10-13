@@ -22,8 +22,8 @@ import java.util.Optional;
 import java.util.logging.Logger;
 
 @RestController
-@RequestMapping("/shop/catalog/add")
-public class AddToCartController {
+@RequestMapping("/shop/catalog/")
+public class CartOperations {
 
     private ArrayList<ClientShopItemDAO> list_of_clients_items;
     private Bucket client_bucket;
@@ -44,7 +44,7 @@ public class AddToCartController {
     private static final Logger logger = Logger.global;
 
     @Transactional
-    @PostMapping("/item/{id}")
+    @PostMapping("/add/item/{id}")
     public ResponseEntity addItemToClientsCart(@PathVariable(value = "id") String id, HttpServletRequest request) {
         Client client = (Client) request.getSession().getAttribute("global_client");
         Optional<ShopItem> shopItemById = itemRepo.findShopItemById(id);
@@ -101,6 +101,42 @@ public class AddToCartController {
         return ResponseEntity.status(226).build();
     }
 
+    @Transactional
+    @PostMapping("/remove/item/{id}")
+    public ResponseEntity removeOneItemFromClientsCart(@PathVariable(value = "id") String id, HttpServletRequest request) {
+        Client client = (Client) request.getSession().getAttribute("global_client");
+        Optional<ShopItem> shopItemById = itemRepo.findShopItemById(id);
+        ClientShopItemDAO shopItemDAO;
+        logger.info("client has requested to remove one item from  his bucket");
+        if (shopItemById.isPresent() && client != null) {
+            client_bucket = client.getBucket();
+            list_of_clients_items = client_bucket.getClient_items();
+            shopItemDAO = list_of_clients_items.get((int) checkForItem(list_of_clients_items, shopItemById.get()));
+
+            if (shopItemDAO.getQuantity() > 1) {
+                shopItemDAO.setQuantity(shopItemDAO.getQuantity() - 1);
+            } else if (shopItemDAO.getQuantity() == 1) {
+                list_of_clients_items.remove((int) checkForItem(list_of_clients_items, shopItemById.get()));
+            }
+
+            client_bucket.setClient_items(list_of_clients_items);
+
+            client.setBucket(client_bucket);
+            bucketService.update_entity(client_bucket);
+            clientsService.update_entity(client);
+
+            UpdateGlobalClient.updateGlobalClient("global_client", client, request.getSession());
+
+            logger.info("operation with item has made successfully");
+
+            return ResponseEntity.ok().build();
+        } else
+            logger.info("something went wrong with operation!");
+        return ResponseEntity.status(226).build();
+
+    }
+
+
     private static long checkForItem(ArrayList<ClientShopItemDAO> items, ShopItem item) {
         logger.info("searching for item in items list");
         for (ClientShopItemDAO dao : items) {
@@ -111,5 +147,6 @@ public class AddToCartController {
         }
         return -1;
     }
+
 
 }
