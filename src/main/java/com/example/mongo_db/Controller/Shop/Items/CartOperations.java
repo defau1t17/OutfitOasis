@@ -28,6 +28,8 @@ public class CartOperations {
     private ArrayList<ClientShopItemDAO> list_of_clients_items;
     private Bucket client_bucket;
 
+    private ClientShopItemDAO shopItemDAO;
+
 
     @Autowired
     private ItemRepo itemRepo;
@@ -83,16 +85,14 @@ public class CartOperations {
 
             }
 
-
             client_bucket.setClient_items(list_of_clients_items);
 
             client.setBucket(client_bucket);
 
 
-            bucketService.update_entity(client_bucket);
-            clientsService.update_entity(client);
+            updateEntities(client_bucket, client, request);
 
-            UpdateGlobalClient.updateGlobalClient("global_client", client, request.getSession());
+
             logger.info("operation with item has made successfully ");
 
             return ResponseEntity.ok().build();
@@ -105,27 +105,26 @@ public class CartOperations {
     @PostMapping("/remove/item/{id}")
     public ResponseEntity removeOneItemFromClientsCart(@PathVariable(value = "id") String id, HttpServletRequest request) {
         Client client = (Client) request.getSession().getAttribute("global_client");
+
         Optional<ShopItem> shopItemById = itemRepo.findShopItemById(id);
-        ClientShopItemDAO shopItemDAO;
         logger.info("client has requested to remove one item from  his bucket");
         if (shopItemById.isPresent() && client != null) {
             client_bucket = client.getBucket();
             list_of_clients_items = client_bucket.getClient_items();
+
             shopItemDAO = list_of_clients_items.get((int) checkForItem(list_of_clients_items, shopItemById.get()));
+
 
             if (shopItemDAO.getQuantity() > 1) {
                 shopItemDAO.setQuantity(shopItemDAO.getQuantity() - 1);
             } else if (shopItemDAO.getQuantity() == 1) {
                 list_of_clients_items.remove((int) checkForItem(list_of_clients_items, shopItemById.get()));
             }
-
             client_bucket.setClient_items(list_of_clients_items);
-
             client.setBucket(client_bucket);
-            bucketService.update_entity(client_bucket);
-            clientsService.update_entity(client);
 
-            UpdateGlobalClient.updateGlobalClient("global_client", client, request.getSession());
+
+            updateEntities(client_bucket, client, request);
 
             logger.info("operation with item has made successfully");
 
@@ -148,5 +147,11 @@ public class CartOperations {
         return -1;
     }
 
+    private void updateEntities(Bucket bucket, Client client, HttpServletRequest request) {
+        bucketService.update_entity(bucket);
+        clientsService.update_entity(client);
+        UpdateGlobalClient.updateGlobalClient("global_client", client, request.getSession());
+
+    }
 
 }
