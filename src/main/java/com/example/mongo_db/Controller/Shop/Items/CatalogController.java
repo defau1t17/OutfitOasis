@@ -25,7 +25,7 @@ public class CatalogController {
     @GetMapping()
     public String displayAllItems(Model model, HttpServletRequest request, RedirectAttributes attributes) {
         model.addAttribute("all_items", catalogService.findAllItems());
-
+//        catalogService.findByPage()
 
         return "shop/items/catalog_page";
     }

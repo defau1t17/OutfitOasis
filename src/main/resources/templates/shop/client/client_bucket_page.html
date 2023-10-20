@@ -69,9 +69,8 @@
                 </div>
             </div>
         </div>
-        <div class="container" th:if="${session.get('global_client').bucket.client_items.size == 0}">
-            <span id="empty-list-text">Your bucket is empty... </span>
-        </div>
+        <span id="empty-list-text" style="display: none">Your bucket is empty... </span>
+
 
     </div>
 
@@ -91,10 +90,13 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 
+
     var items_quantity = 0;
     var items_price = 0;
     $('#items-text').text('Total quantity : ' + items_quantity);
     $('#price-text').text('Total price : ' + items_price);
+
+
 
 
     function buying_block_operations() {
@@ -199,6 +201,11 @@
                         updateBucketQuantity(element, item_quantity);
                     }
                     buying_block_operations();
+                }
+                if (xhr.status === 204) {
+                    console.log('no items');
+                    $(element).closest('.item').remove();
+                    $('#empty-list-text').show();
                 }
                 if (xhr.status === 226) {
                     console.log("Error while removing item from bucket");

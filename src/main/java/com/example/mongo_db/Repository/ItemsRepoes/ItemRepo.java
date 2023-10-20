@@ -15,7 +15,7 @@ public interface ItemRepo extends MongoRepository<ShopItem, String> {
 
     List<ShopItem> findAllByItem_Category(String category);
 
-//    Page<ShopItem> findAll(Pageable pageable);
+    Page<ShopItem> findAll(Pageable pageable);
 
     List<ShopItem> findAll();
 

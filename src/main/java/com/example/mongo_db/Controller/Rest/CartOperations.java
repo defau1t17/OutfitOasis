@@ -1,4 +1,4 @@
-package com.example.mongo_db.Controller.Shop.Items;
+package com.example.mongo_db.Controller.Rest;
 
 import com.example.mongo_db.Entity.Client.Bucket;
 import com.example.mongo_db.Entity.Client.Client;
