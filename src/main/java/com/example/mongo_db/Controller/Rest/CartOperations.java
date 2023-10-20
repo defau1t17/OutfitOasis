@@ -13,6 +13,7 @@ import com.example.mongo_db.Service.Clients.UpdateGlobalClient;
 import com.example.mongo_db.Service.Producer.ProducerService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -82,7 +83,6 @@ public class CartOperations {
                 int updated_quantity = list_of_clients_items.get((int) checkForItem(list_of_clients_items, shopItemById.get())).getQuantity() + 1;
                 list_of_clients_items.get((int) checkForItem(list_of_clients_items, shopItemById.get())).setQuantity(updated_quantity);
                 logger.info("item found successfully. Quantity has incremented");
-
             }
 
             client_bucket.setClient_items(list_of_clients_items);
@@ -128,13 +128,16 @@ public class CartOperations {
 
             logger.info("operation with item has made successfully");
 
+            if (client_bucket.getClient_items().size() == 0) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            }
+
             return ResponseEntity.ok().build();
         } else
             logger.info("something went wrong with operation!");
         return ResponseEntity.status(226).build();
 
     }
-
 
     private static long checkForItem(ArrayList<ClientShopItemDAO> items, ShopItem item) {
         logger.info("searching for item in items list");
