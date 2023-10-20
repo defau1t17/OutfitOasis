@@ -1,6 +1,6 @@
 package com.example.mongo_db.Entity.Items.Item;
 
-import com.example.mongo_db.Entity.Items.Item.Item;
+import com.example.mongo_db.Entity.Producer.Producer;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
@@ -14,5 +14,8 @@ public class ShopItem {
     private String id;
     @NotNull
     private Item item;
+
+    private String producer_id;
+
 
 }

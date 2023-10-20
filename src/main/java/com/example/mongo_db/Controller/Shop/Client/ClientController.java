@@ -12,6 +12,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -203,11 +205,7 @@ public class ClientController {
                 logger.info("Client was found successfully!");
                 request.getSession().setAttribute("global_client", client);
 
-//                if (request.getSession().getAttribute("client_has_been_redirected_from_page") != null) {
-//                    return "redirect:" + request.getSession().getAttribute("client_has_been_redirected_from_page");
-//                } else {
                 return "redirect:/shop/client/account/" + client.getId();
-//                }
 
             } else {
                 logger.info("Client wrote wrong password");
@@ -328,7 +326,6 @@ public class ClientController {
     public String displayClientAccountPage(@PathVariable(value = "id") String id, Model model, HttpServletRequest request) {
 
         Client client = (Client) request.getSession().getAttribute(GLOBAL_CLIENT);
-
         model.addAttribute("current_client", client);
 
 
@@ -347,8 +344,9 @@ public class ClientController {
     @GetMapping("/account/{id}/bucket")
     public String displayClientBucketPage(@PathVariable(value = "id") String id, Model model, HttpServletRequest request) {
         Client client = (Client) request.getSession().getAttribute(GLOBAL_CLIENT);
+        logger.info("all clients items was added to page");
         model.addAttribute("clients_bucket_items", client.getBucket().getClient_items());
-
+        logger.info("clients bucket page was shown successfully");
         return "shop/client/client_bucket_page";
     }
 

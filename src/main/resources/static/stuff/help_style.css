@@ -1,0 +1,126 @@
+body {
+    width: 100%;
+    background: url('/images/static_background.jpg');
+    background-color: #f0f0f0;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.container{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#main-text{
+    color: white;
+    font-family: Arial;
+    font-weight: lighter;
+    font-size: 30px;
+}
+.bug-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+}
+.bug-main-text{
+    display: flex;
+    align-items: center;
+}
+
+.bug-send-block{
+    display: flex;
+    align-items: center;
+}
+.invocation-text{
+    font-size: 17px;
+    font-family: Arial;
+    font-weight: lighter;
+    color: white;
+}
+.input-bug-field , .input-qos-field
+{
+    margin-top: 15px;
+    min-width: 400px;
+    min-height: 200px;
+    resize: horizontal;
+    max-width: 600px;
+    max-height: 300px;
+    background: rgba(182, 4, 42, 0.7);
+    color: white;
+    border: 1px solid white;
+    border-radius: 10px;
+    font-size: 17px;
+    font-family: Arial;
+}
+
+.button-block{
+    margin-top: 15px;
+    display: flex;
+    align-items: center;
+}
+
+.confirmation-bug-button , .confirmation-qos-button{
+    width: 400px;
+    height: 40px;
+    background: rgba(245, 5, 56, 0.5);
+    color: white;
+    border: none;
+    border-radius: 15px;
+    font-size: 16px;
+    font-family: Arial;
+}
+.confirmation-bug-button , .confirmation-qos-button :focus {
+    outline: none;
+}
+
+
+.producer-container{
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.producer-main-text{
+    display: flex;
+    align-items: center;
+}
+.producer-redirection-container{
+    display: flex;
+    align-items: center;
+
+}
+.confirmation-button{
+    margin-top: 15px;
+    width: 350px;
+    height: 40px;
+    background: rgba(245, 5, 56, 0.5);
+    color: white;
+    border: none;
+    border-radius: 15px;
+    font-size: 16px;
+    font-family: Arial;
+}
+#producer-link{
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    font-family: Arial;
+}
+
+.client-qos-container{
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.qos-main-text{
+    display: flex;
+    align-items: center;
+}
+.qos-send-block{
+    display: flex;
+    align-items: center;
+}

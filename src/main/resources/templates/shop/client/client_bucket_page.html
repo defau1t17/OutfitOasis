@@ -3,31 +3,220 @@
 <head>
     <meta charset="UTF-8">
     <title>Bucket</title>
+    <link rel="stylesheet" th:href="@{/client/client_bucket_style.css}">
+    <link rel="stylesheet" th:href="@{/includes/header_style.css}">
+
+    <meta type="hidden" name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+
+
 </head>
 <body>
 
 
-<div class="container">
+<div th:replace="includes/header :: header"></div>
 
-    <div class="items-block">
-        <ul class="list-of-items" th:each="current_item : ${clients_bucket_items}">
-            <a class="item-link" th:href="@{/shop/catalog/item/__${current_item.item.id}__}">
-                <div class="item">
+<div class="main-container">
+    <div class="container">
+        <div class="items-block" th:if="${session.get('global_client').bucket.client_items.size > 0}"
+             th:each="current_item : ${session.get('global_client').bucket.client_items}">
+            <div class="item">
+                <div class="item-checkbox">
+                    <input type="checkbox" name="item-checkbox" class="item-checkbox-field"
+                           onchange="buying_block_operations()">
+                </div>
+
+                <a class="item-link" th:href="@{/shop/catalog/item/__${current_item.item.id}__}"
+                   th:value="${current_item.item.id}">
                     <div class="item-image-block">
-
-<!--                        <img th:href="">-->
+                        <img class="item-image" th:if="${current_item.item.item.item_image.image == ''}"
+                             th:src="@{/images/default_item_icon.png}">
                     </div>
+                    <div class="item-info-block">
+                        <div class="item-name-block">
+                            <span id="item-name" th:text="${current_item.item.item.name}"></span>
+                            <div class="detailed-info">
+                                <span class="item-info-text"
+                                      th:text="'Category : ' +  ${current_item.item.item.category} + ' / ' + ${current_item.item.item.gender}"></span>
+                                <span class="item-info-text"
+                                      th:text=" 'Size : ' + ${current_item.item.item.size}"></span>
+                                <span class="item-info-text"
+                                      th:text="'Producer : ' + ${current_item.producer.producer_brand_name}"></span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
 
-                    <div class="item-text-block">
-                        <p th:text="${current_item.item.item.gender}"></p>
+                <div class="item-quantity-block">
+                    <div class="label-block">
+                        <label class="label-field">Quantity : </label>
+                    </div>
+                    <div class="item-quantity-inner-block">
+                        <button id="button-quantity-operation-minus" onclick="removeOne(this)">-</button>
+                        <span class="item-info-text" id="quantity" th:text="${current_item.quantity}"
+                              th:value="${current_item.quantity}"></span>
+                        <button id="button-quantity-operation-plus" onclick="addOne(this)">+</button>
                     </div>
                 </div>
-            </a>
+                <div class="item-price-block">
+                    <div class="label-block">
+                        <label class="label-field">Price : </label>
+                    </div>
+                    <div class="item-price-inner-block">
+                    <span id="item-price" th:text="${current_item.item.item.price}"
+                          th:value="${current_item.item.item.price}"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <span id="empty-list-text" style="display: none">Your bucket is empty... </span>
 
-        </ul>
+
+    </div>
+
+    <div class="buying-block">
+        <span class="buying-text"><a id="buying-text-link"
+                                     th:href="@{/shop/client/account/__${session.get('global_client').id}__/edit}">EDIT ADDRESS</a></span>
+        <span class="buying-text" id="items-text" th:text="'Total quantity : ' + ${clients_bucket_items.size}"></span>
+        <span class="buying-text" id="price-text"></span>
+        <div class="buying-button-block">
+            <button class="buying-button">CONFIRM</button>
+        </div>
     </div>
 
 </div>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+
+
+    var items_quantity = 0;
+    var items_price = 0;
+    $('#items-text').text('Total quantity : ' + items_quantity);
+    $('#price-text').text('Total price : ' + items_price);
+
+
+
+
+    function buying_block_operations() {
+        var all_checkboxes = $('.item-checkbox-field');
+        items_quantity = 0;
+        items_price = 0;
+        all_checkboxes.each(function (index, checkbox) {
+            var quantity_value = parseInt($(checkbox).closest('.item').find('#quantity').text());
+            var price_value = parseInt($(checkbox).closest('.item').find('#item-price').text());
+
+            if ($(checkbox).prop('checked')) {
+                items_quantity += quantity_value;
+                items_price += quantity_value * price_value;
+            }
+        });
+        updateQuantity(items_quantity);
+        updatePrice(items_price);
+    }
+
+
+    function updateQuantity(item) {
+        $('#items-text').text('Total quantity : ' + item);
+    }
+
+    function updatePrice(price) {
+        $('#price-text').text('Total quantity : ' + price);
+
+    }
+
+    function updateBucketQuantity(element, quantity) {
+        $(element).closest('.item').find("#quantity").text(quantity);
+    }
+
+
+    var item_quantity = 0;
+
+    function addOne(element) {
+
+        var id = $(element).closest('.item').find('.item-link').attr('value');
+
+        item_quantity = parseInt($(element).closest('.item').find("#quantity").text());
+
+        var token = $("meta[name='_csrf']").attr("content");
+
+        console.log('item id - ', id);
+
+        $.ajax({
+            url: '/shop/catalog/add/item/' + id,
+            type: 'POST',
+
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader('X-CSRF-TOKEN', token);
+            },
+            success: function (data, textStatus, xhr) {
+                if (xhr.status === 200) {
+                    console.log("Элемент добавлен в корзину");
+                    item_quantity++;
+                    updateBucketQuantity(element, item_quantity);
+                    buying_block_operations();
+                }
+                if (xhr.status === 226) {
+                    console.log("client not authorized");
+                    console.log("Error while removing item from bucket");
+                    window.location.href = 'http://localhost:8081/shop/client/login';
+                }
+            },
+            error: function () {
+                console.log("Error while sending request");
+            }
+        });
+    }
+
+
+    function removeOne(element) {
+
+        var id = $(element).closest('.item').find('.item-link').attr('value');
+
+        item_quantity = parseInt($(element).closest('.item').find("#quantity").text());
+
+        var token = $("meta[name='_csrf']").attr("content");
+
+        console.log('item id - ', id);
+
+
+        if (item_quantity === 1) {
+            alert("Are you sure you want to remove item from your bucket?");
+        }
+        $.ajax({
+            url: '/shop/catalog/remove/item/' + id,
+            type: 'POST',
+
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader('X-CSRF-TOKEN', token);
+            },
+            success: function (data, textStatus, xhr) {
+                if (xhr.status === 200) {
+                    console.log("Элемент удален из  корзины");
+                    item_quantity--;
+                    if (item_quantity === 0) {
+                        $(element).closest('.item').remove();
+                    } else {
+                        updateBucketQuantity(element, item_quantity);
+                    }
+                    buying_block_operations();
+                }
+                if (xhr.status === 204) {
+                    console.log('no items');
+                    $(element).closest('.item').remove();
+                    $('#empty-list-text').show();
+                }
+                if (xhr.status === 226) {
+                    console.log("Error while removing item from bucket");
+                }
+            },
+            error: function () {
+                console.log("Error while sending request");
+            }
+        });
+    }
+</script>
 
 
 </body>

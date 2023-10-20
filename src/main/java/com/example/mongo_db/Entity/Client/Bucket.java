@@ -1,6 +1,7 @@
 package com.example.mongo_db.Entity.Client;
 
 import com.example.mongo_db.DAO.ClientShopItemDAO;
+import com.example.mongo_db.Entity.Producer.Producer;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

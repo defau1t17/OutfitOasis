@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 import java.util.ArrayList;
 
 @Data
-public abstract class Item<T> {
+public abstract class Item {
 
     private String name;
 
@@ -23,7 +23,5 @@ public abstract class Item<T> {
 
     private String country_producer;
 
-    private T producer;
-
-//    private ArrayList<Image> image;
+    private Image item_image;
 }

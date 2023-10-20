@@ -7,4 +7,6 @@ public class UpdateGlobalClient {
     public static void updateGlobalClient(String global_client, Client updated_client, HttpSession httpSession) {
         httpSession.setAttribute(global_client, updated_client);
     }
+
+
 }

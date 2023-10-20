@@ -1,0 +1,224 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    width: 100%;
+    background: url('/images/client_background.jpg') no-repeat center center fixed;
+    background-size: cover;
+    backdrop-filter: blur(3px);
+    background-color: #f0f0f0;
+}
+
+.main-container {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+
+.container {
+    margin: 15px;
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.items-block {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+
+.item-link {
+    text-decoration: none;
+    color: white;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.item {
+    margin-top: 10px;
+    width: 100%;
+    height: 200px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border: none;
+    background: rgba(245, 5, 56, 0.65);
+    border-radius: 15px;
+    vertical-align: top;
+}
+
+.item-image-block {
+    width: 20%;
+    display: flex;
+    justify-content: center;
+
+}
+
+.item-checkbox {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 10px;
+}
+
+.item-checkbox input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+}
+
+.item {
+    position: relative;
+}
+
+
+.item-image {
+    height: 150px;
+}
+
+
+.item-info-block {
+    width: 50%;
+    display: flex;
+    flex-direction: row;
+    margin-left: 20px;
+}
+
+.item-name-block {
+    display: flex;
+    flex-direction: column;
+}
+
+#item-name {
+    font-size: 25px;
+    font-weight: lighter;
+    font-family: Arial;
+
+}
+
+.detailed-info {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+}
+
+.item-info-text {
+    font-size: 17px;
+    font-family: Arial;
+    color: white;
+    font-weight: lighter;
+}
+
+.item-quantity-block {
+    width: 15%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.item-quantity-inner-block {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    margin-top: 10px;
+    align-items: center;
+}
+
+.item-price-block {
+    width: 15%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.item-price-inner-block {
+    width: 100%;
+    text-align: center;
+    margin-top: 10px;
+
+}
+
+.label-field {
+    font-size: 14px;
+    color: white;
+    font-family: Arial;
+    font-weight: lighter;
+}
+
+#button-quantity-operation-minus,
+#button-quantity-operation-plus {
+    width: 30px;
+    height: 30px;
+    color: white;
+    background: rgba(0, 0, 0, 0.5);
+    border: none;
+    border-radius: 5px;
+}
+
+#item-price {
+    color: white;
+    font-size: 19px;
+    font-weight: lighter;
+    font-family: Arial;
+}
+
+.buying-block {
+    width: 30%;
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    background: rgba(245, 5, 56, 0.65);
+    margin: 15px;
+}
+
+.buying-text {
+    text-align: start;
+    margin-left: 15px;
+    color: white;
+    font-size: 18px;
+    font-weight: lighter;
+    font-family: Arial;
+}
+
+#buying-text-link {
+    text-decoration: none;
+    color: white;
+    font-size: 17px;
+    font-weight: lighter;
+    font-family: Arial;
+}
+
+.buying-button-block {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.buying-button {
+    color: white;
+    width: 320px;
+    height: 40px;
+    background: rgba(0, 0, 0, 0.75);
+    font-size: 17px;
+    font-family: Arial;
+    border: none;
+}
+
+#empty-list-text {
+    color: white;
+    font-size: 30px;
+    font-family: Arial;
+    font-weight: lighter;
+    text-align: center;
+}

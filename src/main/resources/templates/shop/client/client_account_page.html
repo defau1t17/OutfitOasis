@@ -64,9 +64,9 @@
                 <div class="block_3">
                     <div class="delivery_info">
                         <label class="labels">Delivery Information</label>
-                        <p class="inner_info" th:if="${address !=null}"
-                           th:text="${current_client.address.country } + ',' +  ${current_client.address.city != null} +  ',' +  ${current_client.address.address != null} + ' ' +  ${current_client.address.flat !=null} + ' (' + ${current_client.address.postcode != null} + ')'"></p>
                         <p class="inner_info" th:if="${address == null}">No information</p>
+                        <p class="inner_info" th:if="${address !=null}"
+                           th:text="${current_client.address.country } + ',' +  ${current_client.address.city} +  ',' +  ${current_client.address.address} + ' ' +  ${current_client.address.flat } + ' (' + ${current_client.address.postcode} + ')'"></p>
                     </div>
                 </div>
             </div>

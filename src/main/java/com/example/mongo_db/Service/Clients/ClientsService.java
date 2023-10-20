@@ -37,8 +37,6 @@ public class ClientsService implements EntityOperations {
     @Autowired
     private ImagesRepo imagesRepo;
 
-    @Autowired
-    private GridFsTemplate fsTemplate;
 
     private static final String sender = "onlineshop.project@yandex.com";
 

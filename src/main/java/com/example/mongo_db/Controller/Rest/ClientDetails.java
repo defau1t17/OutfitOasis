@@ -13,9 +13,13 @@ public class ClientDetails {
     @GetMapping("/client/status")
     public HttpStatus isClientAuthorized(HttpServletRequest request) {
         if (request.getSession().getAttribute("global_client") != null) {
+
             return HttpStatus.FOUND;
         } else return HttpStatus.NOT_FOUND;
     }
+
+
+
 
 
 }
