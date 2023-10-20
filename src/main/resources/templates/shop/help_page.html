@@ -5,8 +5,14 @@
     <title>Title</title>
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <link rel="stylesheet" th:href="@{/stuff/help_style.css}">
+    <link rel="stylesheet" th:href="@{/includes/header_style.css}">
+    <link rel="stylesheet" th:href="@{/includes/footer_style.css}">
 </head>
 <body>
+
+<div th:replace="includes/header :: header"></div>
+
 
 <div class="container">
 
@@ -16,32 +22,33 @@
 
     <div class="bug-container">
         <div class="bug-main-text">
-            <p> Dear Client, if you found a bug, got some troubles in process of using our app, please write the issue
+            <span class="invocation-text"> Dear Client, if you found a bug, got some troubles in process of using our app, please write the issue
                 in
                 the
                 field
                 below
-            </p>
+            </span>
         </div>
 
-        <div class="bug-send-block">
-            <!--            <form th:action="@{/shop/send/bug/report}" method="post" class="bug-form">-->
+            <div class="bug-send-block">
+                <textarea placeholder="You may describe your issue here :)" name="bug_text" class="input-bug-field"
+                          minlength="50" maxlength="700" required>
 
-            <textarea placeholder="You may describe your issue here :)" name="bug_text" class="input-bug-field"
-                      minlength="50" maxlength="700" required>
+    </textarea>
 
-</textarea>
+        </div>
+        <div class="button-block">
             <button type="submit" onclick="beginRequestChain(this)" class="confirmation-bug-button">SEND</button>
-            <!--            </form>-->
         </div>
+
     </div>
 
     <div class="producer-container">
         <div class="producer-main-text">
-            <p>
+            <span class="invocation-text">
                 If you want to become a producer and sell the items of yours, press the button bellow and complete the
                 form
-            </p>
+            </span>
         </div>
         <div class="producer-redirection-container">
             <button class="confirmation-button">
@@ -55,30 +62,42 @@
 
     <div class="client-qos-container">
         <div class="qos-main-text">
-            <p>If you have some questions or suggestions, please write it bellow :)</p>
+            <span class="invocation-text">If you have some questions or suggestions, please write it bellow :)</span>
         </div>
         <div class="qos-send-block">
-
             <textarea placeholder="You may describe your issue here :)" class="input-qos-field">
-
             </textarea>
+        </div>
+        <div class="button-block">
             <button onclick="beginRequestChain(this)" class="confirmation-qos-button">SEND</button>
-            </form>
         </div>
 
     </div>
 
 </div>
 
+<div id="notification" class="notification">
+
+</div>
+
+<div th:replace="includes/footer :: footer"> </div>
+
+
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 
+    const notification = document.getElementById('notification');
 
-    function showMessage(classname) {
+    function showNotification(message, duration) {
+        notification.textContent = message;
+        notification.style.opacity = '1';
 
-
+        setTimeout(() => {
+            notification.style.opacity = '0';
+        }, duration);
     }
+
 
     function sendRequest(classname) {
 
@@ -117,38 +136,7 @@
             },
             success: function (data, textStatus, xhr) {
                 if (xhr.status === 201) {
-                    showMessage()
-                    console.log('message send')
-                }
-            },
-            error: function () {
-                console.log("Ошибка при отправке запроса");
-            }
-
-        });
-    }
-
-
-    function sendQOSRequest(message) {
-        var token = $("meta[name='_csrf']").attr("content");
-
-        console.log('ready to send qos')
-
-        $.ajax({
-            url: '/shop/send/bug/report',
-            type: 'POST',
-            headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json"
-            },
-            data: JSON.stringify({
-                data_inf: bug_text
-            }),
-            beforeSend: function (xhr) {
-                xhr.setRequestHeader('X-CSRF-TOKEN', token);
-            },
-            success: function (data, textStatus, xhr) {
-                if (xhr.status === 201) {
+                    showNotification("Your request has been successfully!",2000);
                     console.log('message send')
                 }
             },

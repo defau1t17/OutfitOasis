@@ -11,6 +11,7 @@ import com.example.mongo_db.Service.Bucket.BucketService;
 import com.example.mongo_db.Service.Clients.ClientsService;
 import com.example.mongo_db.Service.Clients.UpdateGlobalClient;
 import com.example.mongo_db.Service.Producer.ProducerService;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

@@ -32,7 +32,6 @@ public class ProducerController {
     public String displayProducerForm(Model model, HttpServletRequest request) {
         try {
             model.addAttribute(
-
                     "countries", service.getCountries());
         } catch (IOException e) {
             throw new RuntimeException(e);

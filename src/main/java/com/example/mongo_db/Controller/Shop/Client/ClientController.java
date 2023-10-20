@@ -12,6 +12,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -170,7 +172,6 @@ public class ClientController {
         String total_client = request.getParameter("client_user_name");
         String total_issue = request.getParameter("issue");
 
-
 //        String referringPage = request.getHeader("referer");
 //        if (referringPage != null) {
 //            referringPage = referringPage.substring(referringPage.lastIndexOf('1') + 1, referringPage.length());
@@ -204,11 +205,7 @@ public class ClientController {
                 logger.info("Client was found successfully!");
                 request.getSession().setAttribute("global_client", client);
 
-//                if (request.getSession().getAttribute("client_has_been_redirected_from_page") != null) {
-//                    return "redirect:" + request.getSession().getAttribute("client_has_been_redirected_from_page");
-//                } else {
                 return "redirect:/shop/client/account/" + client.getId();
-//                }
 
             } else {
                 logger.info("Client wrote wrong password");

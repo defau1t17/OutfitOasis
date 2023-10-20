@@ -2,8 +2,8 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta th:hidden="true" name="_csrf" th:content="${_csrf.token}"/>
-    <meta th:hidden="true" hidden name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <meta  name="_csrf" th:content="${_csrf.token}"/>
+    <meta hidden name="_csrf_header" th:content="${_csrf.headerName}"/>
 
     <title>Catalog</title>
     <link rel="stylesheet" th:href="@{/items/catalog_items_style.css}">
@@ -26,7 +26,7 @@
                              th:src="@{/images/default_item_icon.png}">
                     </div>
                     <div class="product-info-block">
-                            <span class="product-item-info" id="item-id" th:class="item-id" th:data-item-id="${item.id}"
+                            <span class="product-item-info" id="item-id"  th:data-item-id="${item.id}"
                                   th:text="${item.item.name}"
                                   th:value="${item.id}">name</span>
                         <div class="product-name-block">
@@ -113,33 +113,31 @@
 
         var id = $(element).closest('.list-of-items').find('#item-id').attr('value');
 
-
         var token = $("meta[name='_csrf']").attr("content");
-
 
         console.log('item id - ', id);
 
-        $.ajax({
-            url: '/shop/catalog/add/item/' + id,
-            type: 'POST',
+            $.ajax({
+                url: '/shop/catalog/add/item/' + id,
+                type: 'POST',
 
-            beforeSend: function (xhr) {
-                xhr.setRequestHeader('X-CSRF-TOKEN', token);
-            },
-            success: function (data, textStatus, xhr) {
-                if (xhr.status === 200) {
-                    console.log("Элемент добавлен в корзину");
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('X-CSRF-TOKEN', token);
+                },
+                success: function (data, textStatus, xhr) {
+                    if (xhr.status === 200) {
+                        console.log("Элемент добавлен в корзину");
+                    }
+                    if (xhr.status === 226) {
+                        console.log("client not authorized");
+                        console.log("Ошибка при добавлении элемента в корзину");
+                        window.location.href = 'http://localhost:8081/shop/client/login';
+                    }
+                },
+                error: function () {
+                    console.log("Ошибка при отправке запроса");
                 }
-                if (xhr.status === 226) {
-                    console.log("client not authorized");
-                    console.log("Ошибка при добавлении элемента в корзину");
-                    window.location.href = 'http://localhost:8081/shop/client/login';
-                }
-            },
-            error: function () {
-                console.log("Ошибка при отправке запроса");
-            }
-        });
+            });
     }
 
     function displayAddToCartButton(event) {
