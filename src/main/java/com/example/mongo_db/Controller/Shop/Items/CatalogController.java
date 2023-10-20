@@ -3,16 +3,18 @@ package com.example.mongo_db.Controller.Shop.Items;
 
 import com.example.mongo_db.Entity.Items.Item.ShopItem;
 import com.example.mongo_db.Service.Items.CatalogService;
-import jakarta.annotation.security.PermitAll;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.web.csrf.CsrfToken;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 
 @Controller
@@ -23,9 +25,14 @@ public class CatalogController {
     private CatalogService catalogService;
 
     @GetMapping()
-    public String displayAllItems(Model model, HttpServletRequest request, RedirectAttributes attributes) {
+    public String displayAllItems(Model model, @RequestParam(value = "page", required = false) Optional<Integer> current_page) {
         model.addAttribute("all_items", catalogService.findAllItems());
-//        catalogService.findByPage()
+        Page<ShopItem> page = catalogService.findByPage(current_page.orElse(0));
+
+        model.addAttribute("page_information", page);
+
+        model.addAttribute("page_count", IntStream.rangeClosed(1, page.getTotalPages()).boxed().collect(Collectors.toList()));
+
 
         return "shop/items/catalog_page";
     }
@@ -40,8 +47,10 @@ public class CatalogController {
 
 
     @GetMapping("/categories/{category}")
-    public String displayItemsByCategory(@PathVariable(value = "category") String category, Model model) {
-        model.addAttribute("items_by_category", catalogService.findAllItemsByCategory(category));
+    public String displayItemsByCategory(@PathVariable(value = "category") String category,@RequestParam(value = "page")Optional<Integer> page, Model model) {
+        Page<ShopItem> allItemsByCategory = catalogService.findAllItemsByCategory(category, page.orElse(0));
+        model.addAttribute("category_page_information", allItemsByCategory);
+        model.addAttribute("page_count", IntStream.rangeClosed(1, allItemsByCategory.getTotalPages()).boxed().collect(Collectors.toList()));
         return "shop/items/catalog_page";
     }
 

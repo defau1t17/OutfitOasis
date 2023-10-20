@@ -15,9 +15,7 @@ import com.example.mongo_db.Repository.ItemsRepoes.ItemRepo;
 import com.example.mongo_db.Repository.ProducerRepoes.ProducerRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -50,16 +48,14 @@ public class CatalogService {
     }
 
 
-    public Page<ShopItem> findByPage(Pageable pageable){
-
-        int current_page = pageable.getPageNumber();
-        int start_item = current_page * PAGE_SIZE_ITEMS;
-
-        return new PageImpl<>(new ArrayList<ShopItem>(), PageRequest.of(current_page,PAGE_SIZE_ITEMS), PAGE_SIZE_ITEMS);
+    public Page<ShopItem> findByPage(int current_page){
+        PageRequest pageRequest = PageRequest.of(current_page, PAGE_SIZE_ITEMS);
+        return itemRepo.findAll(pageRequest);
     }
 
-    public List<ShopItem> findAllItemsByCategory(String category) {
-        return itemRepo.findAllByItem_Category(category);
+    public Page<ShopItem> findAllItemsByCategory(String category, int current_page) {
+        PageRequest pageRequest = PageRequest.of(current_page, PAGE_SIZE_ITEMS);
+        return itemRepo.findAllItemsByCategory(category,pageRequest);
     }
 
     public ShopItem findItemById(String id) {
