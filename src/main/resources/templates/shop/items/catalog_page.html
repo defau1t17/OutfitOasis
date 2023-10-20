@@ -2,8 +2,8 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="_csrf" th:content="${_csrf.token}"/>
-    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <meta th:hidden="true" name="_csrf" th:content="${_csrf.token}"/>
+    <meta th:hidden="true" hidden name="_csrf_header" th:content="${_csrf.headerName}"/>
 
     <title>Catalog</title>
     <link rel="stylesheet" th:href="@{/items/catalog_items_style.css}">
@@ -26,14 +26,14 @@
                              th:src="@{/images/default_item_icon.png}">
                     </div>
                     <div class="product-info-block">
-                            <span class="product-item-info" th:class="item-id" th:data-item-id="${item.id}"
+                            <span class="product-item-info" id="item-id" th:class="item-id" th:data-item-id="${item.id}"
                                   th:text="${item.item.name}"
                                   th:value="${item.id}">name</span>
                         <div class="product-name-block">
                         </div>
 
                         <div class="product-producer-block">
-                            <!--                            <span class="product-item-info" th:text="${item.item.producer}">producer</span>-->
+                            <span class="product-item-info" th:text="${item.item.category}">category</span>
                             <span class="product-item-info"> / </span>
                             <span class="product-item-info" th:text="${item.item.gender}">gender</span>
                         </div>
@@ -45,14 +45,17 @@
 
                 </div>
             </a>
+
             <button class="add-to-bucket-button" id="add-to-bucket" disabled onclick="addToBucket(this)">ADD TO BUCKET
             </button>
         </ul>
     </div>
 
 
-    <div th:if="${page_information.totalPages > 0}" class="pagination" th:each="pageNumber : ${page_count}">
-        <a th:href="@{/shop/catalog?page=__${pageNumber}__}" th:text="${pageNumber}"></a>
+    <div th:if="${page_information.totalPages >= 0}" class="pagination-block">
+        <div class="pagination" th:each="pageNumber : ${page_count}">
+            <a class="pagination-item" th:href="@{/shop/catalog?page=__${pageNumber}__}" th:text="${pageNumber+1}"></a>
+        </div>
     </div>
 
 </div>
@@ -90,8 +93,10 @@
         </ul>
 
     </div>
-    <div th:if="${category_page_information.totalPages > 0}" class="pagination" th:each="pageNumber : ${page_count}">
-        <a th:href="@{/shop/catalog?page=__${pageNumber}__}" th:text="${pageNumber}"></a>
+    <div th:if="${category_page_information.totalPages >= 0}" class="pagination-block" >
+        <div th:each="pageNumber : ${page_count}" class="pagination">
+        <a class="pagination-item" th:href="@{/shop/catalog?page=__${pageNumber}__}" th:text="${pageNumber}"></a>
+         </div>
     </div>
 
 </div>
@@ -106,11 +111,7 @@
 <script>
     function addToBucket(element) {
 
-        var $button = $(element);
-        var $container = $button.closest('ul.list-of-items');
-        var $find_item_id = $container.find('.item-id');
-
-        var id = $find_item_id.attr('value');
+        var id = $(element).closest('.list-of-items').find('#item-id').attr('value');
 
 
         var token = $("meta[name='_csrf']").attr("content");

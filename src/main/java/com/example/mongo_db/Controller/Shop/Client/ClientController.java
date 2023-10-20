@@ -170,6 +170,7 @@ public class ClientController {
         String total_client = request.getParameter("client_user_name");
         String total_issue = request.getParameter("issue");
 
+
 //        String referringPage = request.getHeader("referer");
 //        if (referringPage != null) {
 //            referringPage = referringPage.substring(referringPage.lastIndexOf('1') + 1, referringPage.length());

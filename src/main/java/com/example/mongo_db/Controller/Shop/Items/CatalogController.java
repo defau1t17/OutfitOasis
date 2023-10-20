@@ -20,7 +20,6 @@ import java.util.stream.IntStream;
 @Controller
 @RequestMapping("/shop/catalog")
 public class CatalogController {
-
     @Autowired
     private CatalogService catalogService;
 
@@ -31,12 +30,11 @@ public class CatalogController {
 
         model.addAttribute("page_information", page);
 
-        model.addAttribute("page_count", IntStream.rangeClosed(1, page.getTotalPages()).boxed().collect(Collectors.toList()));
+        model.addAttribute("page_count", IntStream.rangeClosed(0, page.getTotalPages()-1).boxed().collect(Collectors.toList()));
 
 
         return "shop/items/catalog_page";
     }
-
 
     @GetMapping("/categories")
     public String displayCategoriesPage(Model model) {
@@ -50,7 +48,7 @@ public class CatalogController {
     public String displayItemsByCategory(@PathVariable(value = "category") String category,@RequestParam(value = "page")Optional<Integer> page, Model model) {
         Page<ShopItem> allItemsByCategory = catalogService.findAllItemsByCategory(category, page.orElse(0));
         model.addAttribute("category_page_information", allItemsByCategory);
-        model.addAttribute("page_count", IntStream.rangeClosed(1, allItemsByCategory.getTotalPages()).boxed().collect(Collectors.toList()));
+        model.addAttribute("page_count", IntStream.rangeClosed(0, allItemsByCategory.getTotalPages()-1).boxed().collect(Collectors.toList()));
         return "shop/items/catalog_page";
     }
 

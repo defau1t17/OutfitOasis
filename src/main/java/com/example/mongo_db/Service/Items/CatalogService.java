@@ -32,7 +32,7 @@ public class CatalogService {
     @Autowired
     private ProducerRepo producerRepo;
 
-    private static final int PAGE_SIZE_ITEMS = 6;
+    private static final int PAGE_SIZE_ITEMS = 10;
 
 
 

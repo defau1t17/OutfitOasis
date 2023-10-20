@@ -6,7 +6,7 @@
     <link rel="stylesheet" th:href="@{/client/client_bucket_style.css}">
     <link rel="stylesheet" th:href="@{/includes/header_style.css}">
 
-    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta type="hidden" name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 
 
