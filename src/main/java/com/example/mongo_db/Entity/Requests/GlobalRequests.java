@@ -11,7 +11,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Data
 @Document(collection = "requests")
 public class GlobalRequests<T> {
-
     @Id
     private String id;
 

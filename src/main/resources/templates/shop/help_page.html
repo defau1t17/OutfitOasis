@@ -188,7 +188,7 @@
                 console.log('got status');
                 if (clientStatus) {
                     console.log('authorized')
-                    if(element.textContent.trim() !== ''){
+                    if(element.value.trim() !== ''){
                         sendRequest(element.className.valueOf())
                     }
                     else{

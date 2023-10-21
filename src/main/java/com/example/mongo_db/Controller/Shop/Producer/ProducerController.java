@@ -31,17 +31,16 @@ public class ProducerController {
     @GetMapping("/request/form")
     public String displayProducerForm(Model model, HttpServletRequest request) {
         try {
-            model.addAttribute(
-                    "countries", service.getCountries());
+            model.addAttribute("countries", service.getCountries());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        if (requestsService.isClientOnModeration((Client) request.getSession().getAttribute("global_client"))) {
-            model.addAttribute("onModeration", true);
-            logger.info("client found in moderation list. All fields hidden");
-        } else if (requestsService.isClientAlreadyProducer((Client) request.getSession().getAttribute("global_client"))) {
+        if (requestsService.isClientAlreadyProducer((Client) request.getSession().getAttribute("global_client"))) {
             model.addAttribute("alreadyProducer", true);
             logger.info("client is already a producer. All fields hidden");
+        } else if (requestsService.isClientOnModeration((Client) request.getSession().getAttribute("global_client"))) {
+            model.addAttribute("onModeration", true);
+            logger.info("client found in moderation list. All fields hidden");
         } else {
             model.addAttribute("not_producer_and_not_in_list", true);
             logger.info("client not found in moderation list.");

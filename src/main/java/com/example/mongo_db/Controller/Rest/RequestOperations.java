@@ -36,8 +36,10 @@ public class RequestOperations {
     public ResponseEntity getRequestProducer(@RequestBody GlobalRequests<RequestData> producer_request, HttpServletRequest request) {
         if (!requestsService.isClientOnModeration((Client) request.getSession().getAttribute("global_client"))) {
             logger.info("client not found in moderation list. Ready for further moves");
+
             producer_request.setRequest_sender((Client) request.getSession().getAttribute("global_client"));
             requestsService.save_entity(producer_request);
+
             UpdateGlobalClient.updateGlobalClient("global_client", (Client) request.getSession().getAttribute("global_client"), request.getSession());
             logger.info("client added to moderation list successfully. Data updated");
             requestsService.sendMessage(producer_request.getData_inf().getRequest_producer_mail());
@@ -45,8 +47,6 @@ public class RequestOperations {
             return ResponseEntity.status(HttpStatus.CREATED).build();
         } else return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
-
-    //create mail message for client
 
 
 }
