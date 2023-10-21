@@ -101,6 +101,10 @@
 
 </div>
 
+<div id="notification" class="notification">
+
+</div>
+
 
 
 
@@ -109,6 +113,20 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+
+    const notification = document.getElementById('notification');
+
+    function showNotification(message, duration) {
+        notification.textContent = message;
+        notification.style.opacity = '1';
+
+        setTimeout(() => {
+            console.log('message shown');
+            notification.style.opacity = '0';
+        }, duration);
+    }
+
+
     function addToBucket(element) {
 
         var id = $(element).closest('.list-of-items').find('#item-id').attr('value');
@@ -126,7 +144,8 @@
                 },
                 success: function (data, textStatus, xhr) {
                     if (xhr.status === 200) {
-                        console.log("Элемент добавлен в корзину");
+                        showNotification('Item has been added successfully!', 2000);
+                        console.log("");
                     }
                     if (xhr.status === 226) {
                         console.log("client not authorized");

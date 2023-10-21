@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Panel</title>
+</head>
+<body>
+
+
+<div class="container">
+    <div class="requests-block-link">
+        <a th:href="@{/shop/administration/admin/panel/__${session.get('global_client').id}__/display/requests}">REQUESTS</a>
+    </div>
+    <div class="global-block-link">
+        <a th:href="@{/shop/administration/admin/panel/__${session.get('global_client').id}__/display/clients}">WEB
+            CLIENTS</a>
+    </div>
+    <div class="statistics-block-link">
+        <a th:href="@{/shop/administration/admin/panel/__${session.get('global_client').id}__/display/statistics}">STATISTICS</a>
+    </div>
+
+
+</div>
+
+<div>
+    <a>Log Out</a>
+</div>
+
+
+</body>
+</html>

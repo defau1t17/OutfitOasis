@@ -27,24 +27,15 @@ public class RequestsService implements EntityOperations {
 
 
     public boolean isClientOnModeration(Client client) {
-        Optional<GlobalRequests> client_in_request = requestsRepo.findByRequest_sender(client);
+        Optional<GlobalRequests> client_in_request = requestsRepo.isClientInRequestList(client.getId(), RequestTags.PRODUCER_NEW);
         if (client_in_request.isPresent()) {
-            GlobalRequests globalRequests = client_in_request.get();
-
-            if (globalRequests.getRequest_sender().getId().equals(client.getId()) &&
-                    globalRequests.getTag().equals(RequestTags.PRODUCER_NEW)) {
-                return true;
-            } else return false;
-        }
-        return false;
+            return true;
+        } else
+            return false;
     }
 
     public boolean isClientAlreadyProducer(Client client) {
-        Optional<GlobalRequests> byRequest_sender = requestsRepo.findByRequest_sender(client);
-        if (byRequest_sender.isPresent()) {
-            return requestsRepo.findByRequest_sender(client).get().getRequest_sender().getRole().equals(Role.ROLE_PRODUCER);
-        }
-        return false;
+        return client.getRole().equals(Role.ROLE_PRODUCER);
     }
 
 

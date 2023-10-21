@@ -35,8 +35,6 @@ public class CatalogService {
     private static final int PAGE_SIZE_ITEMS = 10;
 
 
-
-
     public List<Category> findAllCategories() {
         return Arrays.asList(Category.values());
     }
@@ -48,14 +46,14 @@ public class CatalogService {
     }
 
 
-    public Page<ShopItem> findByPage(int current_page){
+    public Page<ShopItem> findByPage(int current_page) {
         PageRequest pageRequest = PageRequest.of(current_page, PAGE_SIZE_ITEMS);
         return itemRepo.findAll(pageRequest);
     }
 
     public Page<ShopItem> findAllItemsByCategory(String category, int current_page) {
         PageRequest pageRequest = PageRequest.of(current_page, PAGE_SIZE_ITEMS);
-        return itemRepo.findAllItemsByCategory(category,pageRequest);
+        return itemRepo.findAllItemsByCategory(category, pageRequest);
     }
 
     public ShopItem findItemById(String id) {
@@ -74,7 +72,6 @@ public class CatalogService {
         producer.setProducer_country("China");
         producer.setClient(client);
         producerRepo.save(producer);
-
 
 
         Dress dress = new Dress();
