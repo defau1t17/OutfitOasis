@@ -31,8 +31,7 @@
         </div>
 
             <div class="bug-send-block">
-                <textarea placeholder="You may describe your issue here :)" name="bug_text" class="input-bug-field"
-                          minlength="50" maxlength="700" required>
+                <textarea placeholder="You may describe your issue here :)" name="bug_text" class="input-bug-field" required oninput="removerFirstSpaces(this)">
 
     </textarea>
 
@@ -65,7 +64,7 @@
             <span class="invocation-text">If you have some questions or suggestions, please write it bellow :)</span>
         </div>
         <div class="qos-send-block">
-            <textarea placeholder="You may describe your issue here :)" class="input-qos-field">
+            <textarea placeholder="You may describe your issue here :)" class="input-qos-field" oninput="removerFirstSpaces(this)">
             </textarea>
         </div>
         <div class="button-block">
@@ -86,6 +85,22 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+
+
+    $(document).ready(function() {
+        var $input = $('.input-qos-field');
+        var $input_bug = $('.input-bug-field');
+        $input_bug.val($input_bug.val().replace(/\s/g, ''));
+        $input.val($input.val().replace(/\s/g, ''));
+    });
+
+    function removerFirstSpaces(element){
+        console.log('on change')
+            if (element.value.trim() === '') {
+                element.value = '';
+            }
+    }
+
 
     const notification = document.getElementById('notification');
 
