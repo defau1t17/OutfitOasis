@@ -73,11 +73,13 @@
 
     </div>
 
+
+    <div id="notification" class="notification">
+
+    </div>
+
 </div>
 
-<div id="notification" class="notification">
-
-</div>
 
 <div th:replace="includes/footer :: footer"> </div>
 
@@ -112,17 +114,11 @@
             notification.style.opacity = '0';
         }, duration);
     }
-
-
     function sendRequest(classname) {
-
         var token = $("meta[name='_csrf']").attr("content");
-
         console.log(classname)
-
         var text;
         var tag;
-
 
         if (classname === 'confirmation-bug-button') {
             text = $('.input-bug-field').val();
@@ -162,7 +158,6 @@
         });
     }
 
-
     function getClientStatus() {
         return new Promise(function (resolve, reject) {
             $.ajax({
@@ -193,7 +188,12 @@
                 console.log('got status');
                 if (clientStatus) {
                     console.log('authorized')
-                    sendRequest(element.className.valueOf())
+                    if(element.textContent.trim() !== ''){
+                        sendRequest(element.className.valueOf())
+                    }
+                    else{
+                        showNotification('field should not be empty!', 1500);
+                    }
                 } else {
                     console.log('not authorized')
                     window.location.href = 'http://localhost:8081/shop/client/login';

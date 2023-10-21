@@ -1,0 +1,149 @@
+body {
+    width: 100%;
+    background: url('/images/static_background.jpg');
+    background-color: #f0f0f0;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.producer-main-text-block{
+    margin-top: 25px;
+}
+
+.main-text {
+
+    font-size: 38px;
+    font-family: Arial;
+    font-weight: lighter;
+    color: white;
+
+}
+
+.data-fields {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.input-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.inner-block{
+    margin-top: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.label-field {
+    font-size: 14px;
+    color: white;
+    font-family: Arial;
+    font-weight: lighter;
+    margin-bottom: 15px;
+}
+
+.brand-name-field, .producer-contact-mail{
+    width: 400px;
+    height: 40px;
+    background-color: #b6042a;
+    border-radius: 5px;
+    border: none;
+    opacity: 0.8;
+    color: white;
+    font-size: 17px;
+    font-family: Arial;
+}
+
+.brand-name-field, .producer-contact-mail:focus {
+    outline: none;
+}
+
+.select-field {
+    color: white;
+    background: #b6042a;
+    justify-content: center;
+    align-items: center;
+    background: none;
+    text-align: center;
+    margin-top: 20px;
+    width: 250px;
+    height: 40px;
+    font-size: 17px;
+    font-family: "Times New Roman";
+    border: none;
+    border-bottom: 1px solid #79021c;
+
+}
+
+.producer-description{
+    min-width: 400px;
+    min-height: 200px;
+    resize: horizontal;
+    max-width: 600px;
+    max-height: 300px;
+    background: rgba(182, 4, 42, 0.7);
+    border: none;
+    color: white;
+    border-radius: 10px;
+    font-size: 17px;
+    font-family: Arial;
+    overflow: auto;
+}
+.producer-description:focus{
+    outline: none;
+}
+
+
+
+option {
+    background: #b6042a;
+}
+
+.button-block {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.send-producer-request {
+    width: 350px;
+    height: 40px;
+    color: white;
+    background: rgba(182, 4, 42, 0.8);
+    font-size: 14px;
+    font-family: Arial;
+    border: none;
+    border-radius: 15px;
+
+}
+
+
+.notification {
+    position: absolute;
+    bottom: 20%;
+    left: 50%;
+    width: 350px;
+    height: 40px;
+    background-color: rgb(245, 5, 56, 0.6);
+    color: #fff;
+    font-size: 14px;
+    font-weight: lighter;
+    font-family: Arial;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}

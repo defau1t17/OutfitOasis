@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/shop/request/api")
 public class ClientDetails {
 
-
     @GetMapping("/client/status")
     public HttpStatus isClientAuthorized(HttpServletRequest request) {
         if (request.getSession().getAttribute("global_client") != null) {
