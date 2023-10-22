@@ -1,6 +1,7 @@
 package com.example.mongo_db.Entity.Requests;
 
 import com.example.mongo_db.Entity.Client.Client;
+import com.example.mongo_db.Entity.Requests.Types.RequestStatus;
 import com.example.mongo_db.Entity.Requests.Types.RequestTags;
 import jakarta.annotation.Nullable;
 import lombok.Builder;
@@ -10,7 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
 @Document(collection = "requests")
-public class GlobalRequests<T> {
+public class GlobalRequests<T>  {
     @Id
     private String id;
 
@@ -19,5 +20,8 @@ public class GlobalRequests<T> {
     private T data_inf;
 
     private Client request_sender;
+
+    private RequestStatus requestStatus = RequestStatus.Pending;
+
 
 }

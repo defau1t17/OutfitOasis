@@ -84,8 +84,11 @@
                             xhr.setRequestHeader('X-CSRF-TOKEN', csrf_token);
                         },
                         success(data, status, xhr) {
-                            if (status === 202) {
+                            if (xhr.status === 202) {
+                                $(element).closest('.request-block').remove();
                                 console.log('Success');
+                            } else {
+                                alert("error")
                             }
                         }
                     });
