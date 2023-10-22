@@ -30,8 +30,9 @@
             </span>
         </div>
 
-            <div class="bug-send-block">
-                <textarea placeholder="You may describe your issue here :)" name="bug_text" class="input-bug-field" required oninput="removerFirstSpaces(this)">
+        <div class="bug-send-block">
+                <textarea placeholder="You may describe your issue here :)" name="bug_text" class="input-bug-field"
+                          required oninput="removerFirstSpaces(this)">
 
     </textarea>
 
@@ -64,7 +65,8 @@
             <span class="invocation-text">If you have some questions or suggestions, please write it bellow :)</span>
         </div>
         <div class="qos-send-block">
-            <textarea placeholder="You may describe your issue here :)" class="input-qos-field" oninput="removerFirstSpaces(this)">
+            <textarea placeholder="You may describe your issue here :)" class="input-qos-field"
+                      oninput="removerFirstSpaces(this)">
             </textarea>
         </div>
         <div class="button-block">
@@ -81,26 +83,25 @@
 </div>
 
 
-<div th:replace="includes/footer :: footer"> </div>
-
+<div th:replace="includes/footer :: footer"></div>
 
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 
 
-    $(document).ready(function() {
+    $(document).ready(function () {
         var $input = $('.input-qos-field');
         var $input_bug = $('.input-bug-field');
         $input_bug.val($input_bug.val().replace(/\s/g, ''));
         $input.val($input.val().replace(/\s/g, ''));
     });
 
-    function removerFirstSpaces(element){
+    function removerFirstSpaces(element) {
         console.log('on change')
-            if (element.value.trim() === '') {
-                element.value = '';
-            }
+        if (element.value.trim() === '') {
+            element.value = '';
+        }
     }
 
 
@@ -114,6 +115,7 @@
             notification.style.opacity = '0';
         }, duration);
     }
+
     function sendRequest(classname) {
         var token = $("meta[name='_csrf']").attr("content");
         console.log(classname)
@@ -123,11 +125,9 @@
         if (classname === 'confirmation-bug-button') {
             text = $('.input-bug-field').val();
             tag = "BUG";
-            console.log('ready to send some bugsss......')
         } else if (classname === 'confirmation-qos-button') {
             text = $('.input-qos-field').val();
             tag = "CLIENT_QOS";
-            console.log('ready to send qos')
 
         }
 
@@ -147,7 +147,12 @@
             },
             success: function (data, textStatus, xhr) {
                 if (xhr.status === 201) {
-                    showNotification("Your request has been successfully!",2000);
+                    if (classname === 'confirmation-bug-button') {
+                        $('.input-bug-field').val('');
+                    } else if (classname === 'confirmation-qos-button') {
+                        $('.input-qos-field').val('');
+                    }
+                    showNotification("Your request has been successfully!", 2000);
                     console.log('message send')
                 }
             },
@@ -188,10 +193,11 @@
                 console.log('got status');
                 if (clientStatus) {
                     console.log('authorized')
-                    if(element.value.trim() !== ''){
-                        sendRequest(element.className.valueOf())
-                    }
-                    else{
+                    if (element.className.valueOf() === 'confirmation-bug-button' && $('.input-bug-field').val() !== '') {
+                        sendRequest(element.className.valueOf());
+                    } else if (element.className.valueOf() === 'confirmation-qos-button' && $('.input-qos-field').val() !== '') {
+                        sendRequest(element.className.valueOf());
+                    } else {
                         showNotification('field should not be empty!', 1500);
                     }
                 } else {

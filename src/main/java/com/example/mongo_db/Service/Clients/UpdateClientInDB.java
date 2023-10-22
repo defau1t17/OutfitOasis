@@ -2,7 +2,7 @@ package com.example.mongo_db.Service.Clients;
 
 import com.example.mongo_db.Entity.Client.Client;
 
-public class UpdateClient {
+public class UpdateClientInDB {
 
     public Client updateClient(Client updatedClient, Client current_client, boolean isAddressEmpty) {
 

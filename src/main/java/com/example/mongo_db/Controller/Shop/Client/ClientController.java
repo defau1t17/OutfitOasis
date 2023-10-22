@@ -3,10 +3,7 @@ package com.example.mongo_db.Controller.Shop.Client;
 
 import com.example.mongo_db.Entity.Client.Address;
 import com.example.mongo_db.Entity.Client.Client;
-import com.example.mongo_db.Service.Clients.CheckForAddress;
-import com.example.mongo_db.Service.Clients.ClientsService;
-import com.example.mongo_db.Service.Clients.LoginRedirection;
-import com.example.mongo_db.Service.Clients.UpdateGlobalClient;
+import com.example.mongo_db.Service.Clients.*;
 import com.example.mongo_db.Service.Image.ImageService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.constraints.NotBlank;
@@ -204,8 +201,8 @@ public class ClientController {
             if (client.getClient_password().equals(password)) {
                 logger.info("Client was found successfully!");
                 request.getSession().setAttribute("global_client", client);
-
-                return "redirect:/shop/client/account/" + client.getId();
+                String redirection_gateway = RedirectionClientByRole.redirectClientByRole(client.getRole(), client.getId());
+                return "redirect:" + redirection_gateway;
 
             } else {
                 logger.info("Client wrote wrong password");

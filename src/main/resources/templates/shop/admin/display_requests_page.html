@@ -1,38 +1,152 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Web Requests</title>
+    <link rel="stylesheet" th:href="@{/admin/request_page_style.css}">
+
 </head>
 <body>
 
+<header>
+
+</header>
 
 
-<div class="container">
-    <div class="list-of-requests">
-        <div class="request">
+<div class="container" th:if="${requests_data != null}">
+
+    <div class="filter-container">
+        <div class="selection-container">
+            <label>My '#BUG' tag</label>
+            <input class="filter-checkbox" id="bug-checkbox" type="checkbox" onchange="redirectByCheckedCheckBox(this)">
+        </div>
+        <div class="selection-container">
+            <label>My '#QOS' tag</label>
+            <input class="filter-checkbox" type="checkbox">
+        </div>
+
+        <div class="selection-container">
+            <label>My '#PRODUCER_NEW' tag</label>
+            <input class="filter-checkbox" type="checkbox">
+        </div>
+        <!--        to be continued-->
+
+    </div>
+
+    <div class="list-of-requests" th:each="request : ${requests_data.content}">
+        <div class="request-block">
             <div class="tag-block">
-                <span>TAG</span>
+                <span id="request-id" th:value="${request.id}" th:text="${request.id}">ID</span>
+                <span th:text="${request.tag}">TAG</span>
+                <input type="hidden" id="_csrf_token" name="_csrf" th:content="${_csrf.token}">
             </div>
             <div class="data-information-block">
-                <span>DATA</span>
+                <span th:if="${request.tag == T(com.example.mongo_db.Entity.Requests.Types.RequestTags).BUG}"
+                      th:text="${request.data_inf}">DATA</span>
+                <span th:if="${request.tag == T(com.example.mongo_db.Entity.Requests.Types.RequestTags).CLIENT_QOS}"
+                      th:text="${request.data_inf}">DATA</span>
+                <span th:if="${request.tag == T(com.example.mongo_db.Entity.Requests.Types.RequestTags).PRODUCER_NEW}">
+                    <span th:text="${request.data_inf.request_brand_name}"></span>
+                    <span th:text="${request.data_inf.request_producer_country}"></span>
+                    <span th:text="${request.data_inf.request_producer_mail}"></span>
+                    <span th:text="${request.data_inf.request_producer_product_description}"></span>
+                </span>
             </div>
             <div class="sender-info-block">
-
+                <span th:text="${request.request_sender.id}"></span>
+                <span th:text="${request.request_sender.mail}"></span>
+                <span th:text="${request.request_sender.client_user_name}"></span>
             </div>
-            <div class="decision-block">
-                <button>Apply</button>
-                <button>Deny</button>
+            <div class="decision-block"
+                 th:if="${request.tag == T(com.example.mongo_db.Entity.Requests.Types.RequestTags).BUG || request.tag == T(com.example.mongo_db.Entity.Requests.Types.RequestTags).CLIENT_QOS}">
+                <button class="apply-button" onclick="sendAdminsRequest(this)">APPLY</button>
+                <button class="deny-button" onclick="sendAdminsRequest(this)">REMOVE</button>
             </div>
 
-            <div class="decision-block">
-                <button>Apply</button>
-                <button>Remove</button>
+            <div class="decision-block"
+                 th:if="${request.tag == T(com.example.mongo_db.Entity.Requests.Types.RequestTags).PRODUCER_NEW}">
+                <button class="apply-button-button" onclick="sendAdminsRequest(this)">APPLY</button>
+                <button class="deny-button" onclick="sendAdminsRequest(this)">DENY</button>
             </div>
 
         </div>
     </div>
+
 </div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+
+    function sendAdminsRequest(element) {
+        var csrf_token = $('#_csrf_token').attr("content");
+        var admin_id = '';
+
+        $.ajax({
+            url: '/shop/administration/admin/request/global/id',
+            type: 'GET',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader('X-CSRF-TOKEN', csrf_token);
+            },
+            success: function (data, status, xhr) {
+                if (xhr.status === 200) {
+                    admin_id = data;
+
+                    var id = $(element).closest('.request-block').find('#request-id').attr('value');
+                    var textContent = $(element).text();
+
+                    $.ajax({
+                        url: '/shop/administration/admin/request/' + admin_id + '/moderation/datatype',
+                        type: 'POST',
+                        headers: {
+                            Accept: "application/json",
+                            "Content-Type": "application/json"
+                        },
+                        data: JSON.stringify({
+                            request_id: id,
+                            operation: textContent
+                        }),
+                        beforeSend(xhr) {
+                            xhr.setRequestHeader('X-CSRF-TOKEN', csrf_token);
+                        },
+                        success(data, status, xhr) {
+                            if (xhr.status === 202) {
+                                $(element).closest('.request-block').remove();
+                                console.log('Success');
+                            } else {
+                                alert("error")
+                            }
+                        }
+                    });
+                } else if (xhr.status === 404) {
+                    console.log('Admin not authorized');
+                }
+            }
+        });
+    }
+
+
+    function redirectByCheckedCheckBox(element) {
+        var csrf_token = $('#_csrf_token').attr("content");
+        var admin_id = '';
+
+        $.ajax({
+            url: '/shop/administration/admin/request/global/id',
+            type: 'GET',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader('X-CSRF-TOKEN', csrf_token);
+            },
+            success: function (data, status, xhr) {
+                if (xhr.status === 200) {
+                    admin_id = data;
+                    location.replace('/shop/administration/admin/panel/' + admin_id + '/display/requests?tag=bug&tag=test')
+
+                } else if (xhr.status === 404) {
+                    console.log('Admin not authorized');
+                }
+            }
+        });
+    }
+
+</script>
 
 
 </body>

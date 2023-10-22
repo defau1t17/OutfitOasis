@@ -19,7 +19,7 @@ public interface RequestsRepo extends MongoRepository<GlobalRequests, String> {
     Optional<GlobalRequests> isClientInRequestList(String id, RequestTags tags);
 
 
-    Page<GlobalRequests> getRequestByPage(Pageable pageable);
+    Page<GlobalRequests> findAll(Pageable pageable);
 
 
 }

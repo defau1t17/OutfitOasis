@@ -47,24 +47,6 @@ public class ClientsService implements EntityOperations {
         } else return true;
     }
 
-    public void saveNewClient(Client client) {
-        Bucket client_bucket = new Bucket();
-        Image image = new Image();
-
-        ArrayList<ClientShopItemDAO> items = new ArrayList<>();
-        client_bucket.setClient_items(items);
-        image.setImage("");
-
-
-        client.setClient_image(image);
-        client.setBucket(client_bucket);
-
-        bucketRepo.save(client_bucket);
-        imagesRepo.save(image);
-
-        clientsRepo.save(client);
-    }
-
     public String existedFields(Client client) {
         String fields = "client with ";
         if (clientsRepo.doesUserNameExists(client.getClient_user_name()) != null) {
@@ -122,7 +104,7 @@ public class ClientsService implements EntityOperations {
         Optional<Client> clientById = findClientById(request_for_update_client.getId());
         if (clientById.isPresent()) {
             Client client = clientById.get();
-            Client updated_client = new UpdateClient().updateClient(request_for_update_client, client, isAddressEmpty);
+            Client updated_client = new UpdateClientInDB().updateClient(request_for_update_client, client, isAddressEmpty);
             if (updated_client != null) {
                 return updated_client;
             } else {
@@ -130,7 +112,6 @@ public class ClientsService implements EntityOperations {
             }
         }
         return null;
-
     }
 
     @Override
