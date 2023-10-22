@@ -1,10 +1,7 @@
 package com.example.mongo_db.Controller.Rest.admin;
 
-import com.example.mongo_db.DTO.admin.SendRequestOperationDTO;
+import com.example.mongo_db.DTO.SendRequestOperationDTO;
 import com.example.mongo_db.Entity.Client.Client;
-import com.example.mongo_db.Entity.Requests.GlobalRequests;
-import com.example.mongo_db.Entity.Requests.RequestData;
-import com.example.mongo_db.Entity.Requests.Types.RequestTags;
 import com.example.mongo_db.Service.Admin.AdminService;
 import com.example.mongo_db.Service.Admin.RequestOperations;
 import com.example.mongo_db.Service.BugsAndQos.BugsAndQosService;
@@ -15,8 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/shop/administration/admin/request")

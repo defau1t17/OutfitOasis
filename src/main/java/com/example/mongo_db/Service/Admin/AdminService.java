@@ -1,6 +1,7 @@
 package com.example.mongo_db.Service.Admin;
 
 import com.example.mongo_db.Entity.Requests.GlobalRequests;
+import com.example.mongo_db.Entity.Requests.Types.RequestTags;
 import com.example.mongo_db.Repository.ClientsRepoes.ClientsRepo;
 import com.example.mongo_db.Repository.RequestsRepost.RequestsRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,11 @@ public class AdminService {
     public Page<GlobalRequests> getRequestsByPageNumber(int page){
         return requestsRepo.findAll(PageRequest.of(page,REQUESTS_PAGE_SIZE));
     }
+
+//    public Page<GlobalRequests> getRequestsByTag(RequestTags tag){
+//
+//        return
+//    }
 
     public Optional<GlobalRequests> getRequestByID(String id){
         return requestsRepo.findById(id);

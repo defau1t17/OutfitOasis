@@ -8,8 +8,31 @@
 </head>
 <body>
 
+<header>
+
+</header>
+
 
 <div class="container" th:if="${requests_data != null}">
+
+    <div class="filter-container">
+        <div class="selection-container">
+            <label>My '#BUG' tag</label>
+            <input class="filter-checkbox" id="bug-checkbox" type="checkbox" onchange="redirectByCheckedCheckBox(this)">
+        </div>
+        <div class="selection-container">
+            <label>My '#QOS' tag</label>
+            <input class="filter-checkbox" type="checkbox">
+        </div>
+
+        <div class="selection-container">
+            <label>My '#PRODUCER_NEW' tag</label>
+            <input class="filter-checkbox" type="checkbox">
+        </div>
+        <!--        to be continued-->
+
+    </div>
+
     <div class="list-of-requests" th:each="request : ${requests_data.content}">
         <div class="request-block">
             <div class="tag-block">
@@ -48,6 +71,7 @@
 
         </div>
     </div>
+
 </div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
@@ -99,6 +123,28 @@
         });
     }
 
+
+    function redirectByCheckedCheckBox(element) {
+        var csrf_token = $('#_csrf_token').attr("content");
+        var admin_id = '';
+
+        $.ajax({
+            url: '/shop/administration/admin/request/global/id',
+            type: 'GET',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader('X-CSRF-TOKEN', csrf_token);
+            },
+            success: function (data, status, xhr) {
+                if (xhr.status === 200) {
+                    admin_id = data;
+                    location.replace('/shop/administration/admin/panel/' + admin_id + '/display/requests?tag=bug&tag=test')
+
+                } else if (xhr.status === 404) {
+                    console.log('Admin not authorized');
+                }
+            }
+        });
+    }
 
 </script>
 

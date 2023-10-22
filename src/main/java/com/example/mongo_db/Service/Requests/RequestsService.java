@@ -34,6 +34,8 @@ public class RequestsService implements EntityOperations {
             return false;
     }
 
+
+
     public boolean isClientAlreadyProducer(Client client) {
         return client.getRole().equals(Role.ROLE_PRODUCER);
     }

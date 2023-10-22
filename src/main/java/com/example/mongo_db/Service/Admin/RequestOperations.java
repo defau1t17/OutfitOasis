@@ -1,6 +1,6 @@
 package com.example.mongo_db.Service.Admin;
 
-import com.example.mongo_db.DTO.admin.SendRequestOperationDTO;
+import com.example.mongo_db.DTO.SendRequestOperationDTO;
 import com.example.mongo_db.Entity.Client.Client;
 import com.example.mongo_db.Entity.Requests.GlobalRequests;
 import com.example.mongo_db.Entity.Requests.Types.RequestStatus;
@@ -9,8 +9,6 @@ import com.example.mongo_db.Entity.Role;
 import com.example.mongo_db.Service.BugsAndQos.BugsAndQosService;
 import com.example.mongo_db.Service.Clients.ClientsService;
 import com.example.mongo_db.Service.Clients.SendMessage;
-import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 
 import java.util.Optional;

@@ -1,4 +1,4 @@
-package com.example.mongo_db.DTO.admin;
+package com.example.mongo_db.DTO;
 
 import lombok.Data;
 

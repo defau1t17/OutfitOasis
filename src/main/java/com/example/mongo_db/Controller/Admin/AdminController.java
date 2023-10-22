@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Arrays;
+import java.util.Map;
 import java.util.Optional;
 
 @Controller
@@ -23,22 +25,23 @@ public class AdminController {
     private AdminService adminService;
 
     @GetMapping("/panel/{id}")
-    public String displayAdminPanelPage(@PathVariable(value = "id")String id){
+    public String displayAdminPanelPage(@PathVariable(value = "id") String id) {
 
         return "/shop/admin/main_admin_panel_page";
     }
 
 
     @GetMapping("/panel/{id}/display/requests")
-    public String displayRequestPage(@PathVariable(value = "id")String id, @RequestParam("page")Optional<Integer> page, Model model){
+    public String displayRequestPage(@PathVariable(value = "id") String id, @RequestParam("page") Optional<Integer> page, Model model, HttpServletRequest request) {
         Page<GlobalRequests> requestsPage = adminService.getRequestsByPageNumber(page.orElse(0));
         model.addAttribute("requests_data", requestsPage);
+        Map<String, String[]> parameterMap = request.getParameterMap();
+        for (Map.Entry<String, String[]> test : parameterMap.entrySet()) {
+            System.out.println(Arrays.toString(test.getValue()));
+        }
 
         return "/shop/admin/display_requests_page";
     }
-
-
-
 
 
 }
