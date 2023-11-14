@@ -3,7 +3,7 @@ package com.example.mongo_db.Controller.Rest.admin;
 import com.example.mongo_db.DTO.SendRequestOperationDTO;
 import com.example.mongo_db.Entity.Client.Client;
 import com.example.mongo_db.Service.Admin.AdminService;
-import com.example.mongo_db.Service.Admin.RequestOperations;
+import com.example.mongo_db.Service.Admin.RequestsOperations;
 import com.example.mongo_db.Service.BugsAndQos.BugsAndQosService;
 import com.example.mongo_db.Service.Clients.ClientsService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -29,9 +29,12 @@ public class AdminRequestsRestController {
     @Autowired
     private BugsAndQosService bugsAndQosService;
 
+    @Autowired
+    private RequestsOperations requestsOperations;
+
 
     @GetMapping("/global/id")
-    public ResponseEntity<String> getCurrentAdminID(HttpServletRequest request) {
+    public ResponseEntity<?> getCurrentAdminID(HttpServletRequest request) {
         Client global_client = (Client) request.getSession().getAttribute("global_client");
         if (global_client != null) {
             String global_clientId = global_client.getId();
@@ -39,13 +42,11 @@ public class AdminRequestsRestController {
         } else return ResponseEntity.notFound().build();
     }
 
-
     @PostMapping("/{id}/moderation/datatype")
-    public ResponseEntity adminRequestsProcessor(@PathVariable(value = "id") String id, @RequestBody SendRequestOperationDTO request) {
-        if (new RequestOperations().processOperation(request, adminService, bugsAndQosService, clientsService, mailSender)) {
+    public ResponseEntity<?> adminRequestsProcessor(@PathVariable(value = "id") String id, @RequestBody SendRequestOperationDTO request) {
+        if (requestsOperations.processOperation(request, adminService, bugsAndQosService, clientsService, mailSender)) {
             return ResponseEntity.status(HttpStatus.ACCEPTED).build();
         } else return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).build();
     }
-
 
 }

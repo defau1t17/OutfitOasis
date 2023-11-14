@@ -12,7 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class CheckForQuery {
-
+    //code must be reviewed
     private Logger logger = Logger.getGlobal();
 
     public boolean doRedirectionNeeded(HttpServletRequest request) {
@@ -33,14 +33,9 @@ public class CheckForQuery {
         if (!parameterNames.asIterator().hasNext()) {
             return null;
         }
-
-
         while (parameterNames.asIterator().hasNext()) {
-
             String param = parameterNames.asIterator().next();
             String value = httpServletRequest.getParameter("" + param);
-
-
             switch (param) {
                 case "name":
                     employeeFilterDTO.setName(value);

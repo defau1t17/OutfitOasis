@@ -28,7 +28,6 @@ public class ProducerService implements EntityOperations {
         producerRepo.save((Producer) obj);
 
     }
-
     @Override
     public void remove_entity(Object obj) {
         producerRepo.delete((Producer) obj);

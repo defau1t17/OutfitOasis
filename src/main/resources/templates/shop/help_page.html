@@ -142,8 +142,8 @@
                 tag: tag,
                 data_inf: text
             }),
-            beforeSend: function (xhr) {
-                xhr.setRequestHeader('X-CSRF-TOKEN', token);
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('X-CSRF-TOKEN', token);
             },
             success: function (data, textStatus, xhr) {
                 if (xhr.status === 201) {

@@ -16,4 +16,10 @@ public class Image {
     private String id;
     private String image;
 
+    public Image update(Image oldImage) {
+        if (oldImage != null) {
+            this.image = oldImage.getImage();
+        }
+        return this;
+    }
 }

@@ -45,10 +45,7 @@ public class ProducerController {
             model.addAttribute("not_producer_and_not_in_list", true);
             logger.info("client not found in moderation list.");
         }
-
         logger.info("Producer form page was shown successfully");
-
-
         return "shop/producer/producer_request_form_page";
     }
 

@@ -27,7 +27,6 @@ public class GenerateQuery {
         if (filterDTO.getPost() != null) {
             query += "post=" + filterDTO.getPost() + "&";
         }
-
         if (query.endsWith("&")) {
             query = query.substring(0, query.length() - 1);
         }

@@ -31,8 +31,6 @@ public class CartOperations {
     private Bucket client_bucket;
 
     private ClientShopItemDAO shopItemDAO;
-
-
     @Autowired
     private ItemRepo itemRepo;
 

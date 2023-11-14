@@ -48,4 +48,27 @@ public class Client extends User {
 
     @Field(name = "role")
     private Role role = Role.ROLE_CLIENT;
+
+    public Client updateClient(Client updatedClient, boolean isAddressEmpty) {
+        if (updatedClient.getName() != null && updatedClient.getName().trim() != "") {
+            this.setName(updatedClient.getName());
+        }
+        if (updatedClient.getSecond_name() != null && updatedClient.getSecond_name().trim() != "") {
+            this.setSecond_name(updatedClient.getSecond_name());
+        }
+        if (updatedClient.getAge() != 0 && updatedClient.getAge() >= 12) {
+            this.setAge(updatedClient.getAge());
+        }
+        if (updatedClient.getPhone_number() != null && updatedClient.getPhone_number().trim() != "") {
+            this.setPhone_number(updatedClient.getPhone_number());
+        }
+        if (updatedClient.getAddress() != null && !isAddressEmpty) {
+            this.setAddress(updatedClient.getAddress());
+        } else if (updatedClient.getAddress() == null && isAddressEmpty) {
+            this.setAddress(null);
+        }
+        return this;
+    }
+
+
 }

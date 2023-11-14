@@ -1,13 +1,15 @@
-package com.example.mongo_db.Service.Clients;
+package com.example.mongo_db.Service;
 
 import org.passay.CharacterData;
 import org.passay.CharacterRule;
 import org.passay.EnglishCharacterData;
 import org.passay.PasswordGenerator;
+import org.springframework.stereotype.Component;
 
-public class GenerateCode {
+@Component
+public class GenerateSpecialCode {
 
-    public static String createCode() {
+    public  String createCode() {
         PasswordGenerator generatedPassword = new PasswordGenerator();
         CharacterData lowerCaseChars = EnglishCharacterData.LowerCase;
         CharacterRule lowerCaseRule = new CharacterRule(lowerCaseChars);

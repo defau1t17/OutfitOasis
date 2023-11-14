@@ -19,11 +19,9 @@ public class ClientFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         Client global_client = (Client) request.getSession().getAttribute("global_client");
-
         if (global_client == null) {
             response.sendRedirect("/shop/client/login");
         } else {
-//            response.sendRedirect("shop/client/account/" + global_client.getId());
             filterChain.doFilter(request, response);
         }
 

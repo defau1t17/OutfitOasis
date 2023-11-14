@@ -20,11 +20,6 @@ public class BugsAndQosService implements EntityOperations {
         BugsAndQOS bugsAndQOS = new BugsAndQOS();
         bugsAndQOS.setRequest(obj1);
         repository.save(bugsAndQOS);
-
-    }
-
-    public void save(GlobalRequests globalRequests) {
-
     }
 
     @Override

@@ -6,6 +6,7 @@ import com.example.mongo_db.Entity.Requests.Types.RequestTags;
 import com.example.mongo_db.Entity.Role;
 import com.example.mongo_db.Repository.RequestsRepost.RequestsRepo;
 import com.example.mongo_db.Service.EntityOperations;
+import com.example.mongo_db.Service.MessageSenderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -23,7 +24,9 @@ public class RequestsService implements EntityOperations {
     @Autowired
     private JavaMailSender javaMailSender;
 
-    private static final String SENDER = "onlineshop.project@yandex.com";
+    @Autowired
+    private MessageSenderService messageSenderService;
+
 
 
     public boolean isClientOnModeration(Client client) {
@@ -35,14 +38,13 @@ public class RequestsService implements EntityOperations {
     }
 
 
-
     public boolean isClientAlreadyProducer(Client client) {
         return client.getRole().equals(Role.ROLE_PRODUCER);
     }
 
 
     public void sendMessage(String producer_mail) {
-        SendStatusMessage.SendModerationMessage(producer_mail, SENDER, javaMailSender);
+        messageSenderService.sendClientNotificationAboutRequestStatus(producer_mail, javaMailSender);
     }
 
 

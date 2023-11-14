@@ -1,18 +1,12 @@
 package com.example.mongo_db.Service.Clients;
 
-import com.example.mongo_db.Entity.Client.Client;
-import com.example.mongo_db.Entity.Producer.Producer;
 import com.example.mongo_db.Entity.Role;
+import org.springframework.stereotype.Component;
 
-import static com.example.mongo_db.Entity.Role.ROLE_CLIENT;
-import static com.example.mongo_db.Entity.Role.ROLE_PRODUCER;
-
-public class RedirectionClientByRole {
-
-
-    public static String redirectClientByRole(Role role, String client_id) {
+@Component
+public class RoleRedirection {
+    public String redirectClientByRole(Role role, String client_id) {
         String redirection_url = "/shop/";
-
         switch (role) {
             case ROLE_CLIENT:
                 redirection_url += "client/account/" + client_id;
@@ -27,9 +21,7 @@ public class RedirectionClientByRole {
             case ROLE_EMPLOYEE:
 
             case ROLE_REDACTOR:
-
         }
-
         return "redirect:/shop/login";
     }
 

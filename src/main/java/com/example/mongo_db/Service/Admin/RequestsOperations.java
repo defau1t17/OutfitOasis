@@ -8,32 +8,36 @@ import com.example.mongo_db.Entity.Requests.Types.RequestTags;
 import com.example.mongo_db.Entity.Role;
 import com.example.mongo_db.Service.BugsAndQos.BugsAndQosService;
 import com.example.mongo_db.Service.Clients.ClientsService;
-import com.example.mongo_db.Service.Clients.SendMessage;
+import com.example.mongo_db.Service.MessageSenderService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-public class RequestOperations {
+@Service
+public class RequestsOperations {
 
-    private static final String OUTFIT_OASIS_SENDER = "onlineshop.project@yandex.com";
+    @Autowired
+    private MessageSenderService messageSenderService;
+
 
     private void upgradeClientsRoleToProducer(Client client, String clients_work_mail, ClientsService clientsService, JavaMailSender mailSender, String request_id, AdminService adminService) {
         client.setRole(Role.ROLE_PRODUCER);
         clientsService.update_entity(client);
-        SendMessage.sendMessageForNewClientsRole(clients_work_mail, OUTFIT_OASIS_SENDER, mailSender);
+        messageSenderService.sendClientNotificationAboutNewRole(clients_work_mail, mailSender);
         adminService.deleteRequestByID(request_id);
 
     }
 
     private void denyClientsRequest(String request_id, AdminService service, String clients_work_mail, JavaMailSender mailSender) {
         service.deleteRequestByID(request_id);
-        SendMessage.sendDenyForNewRoleToClient(clients_work_mail, OUTFIT_OASIS_SENDER, mailSender);
+        messageSenderService.sendClientNotificationAboutRejectionNewRole(clients_work_mail, mailSender);
     }
 
     private void logAndRemoveApprovedRequestOrRoleUpdateRequest(String request_id, AdminService adminService) {
         Optional<GlobalRequests> requestByID = adminService.getRequestByID(request_id);
         requestByID.ifPresent(globalRequests -> globalRequests.setRequestStatus(RequestStatus.Approved));
-        //logging approve and remover
         adminService.deleteRequestByID(request_id);
     }
 
@@ -62,7 +66,7 @@ public class RequestOperations {
                         applyQosAndBugsRequest(request.getId(), adminService, bugsAndQosService);
                         return true;
                     } else if (request.getTag() == RequestTags.PRODUCER_NEW) {
-                        upgradeClientsRoleToProducer(request.getRequest_sender(), request.getRequest_sender().getMail(), clientsService, mailSender, request.getId(),adminService);
+                        upgradeClientsRoleToProducer(request.getRequest_sender(), request.getRequest_sender().getMail(), clientsService, mailSender, request.getId(), adminService);
                         logAndRemoveApprovedRequestOrRoleUpdateRequest(request.getId(), adminService);
                         return true;
                     } else return false;

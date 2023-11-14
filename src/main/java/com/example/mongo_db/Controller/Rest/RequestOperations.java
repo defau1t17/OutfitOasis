@@ -27,7 +27,6 @@ public class RequestOperations {
         bug_request.setRequest_sender((Client) request.getSession().getAttribute("global_client"));
         requestsService.save_entity(bug_request);
         logger.info("bug message has been added to request db successfully");
-
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
@@ -36,14 +35,11 @@ public class RequestOperations {
     public ResponseEntity getRequestProducer(@RequestBody GlobalRequests<RequestData> producer_request, HttpServletRequest request) {
         if (!requestsService.isClientOnModeration((Client) request.getSession().getAttribute("global_client"))) {
             logger.info("client not found in moderation list. Ready for further moves");
-
             producer_request.setRequest_sender((Client) request.getSession().getAttribute("global_client"));
             requestsService.save_entity(producer_request);
-
             UpdateGlobalClient.updateGlobalClient("global_client", (Client) request.getSession().getAttribute("global_client"), request.getSession());
             logger.info("client added to moderation list successfully. Data updated");
             requestsService.sendMessage(producer_request.getData_inf().getRequest_producer_mail());
-
             return ResponseEntity.status(HttpStatus.CREATED).build();
         } else return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }

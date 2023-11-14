@@ -26,10 +26,8 @@ public class AdminController {
 
     @GetMapping("/panel/{id}")
     public String displayAdminPanelPage(@PathVariable(value = "id") String id) {
-
         return "/shop/admin/main_admin_panel_page";
     }
-
 
     @GetMapping("/panel/{id}/display/requests")
     public String displayRequestPage(@PathVariable(value = "id") String id, @RequestParam("page") Optional<Integer> page, Model model, HttpServletRequest request) {

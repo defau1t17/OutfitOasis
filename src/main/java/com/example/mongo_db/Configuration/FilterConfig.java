@@ -22,7 +22,6 @@ public class FilterConfig {
         FilterRegistrationBean<ClientRegistrationFilter> filter = new FilterRegistrationBean<>();
         filter.setFilter(new ClientRegistrationFilter());
         filter.addUrlPatterns("/shop/client/registration/verification");
-
         return filter;
     }
 

@@ -1,14 +1,16 @@
-package com.example.mongo_db.Service.Clients;
+package com.example.mongo_db.Service;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class LoginRedirection {
-
-    public static boolean addModels(String username) {
+    public boolean addModels(String username) {
         if (username != null && !username.isBlank() && !username.isEmpty()) {
             return true;
         } else return false;
     }
 
-    public static String printIssue(String issue) {
+    public String printIssue(String issue) {
         if (issue.equals("WRONG_PASSWORD")) {
             return "Access denied! Password is incorrect!";
         } else if (issue.equals("USER_NOT_FOUND")) {

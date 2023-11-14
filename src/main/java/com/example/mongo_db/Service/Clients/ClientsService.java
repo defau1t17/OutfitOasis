@@ -6,19 +6,25 @@ import com.example.mongo_db.Entity.Client.Image;
 import com.example.mongo_db.DAO.ClientShopItemDAO;
 import com.example.mongo_db.Entity.Parse.Countries;
 import com.example.mongo_db.Entity.Parse.Country;
+import com.example.mongo_db.Entity.OutfitOasisMail;
 import com.example.mongo_db.Repository.ClientsRepoes.BucketRepo;
 import com.example.mongo_db.Repository.ClientsRepoes.ClientsRepo;
 import com.example.mongo_db.Repository.ClientsRepoes.ImagesRepo;
 import com.example.mongo_db.Service.EntityOperations;
+import com.example.mongo_db.Service.GenerateSpecialCode;
+import com.example.mongo_db.Service.Image.ImageService;
+import com.example.mongo_db.Service.MessageSenderService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -37,11 +43,16 @@ public class ClientsService implements EntityOperations {
     @Autowired
     private ImagesRepo imagesRepo;
 
+    @Autowired
+    private ImageService imageService;
 
-    private static final String sender = "onlineshop.project@yandex.com";
+    @Autowired
+    private MessageSenderService messageSenderService;
 
+    @Autowired
+    private GenerateSpecialCode generateSpecialCode;
 
-    public boolean doesClientExists(Client client) {
+    public boolean isClientExists(Client client) {
         if (client != null && clientsRepo.doesUserExists(client.getPhone_number(), client.getMail(), client.getClient_user_name()) == null) {
             return false;
         } else return true;
@@ -80,15 +91,15 @@ public class ClientsService implements EntityOperations {
 
 
     public String sendPasswordRecoveryMessage(String client_mail) {
-        String recovery_code = GenerateCode.createCode();
-        SendMessage.sendRecoveryPassword(client_mail, sender, recovery_code, mailSender);
+        String recovery_code = generateSpecialCode.createCode();
+        messageSenderService.sendRecoveryPasswordMessage(client_mail, recovery_code, mailSender);
         return recovery_code;
     }
 
 
     public String sendVerificationMessage(String client_mail) {
-        String verification_code = GenerateCode.createCode();
-        SendVerificationMessage.SendVerificationCode(client_mail, sender, verification_code, mailSender);
+        String verification_code = generateSpecialCode.createCode();
+        messageSenderService.sendClientVerificationMessage(client_mail, OutfitOasisMail.OUTFIT_OASIS_SENDER, mailSender);
         return verification_code;
     }
 
@@ -103,8 +114,7 @@ public class ClientsService implements EntityOperations {
     public Client requestClientUpdate(Client request_for_update_client, boolean isAddressEmpty) {
         Optional<Client> clientById = findClientById(request_for_update_client.getId());
         if (clientById.isPresent()) {
-            Client client = clientById.get();
-            Client updated_client = new UpdateClientInDB().updateClient(request_for_update_client, client, isAddressEmpty);
+            Client updated_client = clientById.get().updateClient(request_for_update_client, isAddressEmpty);
             if (updated_client != null) {
                 return updated_client;
             } else {
@@ -116,16 +126,13 @@ public class ClientsService implements EntityOperations {
 
     @Override
     public void save_entity(Object obj) {
-
         Client client = (Client) obj;
 
         Bucket client_bucket = new Bucket();
-        Image image = new Image();
+        Image image = imageService.buildDefaultImage();
 
         ArrayList<ClientShopItemDAO> items = new ArrayList<>();
         client_bucket.setClient_items(items);
-        image.setImage("");
-
 
         client.setClient_image(image);
         client.setBucket(client_bucket);
@@ -139,11 +146,19 @@ public class ClientsService implements EntityOperations {
     @Override
     public void update_entity(Object obj) {
         clientsRepo.save((Client) obj);
-
     }
 
     @Override
     public void remove_entity(Object obj) {
         clientsRepo.delete((Client) obj);
+    }
+
+    @Transactional
+    public void updateClientImage(MultipartFile file, Client client) throws IOException {
+        Image image = client.getClient_image();
+        image.setImage(Base64.getEncoder().encodeToString(file.getBytes()));
+        imagesRepo.save(image);
+        client.setClient_image(image);
+        update_entity(client);
     }
 }
