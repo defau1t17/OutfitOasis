@@ -89,15 +89,10 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-
-
     var items_quantity = 0;
     var items_price = 0;
     $('#items-text').text('Total quantity : ' + items_quantity);
     $('#price-text').text('Total price : ' + items_price);
-
-
-
 
     function buying_block_operations() {
         var all_checkboxes = $('.item-checkbox-field');
@@ -144,7 +139,7 @@
         console.log('item id - ', id);
 
         $.ajax({
-            url: '/shop/catalog/add/item/' + id,
+            url: '/shop/api/client/item/' + id,
             type: 'POST',
 
             beforeSend: function (xhr) {
@@ -185,9 +180,8 @@
             alert("Are you sure you want to remove item from your bucket?");
         }
         $.ajax({
-            url: '/shop/catalog/remove/item/' + id,
-            type: 'POST',
-
+            url: '/shop/api/client/item/' + id,
+            type: 'DELETE',
             beforeSend: function (xhr) {
                 xhr.setRequestHeader('X-CSRF-TOKEN', token);
             },

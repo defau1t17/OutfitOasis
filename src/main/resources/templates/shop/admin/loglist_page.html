@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>LOG LIST</title>
+</head>
+<body>
+<div class="log-container" th:if="${loglist != null}" th:each="list : ${loglist}">
+    <p th:text="${list}"></p>
+</div>
+</body>
+</html>

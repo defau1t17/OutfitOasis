@@ -8,5 +8,4 @@ public class UpdateGlobalClient {
         httpSession.setAttribute(global_client, updated_client);
     }
 
-
 }

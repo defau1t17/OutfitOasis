@@ -1,9 +1,7 @@
 package com.example.mongo_db.Controller.Rest;
 
-import com.example.mongo_db.Entity.Client.Client;
 import com.example.mongo_db.Entity.Requests.GlobalRequests;
 import com.example.mongo_db.Entity.Requests.RequestData;
-import com.example.mongo_db.Service.Clients.UpdateGlobalClient;
 import com.example.mongo_db.Service.Requests.RequestsService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,38 +12,30 @@ import org.springframework.web.bind.annotation.*;
 import java.util.logging.Logger;
 
 @RestController
-@RequestMapping("/shop/send")
+@RequestMapping("/shop/api/help")
 public class RequestOperations {
 
     @Autowired
     private RequestsService requestsService;
 
-    private static final Logger logger = Logger.global;
+    private static final Logger logger = Logger.getGlobal();
 
-    @RequestMapping(value = "/request/reports", method = RequestMethod.POST)
+    @PostMapping(value = "/report")
     public ResponseEntity getRequestIssue(@RequestBody GlobalRequests<String> bug_request, HttpServletRequest request) {
-        bug_request.setRequest_sender((Client) request.getSession().getAttribute("global_client"));
-        requestsService.save_entity(bug_request);
-        logger.info("bug message has been added to request db successfully");
-
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        requestsService.saveNewReport(bug_request, request);
+        logger.info("The request coming from the client has been processed. New repost saved successfully");
+        return ResponseEntity.status(200).build();
     }
 
-
-    @RequestMapping(value = "/request/producer")
+    @PostMapping(value = "/producer")
     public ResponseEntity getRequestProducer(@RequestBody GlobalRequests<RequestData> producer_request, HttpServletRequest request) {
-        if (!requestsService.isClientOnModeration((Client) request.getSession().getAttribute("global_client"))) {
-            logger.info("client not found in moderation list. Ready for further moves");
-
-            producer_request.setRequest_sender((Client) request.getSession().getAttribute("global_client"));
-            requestsService.save_entity(producer_request);
-
-            UpdateGlobalClient.updateGlobalClient("global_client", (Client) request.getSession().getAttribute("global_client"), request.getSession());
-            logger.info("client added to moderation list successfully. Data updated");
-            requestsService.sendMessage(producer_request.getData_inf().getRequest_producer_mail());
-
-            return ResponseEntity.status(HttpStatus.CREATED).build();
-        } else return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        if (!requestsService.validateClientBeforeAdd(request)) {
+            logger.info("The request coming from the client has been processed. The client is not on the moderation list");
+            requestsService.saveNewProducerRequest(producer_request, request);
+            return ResponseEntity.status(200).build();
+        } else
+            logger.info("The request coming from the client has been processed. The client failed validation");
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 
 

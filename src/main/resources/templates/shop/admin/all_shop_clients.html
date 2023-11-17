@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>All Clients</title>
+</head>
+<body>
+
+<div class="filter-container">
+    <form class="filter-form" action="">
+        <input type="hidden" th:name="page" th:value="${page}">
+        <div th:each="role : ${T(com.example.mongo_db.Entity.Role).values()}">
+            <input type="checkbox" th:name="roles" th:value="${role.name}"
+                   th:checked="${checked_roles != null && checked_roles.contains(role.name)}" th:text="${role.name}">
+        </div>
+        <div>
+            <input type="hidden" th:name="page" th:value="${page}">
+            <input type="hidden" th:name="roles" th:if="${roles != null}"
+                   th:attr="value=${#strings.arrayJoin(roles, ',')}">
+            <input type="text" th:name="name" th:value="${searchName}">
+            <input type="text" th:name="secondName" th:value="${searchSecondName}">
+            <input type="number" th:name="age" th:value="${searchAge}" min="13" max="100">
+            <select th:name="gender">
+                <option th:value="null" th:selected="${searchGender == null}">--choose sex--</option>
+                <option th:each="gender : ${T(com.example.mongo_db.Entity.Gender).values()}"
+                        th:value="${gender.name}" th:selected="${searchGender != null && gender.name().equals(searchGender)}" th:text="${gender.name()}"></option>
+            </select>
+        </div>
+
+        <button type="submit">Filter</button>
+    </form>
+</div>
+
+<div class="container">
+    <div class="clients" th:each="client : ${clients}">
+        <div class="client-block">
+            <div class="client-image-block">
+                <img th:src="@{'data:image/*;base64,'+ ${client.client_image.image}}" style="height: 50px;">
+            </div>
+            <div class="client-main-information">
+                <label>Name : </label>
+                <span th:text="${client.name}"></span>
+                <label>Second Name : </label>
+                <span th:text="${client.name}"></span>
+                <label>ID : </label>
+                <span th:text="${client.id}"></span>
+                <label>Mail : </label>
+                <span th:text="${client.mail}"></span>
+            </div>
+            <h4 th:text="${client.role}"></h4>
+            <div class="loggs-button-block">
+                <a th:href="@{/shop/__${client.id}__/loglist}">View Client's Log List</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -11,7 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
 @Document(collection = "requests")
-public class GlobalRequests<T>  {
+public class GlobalRequests<T> {
     @Id
     private String id;
 
@@ -22,6 +22,10 @@ public class GlobalRequests<T>  {
     private Client request_sender;
 
     private RequestStatus requestStatus = RequestStatus.Pending;
+
+    public String displayRequest() {
+        return "ID [" + this.getId() + "], TAG [" + this.getTag().toString() + "], DATA [" + this.data_inf + "], SENDER [" + request_sender.getId() + "];";
+    }
 
 
 }

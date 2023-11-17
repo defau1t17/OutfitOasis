@@ -30,13 +30,7 @@
         <div class="account-inner-links" th:if="${session.get('global_client') != null}">
             <a class="header-link" th:href="@{/shop/client/account/__${session.get('global_client').id}__}"
                th:text="${session.get('global_client').name}"></a>
-            <a href="account-link" th:href="@{/shop/client/account/__${session.get('global_client').id}__}"
-               th:if="${session.get('global_client').client_image.image == ''}"><img
-                    class="account-link-logo" th:src="@{/images/default-client-icon.jpg}">
-            </a>
-
-            <a href="account-link" th:href="@{/shop/client/account/__${session.get('global_client').id}__}"
-               th:if="${session.get('global_client').client_image.image != ''}"><img
+            <a href="account-link" th:href="@{/shop/client/account/__${session.get('global_client').id}__}"><img
                     class="account-link-logo"
                     th:src="@{'data:image/*;base64,'+${session.get('global_client').client_image.image}}">
             </a>

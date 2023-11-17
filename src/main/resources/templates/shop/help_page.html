@@ -12,14 +12,10 @@
 <body>
 
 <div th:replace="includes/header :: header"></div>
-
-
 <div class="container">
-
     <div class="main-text-container">
         <h1 id="main-text">Do you need some help?</h1>
     </div>
-
     <div class="bug-container">
         <div class="bug-main-text">
             <span class="invocation-text"> Dear Client, if you found a bug, got some troubles in process of using our app, please write the issue
@@ -29,13 +25,10 @@
                 below
             </span>
         </div>
-
         <div class="bug-send-block">
                 <textarea placeholder="You may describe your issue here :)" name="bug_text" class="input-bug-field"
                           required oninput="removerFirstSpaces(this)">
-
     </textarea>
-
         </div>
         <div class="button-block">
             <button type="submit" onclick="beginRequestChain(this)" class="confirmation-bug-button">SEND</button>
@@ -57,9 +50,7 @@
                 </a>
             </button>
         </div>
-
     </div>
-
     <div class="client-qos-container">
         <div class="qos-main-text">
             <span class="invocation-text">If you have some questions or suggestions, please write it bellow :)</span>
@@ -88,7 +79,7 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-
+    var token = $("meta[name='_csrf']").attr("content");
 
     $(document).ready(function () {
         var $input = $('.input-qos-field');
@@ -104,7 +95,6 @@
         }
     }
 
-
     const notification = document.getElementById('notification');
 
     function showNotification(message, duration) {
@@ -117,22 +107,17 @@
     }
 
     function sendRequest(classname) {
-        var token = $("meta[name='_csrf']").attr("content");
-        console.log(classname)
         var text;
         var tag;
-
         if (classname === 'confirmation-bug-button') {
             text = $('.input-bug-field').val();
             tag = "BUG";
         } else if (classname === 'confirmation-qos-button') {
             text = $('.input-qos-field').val();
             tag = "CLIENT_QOS";
-
         }
-
         $.ajax({
-            url: '/shop/send/request/reports',
+            url: '/shop/api/help/report',
             type: 'POST',
             headers: {
                 Accept: "application/json",
@@ -146,40 +131,35 @@
                 xhr.setRequestHeader('X-CSRF-TOKEN', token);
             },
             success: function (data, textStatus, xhr) {
-                if (xhr.status === 201) {
+                if (xhr.status === 200) {
                     if (classname === 'confirmation-bug-button') {
                         $('.input-bug-field').val('');
                     } else if (classname === 'confirmation-qos-button') {
                         $('.input-qos-field').val('');
                     }
                     showNotification("Your request has been successfully!", 2000);
-                    console.log('message send')
                 }
             },
-            error: function () {
-                console.log("Ошибка при отправке запроса");
+            error: function (jqXHR, textStatus, errorThrown) {
+                showNotification("Error happened while sending the request", 2000);
             }
-
         });
     }
 
-    function getClientStatus() {
+    function isClientAuthorized() {
         return new Promise(function (resolve, reject) {
             $.ajax({
-                url: "/shop/request/api/client/status",
+                url: "/shop/api/client/status",
                 type: "GET",
                 dataType: "json",
                 success: function (response) {
                     if (response === "FOUND") {
-                        console.log("Client found");
                         resolve(true);
                     } else {
-                        console.log("Client not found");
                         resolve(false);
                     }
                 },
                 error: function (xhr, status, error) {
-                    console.error("Something went wrong: " + error);
                     reject(error);
                 }
             });
@@ -187,12 +167,9 @@
     }
 
     function beginRequestChain(element) {
-        console.log('chain begin');
-        getClientStatus()
-            .then(function (clientStatus) {
-                console.log('got status');
-                if (clientStatus) {
-                    console.log('authorized')
+        isClientAuthorized()
+            .then(function (authorized) {
+                if (authorized) {
                     if (element.className.valueOf() === 'confirmation-bug-button' && $('.input-bug-field').val() !== '') {
                         sendRequest(element.className.valueOf());
                     } else if (element.className.valueOf() === 'confirmation-qos-button' && $('.input-qos-field').val() !== '') {
@@ -201,7 +178,6 @@
                         showNotification('field should not be empty!', 1500);
                     }
                 } else {
-                    console.log('not authorized')
                     window.location.href = 'http://localhost:8081/shop/client/login';
                 }
             })
@@ -209,7 +185,6 @@
                 console.error("Error: " + error);
             });
     }
-
 </script>
 
 

@@ -12,14 +12,10 @@
 <body>
 
 <div th:replace="includes/header :: header"></div>
-
-
-<div class="container" th:if="${not_producer_and_not_in_list == true}">
-
+<div class="container" th:if="${status.equals('CLIENT')}">
     <div class="producer-main-text-block">
         <span class="main-text">FILL THE FORM TO BECOME A PRODUCE</span>
     </div>
-
     <div class="data-fields">
         <form>
             <div class="input-block">
@@ -27,7 +23,6 @@
                     <label class="label-field">Enter your Brand Name</label>
                     <input class="brand-name-field" type="text" name="brand-name" required>
                 </div>
-
                 <div class="inner-block">
                     <label class="label-field">Please, select the country where you are producing your product</label>
                     <select class="select-field" id="selected_country" required>
@@ -35,36 +30,30 @@
                         <option th:each="country : ${countries}" th:value="${country}" th:text="${country}"></option>
                     </select>
                 </div>
-
                 <div class="inner-block">
                     <label class="label-field">Enter your work email for contact </label>
                     <input class="producer-contact-mail" type="email" name="producer-mail">
                 </div>
-
                 <div class="inner-block">
                     <label class="label-field">Please, describe your product</label>
                     <textarea placeholder="Write information about your product...." class="producer-description"
                               required oninput="removerFirstSpaces(this)">
                     </textarea>
                 </div>
-
             </div>
-
             <div class="button-block">
-                <button type="button" class="send-producer-request" onclick="checkData()">SEND</button>
+                <button type="button" class="send-producer-request" onclick="validateBeforeSend()">SEND</button>
             </div>
         </form>
     </div>
-
 </div>
 
-<div class="container" th:if="${onModeration == true}">
-    <span  class="main-text">Your request is in progress....Just wait</span>
-
+<div class="container" th:if="${status.equals('ON_MODERATION')}">
+    <span class="main-text">Your request is in progress....Just wait</span>
 </div>
 
-<div class="container" th:if="${alreadyProducer == true}">
-    <span  class="main-text">Your are already a producer :)</span>
+<div class="container" th:if="${status.equals('PRODUCER')}">
+    <span class="main-text">Your are already a producer :)</span>
 </div>
 
 
@@ -72,14 +61,10 @@
 
 </div>
 
-
 <div th:replace="includes/footer :: footer"></div>
-
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-
-
     const notification = document.getElementById('notification');
 
     function showNotification(message, duration) {
@@ -91,24 +76,22 @@
         }, duration);
     }
 
-
-    $(document).ready(function() {
+    $(document).ready(function () {
         var $input = $('.producer-description');
         $input.val($input.val().replace(/\s/g, ''));
     });
 
-    function removerFirstSpaces(element){
+    function removerFirstSpaces(element) {
         if (element.value.trim() === '') {
             element.value = '';
         }
     }
 
-    function checkData() {
+    function validateBeforeSend() {
         var brand = $('.brand-name-field').val();
         var country = $('.select-field').val();
         var mail = $('.producer-contact-mail').val();
         var desc = $('.producer-description').val();
-
         var data;
         if (brand.trim() !== '' && country !== '' && country !== null && mail.trim() !== '' && desc.trim() !== '') {
             data = {
@@ -118,19 +101,16 @@
                 "request_producer_product_description": desc
             };
             sendProducerRequest(data);
-
         } else {
             showNotification('Please fill in all fields', 2000);
         }
     }
 
     function sendProducerRequest(data) {
-
         var token = $("meta[name='_csrf']").attr("content");
-        console.log(data)
         var tag = "PRODUCER_NEW";
         $.ajax({
-            url: '/shop/send/request/producer',
+            url: '/shop/api/help/producer',
             type: 'POST',
             headers: {
                 Accept: "application/json",
@@ -144,18 +124,16 @@
                 xhr.setRequestHeader('X-CSRF-TOKEN', token);
             },
             success: function (data, textStatus, xhr) {
-                if (xhr.status === 201) {
+                if (xhr.status === 200) {
                     showNotification("You request has been send successfully!", 1000)
-                    setTimeout(function() {
+                    setTimeout(function () {
                         window.location.href = '/shop/catalog';
-                        }, 1000);
-                } else if (xhr.status === 403) {
-                    console.log('client is in progress')
+                    }, 1000);
                 }
             },
-            error: function () {
-                console.log("Ошибка при отправке запроса");
-            }
+            error(data, status, xhr) {
+                alert(data.responseText);
+            },
         });
     }
 

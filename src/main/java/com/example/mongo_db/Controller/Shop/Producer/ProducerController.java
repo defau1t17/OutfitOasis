@@ -25,9 +25,6 @@ public class ProducerController {
     @Autowired
     private RequestsService requestsService;
 
-    private static final Logger logger = Logger.getGlobal();
-
-
     @GetMapping("/request/form")
     public String displayProducerForm(Model model, HttpServletRequest request) {
         try {
@@ -35,20 +32,8 @@ public class ProducerController {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        if (requestsService.isClientAlreadyProducer((Client) request.getSession().getAttribute("global_client"))) {
-            model.addAttribute("alreadyProducer", true);
-            logger.info("client is already a producer. All fields hidden");
-        } else if (requestsService.isClientOnModeration((Client) request.getSession().getAttribute("global_client"))) {
-            model.addAttribute("onModeration", true);
-            logger.info("client found in moderation list. All fields hidden");
-        } else {
-            model.addAttribute("not_producer_and_not_in_list", true);
-            logger.info("client not found in moderation list.");
-        }
-
-        logger.info("Producer form page was shown successfully");
-
-
+        Client client = (Client) request.getSession().getAttribute("global_client");
+        model.addAttribute("status", requestsService.getProducerStatus(client));
         return "shop/producer/producer_request_form_page";
     }
 

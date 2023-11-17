@@ -12,6 +12,5 @@ public class BugsAndQOS {
 
     @Id
     private String id;
-
     private GlobalRequests request;
 }
