@@ -9,15 +9,16 @@
 
 <div class="container">
     <div class="requests-block-link">
-        <a th:href="@{/shop/administration/admin/panel/__${session.get('global_client').id}__/display/requests}">VIEW
+        <a th:href="@{/shop/administration/requests}">VIEW
             REQUESTS</a>
     </div>
     <div class="global-block-link">
-        <a th:href="@{/shop/administration/admin/panel/__${session.get('global_client').id}__/display/clients}">VIEW WEB
+        <a th:href="@{/shop/administration/clients}">VIEW WEB
             CLIENTS</a>
     </div>
     <div class="statistics-block-link">
-        <a th:href="@{/shop/administration/admin/panel/__${session.get('global_client').id}__/display/statistics}">VIEW STATISTICS</a>
+        <a th:href="@{/shop/administration/statistics}">VIEW
+            STATISTICS</a>
     </div>
 </div>
 

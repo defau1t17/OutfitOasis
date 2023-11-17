@@ -1,6 +1,6 @@
 package com.example.mongo_db.Controller.Rest.admin;
 
-import com.example.mongo_db.DTO.SendRequestOperationDTO;
+import com.example.mongo_db.DTO.AdminRequestOperationDTO;
 import com.example.mongo_db.Entity.Client.Client;
 import com.example.mongo_db.Service.Admin.AdminService;
 import com.example.mongo_db.Service.Admin.RequestsOperations;
@@ -14,9 +14,8 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/shop/administration/admin/request")
+@RequestMapping("/shop/api/admin")
 public class AdminRequestsRestController {
-
     @Autowired
     private AdminService adminService;
 
@@ -32,21 +31,15 @@ public class AdminRequestsRestController {
     @Autowired
     private RequestsOperations requestsOperations;
 
-
-    @GetMapping("/global/id")
-    public ResponseEntity<?> getCurrentAdminID(HttpServletRequest request) {
-        Client global_client = (Client) request.getSession().getAttribute("global_client");
-        if (global_client != null) {
-            String global_clientId = global_client.getId();
-            return ResponseEntity.ok(global_clientId);
-        } else return ResponseEntity.notFound().build();
+    @PostMapping("/requests")
+    public ResponseEntity<?> adminRequestsProcessor(@RequestBody AdminRequestOperationDTO request, HttpServletRequest httpServletRequest) {
+        if (adminService.operationValidation((Client) httpServletRequest.getSession().getAttribute("global_client"))) {
+            if (requestsOperations.processOperation(request, adminService, bugsAndQosService, clientsService, mailSender, httpServletRequest)) {
+                return ResponseEntity.status(HttpStatus.OK).build();
+            } else return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("transaction error");
+        } else
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Operation rejected. Caused : " + ((Client) httpServletRequest.getSession().getAttribute("global_client")).getRole().toString());
     }
 
-    @PostMapping("/{id}/moderation/datatype")
-    public ResponseEntity<?> adminRequestsProcessor(@PathVariable(value = "id") String id, @RequestBody SendRequestOperationDTO request) {
-        if (requestsOperations.processOperation(request, adminService, bugsAndQosService, clientsService, mailSender)) {
-            return ResponseEntity.status(HttpStatus.ACCEPTED).build();
-        } else return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).build();
-    }
 
 }

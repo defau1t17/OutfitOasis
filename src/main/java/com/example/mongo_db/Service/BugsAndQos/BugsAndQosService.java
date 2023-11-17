@@ -22,6 +22,10 @@ public class BugsAndQosService implements EntityOperations {
         repository.save(bugsAndQOS);
     }
 
+    public String findNewEntityByOldID(String oldID) {
+        return repository.findByRequestId(oldID).get().getId();
+    }
+
     @Override
     public void update_entity(Object obj) {
 

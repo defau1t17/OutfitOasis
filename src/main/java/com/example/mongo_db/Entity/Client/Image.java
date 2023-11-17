@@ -2,6 +2,7 @@ package com.example.mongo_db.Entity.Client;
 
 
 import lombok.Data;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.bson.types.Binary;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -22,4 +23,6 @@ public class Image {
         }
         return this;
     }
+
+
 }

@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta  name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta hidden name="_csrf_header" th:content="${_csrf.headerName}"/>
 
     <title>Catalog</title>
@@ -16,7 +16,8 @@
 
 <div class="container" th:if="${page_information != null}">
     <div class="items-block">
-        <ul class="list-of-items" th:each="item : ${page_information.content}" onmouseenter="displayAddToCartButton(event)"
+        <ul class="list-of-items" th:each="item : ${page_information.content}"
+            onmouseenter="displayAddToCartButton(event)"
             onmouseleave="hideAddToCartButton(event)">
             <a class="item-link" th:href="@{/shop/catalog/item/__${item.id}__}">
                 <div class="item">
@@ -26,7 +27,7 @@
                              th:src="@{/images/default_item_icon.png}">
                     </div>
                     <div class="product-info-block">
-                            <span class="product-item-info" id="item-id"  th:data-item-id="${item.id}"
+                            <span class="product-item-info" id="item-id" th:data-item-id="${item.id}"
                                   th:text="${item.item.name}"
                                   th:value="${item.id}">name</span>
                         <div class="product-name-block">
@@ -63,7 +64,8 @@
 
 <div class="container" th:if="${category_page_information != null}">
     <div class="items-block">
-        <ul class="list-of-items" th:each="item : ${category_page_information.content}" onmouseenter="displayAddToCartButton(event)"
+        <ul class="list-of-items" th:each="item : ${category_page_information.content}"
+            onmouseenter="displayAddToCartButton(event)"
             onmouseleave="hideAddToCartButton(event)">
             <a class="item-link" th:href="@{/shop/catalog/item/__${item.id}__}">
                 <div class="item">
@@ -93,10 +95,10 @@
         </ul>
 
     </div>
-    <div th:if="${category_page_information.totalPages >= 0}" class="pagination-block" >
+    <div th:if="${category_page_information.totalPages >= 0}" class="pagination-block">
         <div th:each="pageNumber : ${page_count}" class="pagination">
-        <a class="pagination-item" th:href="@{/shop/catalog?page=__${pageNumber}__}" th:text="${pageNumber}"></a>
-         </div>
+            <a class="pagination-item" th:href="@{/shop/catalog?page=__${pageNumber}__}" th:text="${pageNumber}"></a>
+        </div>
     </div>
 
 </div>
@@ -104,8 +106,6 @@
 <div id="notification" class="notification">
 
 </div>
-
-
 
 
 <div th:replace="includes/footer :: footer">
@@ -126,37 +126,31 @@
         }, duration);
     }
 
-
     function addToBucket(element) {
 
         var id = $(element).closest('.list-of-items').find('#item-id').attr('value');
 
         var token = $("meta[name='_csrf']").attr("content");
 
-        console.log('item id - ', id);
-
-            $.ajax({
-                url: '/shop/catalog/add/item/' + id,
-                type: 'POST',
-
-                beforeSend: function (xhr) {
-                    xhr.setRequestHeader('X-CSRF-TOKEN', token);
-                },
-                success: function (data, textStatus, xhr) {
-                    if (xhr.status === 200) {
-                        showNotification('Item has been added successfully!', 2000);
-                        console.log("");
-                    }
-                    if (xhr.status === 226) {
-                        console.log("client not authorized");
-                        console.log("Ошибка при добавлении элемента в корзину");
-                        window.location.href = 'http://localhost:8081/shop/client/login';
-                    }
-                },
-                error: function () {
-                    console.log("Ошибка при отправке запроса");
+        $.ajax({
+            url: '/shop/api/client/item/' + id,
+            type: 'POST',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader('X-CSRF-TOKEN', token);
+            },
+            success: function (data, textStatus, xhr) {
+                if (xhr.status === 200) {
+                    showNotification('Item has been added successfully!', 2000);
+                    console.log("");
                 }
-            });
+                if (xhr.status === 401) {
+                    window.location.href = 'http://localhost:8081/shop/client/login';
+                }
+            },
+            error: function () {
+                console.log("Ошибка при отправке запроса");
+            }
+        });
     }
 
     function displayAddToCartButton(event) {

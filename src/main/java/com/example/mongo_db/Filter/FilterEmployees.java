@@ -9,7 +9,6 @@ public class FilterEmployees {
     public Query filter(EmployeeFilterDTO filterDTO) {
         Query query = new Query();
 
-        System.out.println(filterDTO.toString());
         if (!filterDTO.getName().isEmpty()) {
             query.addCriteria(Criteria.where("name").is(filterDTO.getName()));
         }

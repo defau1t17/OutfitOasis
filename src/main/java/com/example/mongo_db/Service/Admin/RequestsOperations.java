@@ -1,6 +1,6 @@
 package com.example.mongo_db.Service.Admin;
 
-import com.example.mongo_db.DTO.SendRequestOperationDTO;
+import com.example.mongo_db.DTO.AdminRequestOperationDTO;
 import com.example.mongo_db.Entity.Client.Client;
 import com.example.mongo_db.Entity.Requests.GlobalRequests;
 import com.example.mongo_db.Entity.Requests.Types.RequestStatus;
@@ -8,7 +8,9 @@ import com.example.mongo_db.Entity.Requests.Types.RequestTags;
 import com.example.mongo_db.Entity.Role;
 import com.example.mongo_db.Service.BugsAndQos.BugsAndQosService;
 import com.example.mongo_db.Service.Clients.ClientsService;
+import com.example.mongo_db.Service.LogData.LoggerService;
 import com.example.mongo_db.Service.MessageSenderService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -21,66 +23,62 @@ public class RequestsOperations {
     @Autowired
     private MessageSenderService messageSenderService;
 
+    @Autowired
+    private LoggerService loggerService;
 
     private void upgradeClientsRoleToProducer(Client client, String clients_work_mail, ClientsService clientsService, JavaMailSender mailSender, String request_id, AdminService adminService) {
         client.setRole(Role.ROLE_PRODUCER);
         clientsService.update_entity(client);
         messageSenderService.sendClientNotificationAboutNewRole(clients_work_mail, mailSender);
-        adminService.deleteRequestByID(request_id);
-
     }
 
-    private void denyClientsRequest(String request_id, AdminService service, String clients_work_mail, JavaMailSender mailSender) {
-        service.deleteRequestByID(request_id);
+    private void denyClientsRequest(String request_id, AdminService adminService, String clients_work_mail, JavaMailSender mailSender) {
+        GlobalRequests requests = adminService.getRequestByID(request_id).get();
+        requests.setRequestStatus(RequestStatus.Denied);
         messageSenderService.sendClientNotificationAboutRejectionNewRole(clients_work_mail, mailSender);
     }
 
-    private void logAndRemoveApprovedRequestOrRoleUpdateRequest(String request_id, AdminService adminService) {
-        Optional<GlobalRequests> requestByID = adminService.getRequestByID(request_id);
-        requestByID.ifPresent(globalRequests -> globalRequests.setRequestStatus(RequestStatus.Approved));
+    private void removeRequests(String request_id, AdminService adminService, boolean approved) {
+        if (approved) adminService.getRequestByID(request_id).get().setRequestStatus(RequestStatus.Approved);
+        if (!approved) adminService.getRequestByID(request_id).get().setRequestStatus(RequestStatus.Denied);
         adminService.deleteRequestByID(request_id);
     }
 
-
-    private void removeDeniedRequest(String request_id, AdminService adminService) {
-        Optional<GlobalRequests> getRequest = adminService.getRequestByID(request_id);
-        getRequest.ifPresent(globalRequests -> globalRequests.setRequestStatus(RequestStatus.Denied));
-        adminService.deleteRequestByID(request_id);
-    }
-
-    private void applyQosAndBugsRequest(String request_id, AdminService adminService, BugsAndQosService service) {
+    private String applyQosAndBugsRequest(String request_id, AdminService adminService, BugsAndQosService service) {
         GlobalRequests requests = adminService.getRequestByID(request_id).get();
         requests.setRequestStatus(RequestStatus.Approved);
         service.save_entity(requests);
-        adminService.deleteRequestByID(request_id);
+        return service.findNewEntityByOldID(request_id);
     }
 
-
-    public boolean processOperation(SendRequestOperationDTO data, AdminService adminService, BugsAndQosService bugsAndQosService, ClientsService clientsService, JavaMailSender mailSender) {
+    public boolean processOperation(AdminRequestOperationDTO data, AdminService adminService, BugsAndQosService bugsAndQosService, ClientsService clientsService, JavaMailSender mailSender, HttpServletRequest httpServletRequest) {
         Optional<GlobalRequests> getById = adminService.getRequestByID(data.getRequest_id());
+        Client admin = (Client) httpServletRequest.getSession().getAttribute("global_client");
         if (getById.isPresent()) {
             GlobalRequests request = getById.get();
             switch (data.getOperation()) {
                 case "APPLY":
                     if (request.getTag() == RequestTags.BUG || request.getTag() == RequestTags.CLIENT_QOS) {
-                        applyQosAndBugsRequest(request.getId(), adminService, bugsAndQosService);
+                        String newRequestID = applyQosAndBugsRequest(request.getId(), adminService, bugsAndQosService);
+                        loggerService.log(admin.getId(), "applied request with ID [" + request.getId() + "] ->  new ID [" + newRequestID + "]");
+                        removeRequests(request.getId(), adminService, true);
                         return true;
                     } else if (request.getTag() == RequestTags.PRODUCER_NEW) {
                         upgradeClientsRoleToProducer(request.getRequest_sender(), request.getRequest_sender().getMail(), clientsService, mailSender, request.getId(), adminService);
-                        logAndRemoveApprovedRequestOrRoleUpdateRequest(request.getId(), adminService);
+                        loggerService.log(admin.getId(), "approved role reversal for " + request.getRequest_sender().getId() + " client");
+                        loggerService.log(request.getRequest_sender().getId(), "role reversed to PRODUCER");
+                        removeRequests(request.getId(), adminService, true);
                         return true;
                     } else return false;
                 case "DENY":
-                    if (request.getTag() == RequestTags.BUG || request.getTag() == RequestTags.CLIENT_QOS) {
-                        removeDeniedRequest(request.getId(), adminService);
-                        return true;
-                    } else if (request.getTag() == RequestTags.PRODUCER_NEW) {
-                        denyClientsRequest(request.getId(), adminService, request.getRequest_sender().getMail(), mailSender);
-                        return true;
-                    } else return false;
-
+                    denyClientsRequest(request.getId(), adminService, request.getRequest_sender().getMail(), mailSender);
+                    loggerService.log(admin.getId(), "denied role reversal for " + request.getRequest_sender().getId() + " client | request " + request.displayRequest());
+                    loggerService.log(request.getRequest_sender().getId(), "role reversal request denied");
+                    removeRequests(request.getId(), adminService, false);
+                    return true;
                 case "REMOVE":
-                    removeDeniedRequest(request.getId(), adminService);
+                    loggerService.log(admin.getId(), "removed request " + request.displayRequest());
+                    removeRequests(request.getId(), adminService, false);
                     return true;
             }
         } else return false;
