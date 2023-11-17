@@ -4,13 +4,15 @@ import com.example.mongo_db.Entity.Client.Client;
 import com.example.mongo_db.Entity.Requests.GlobalRequests;
 import com.example.mongo_db.Entity.Role;
 import com.example.mongo_db.Filter.RequestsFilter;
-import com.example.mongo_db.Filter.RoleFilter;
+import com.example.mongo_db.Filter.GlobalClientsFilter;
 import com.example.mongo_db.Repository.RequestsRepost.RequestsRepo;
+import com.example.mongo_db.Service.Clients.ClientsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -25,6 +27,9 @@ public class AdminService {
 
     private static final int REQUESTS_PAGE_SIZE = 20;
 
+    @Autowired
+    private ClientsService clientsService;
+
     public Page<GlobalRequests> getRequestsByParams(int page, List<String> tags) {
         Query query = new RequestsFilter().filterRequestsByTags(tags)
                 .skip((long) page * REQUESTS_PAGE_SIZE)
@@ -32,11 +37,8 @@ public class AdminService {
         return new PageImpl<>(mongoTemplate.find(query, GlobalRequests.class), PageRequest.of(page, REQUESTS_PAGE_SIZE), mongoTemplate.count(query.skip(-1).limit(-1), GlobalRequests.class));
     }
 
-    public Page<Client> getClientsByParams(int page, List<String> roles) {
-        Query query = new RoleFilter().filterUsersByRole(roles)
-                .skip((long) page * REQUESTS_PAGE_SIZE)
-                .limit(REQUESTS_PAGE_SIZE);
-        return new PageImpl<>(mongoTemplate.find(query, Client.class), PageRequest.of(page, REQUESTS_PAGE_SIZE), mongoTemplate.count(query.skip(-1).limit(-1), Client.class));
+    public Page<Client> getClientsByParams(int page, List<String> roles, String name, String secondName, int age, String gender) {
+        return clientsService.getClientsByParams(page, roles, name, secondName, age, gender);
     }
 
     public Optional<GlobalRequests> getRequestByID(String id) {

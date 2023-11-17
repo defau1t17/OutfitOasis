@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Service
 public class LoggerService {
@@ -20,7 +21,7 @@ public class LoggerService {
         if (logDataRepo.findByClientID(client_id).isPresent()) {
             logData = logDataRepo.findByClientID(client_id).get();
             logData.getLog().add("< " + LocalDateTime.now() + " > : " + text);
-                logData.setClientID(client_id);
+            logData.setClientID(client_id);
         } else {
             logData = new LogData();
             logData.getLog().add("< " + LocalDateTime.now() + " > : " + text);
@@ -29,6 +30,9 @@ public class LoggerService {
         save(logData);
     }
 
+    public List<String> findLogListByClientID(String clientID) {
+        return logDataRepo.findByClientID(clientID).get().getLog();
+    }
 
 
     private void save(LogData logData) {

@@ -33,7 +33,7 @@ public class AdminController {
     @GetMapping("/requests")
     public String displayRequestPage(@RequestParam(required = false) Optional<Integer> page,
                                      @RequestParam(required = false) List<String> tag,
-                                     Model model, HttpServletRequest request) {
+                                     Model model) {
         Page<GlobalRequests> requestsByParams = adminService.getRequestsByParams(page.orElse(0), tag);
         model.addAttribute("requests_data", requestsByParams);
         model.addAttribute("tags", tag);
@@ -44,9 +44,17 @@ public class AdminController {
     @GetMapping("/clients")
     public String displayClientsPage(@RequestParam(required = false) Optional<Integer> page,
                                      @RequestParam(required = false) List<String> roles,
+                                     @RequestParam(required = false) String name,
+                                     @RequestParam(required = false) String secondName,
+                                     @RequestParam(required = false) Optional<Integer> age,
+                                     @RequestParam(required = false) String gender,
                                      Model model) {
-        Page<Client> clientsByParams = adminService.getClientsByParams(page.orElse(0), roles);
+        Page<Client> clientsByParams = adminService.getClientsByParams(page.orElse(0), roles, name, secondName, age.orElse(0), gender);
         model.addAttribute("clients", clientsByParams);
+        model.addAttribute("searchName", name);
+        model.addAttribute("searchSecondName", secondName);
+        model.addAttribute("searchAge", age);
+        model.addAttribute("searchGender", gender);
         model.addAttribute("checked_roles", roles);
         model.addAttribute("page", page.orElse(0));
         return "/shop/admin/all_shop_clients";

@@ -9,9 +9,11 @@ import com.example.mongo_db.Entity.Parse.Countries;
 import com.example.mongo_db.Entity.Parse.Country;
 import com.example.mongo_db.Entity.OutfitOasisMail;
 import com.example.mongo_db.Entity.Producer.Producer;
+import com.example.mongo_db.Filter.GlobalClientsFilter;
 import com.example.mongo_db.Repository.ClientsRepoes.BucketRepo;
 import com.example.mongo_db.Repository.ClientsRepoes.ClientsRepo;
 import com.example.mongo_db.Repository.ClientsRepoes.ImagesRepo;
+import com.example.mongo_db.Repository.RequestsRepost.RequestsRepo;
 import com.example.mongo_db.Service.Bucket.BucketService;
 import com.example.mongo_db.Service.EntityOperations;
 import com.example.mongo_db.Service.GenerateSpecialCode;
@@ -22,6 +24,11 @@ import com.example.mongo_db.Service.Producer.ProducerService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,6 +38,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -58,6 +66,9 @@ public class ClientsService implements EntityOperations {
     @Autowired
     private GenerateSpecialCode generateSpecialCode;
 
+    @Autowired
+    private MongoTemplate mongoTemplate;
+    private static final int REQUESTS_PAGE_SIZE = 20;
 
     public boolean isClientExists(Client client) {
         if (client != null && clientsRepo.doesUserExists(client.getPhone_number(), client.getMail(), client.getClient_user_name()) == null) {
@@ -194,6 +205,13 @@ public class ClientsService implements EntityOperations {
         bucketService.update_entity(client.getBucket());
         update_entity(client);
         UpdateGlobalClient.updateGlobalClient("global_client", client, request.getSession());
+    }
+
+    public Page<Client> getClientsByParams(int page, List<String> roles, String name, String secondName, int age, String gender) {
+        Query query = new GlobalClientsFilter().filterUsersByParams(roles, name, secondName, age, gender)
+                .skip((long) page * REQUESTS_PAGE_SIZE)
+                .limit(REQUESTS_PAGE_SIZE);
+        return new PageImpl<>(mongoTemplate.find(query, Client.class), PageRequest.of(page, REQUESTS_PAGE_SIZE), mongoTemplate.count(query.skip(-1).limit(-1), Client.class));
     }
 
     @Override
