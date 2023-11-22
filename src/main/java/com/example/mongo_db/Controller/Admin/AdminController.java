@@ -4,6 +4,7 @@ package com.example.mongo_db.Controller.Admin;
 import com.example.mongo_db.Entity.Client.Client;
 import com.example.mongo_db.Entity.Requests.GlobalRequests;
 import com.example.mongo_db.Service.Admin.AdminService;
+import com.example.mongo_db.Service.Admin.StatisticService;
 import com.example.mongo_db.Service.LogData.LoggerService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,8 @@ public class AdminController {
     @Autowired
     private AdminService adminService;
 
+    @Autowired
+    private StatisticService statisticService;
 
     @GetMapping("/panel")
     public String displayAdminPanelPage() {
@@ -58,6 +61,13 @@ public class AdminController {
         model.addAttribute("checked_roles", roles);
         model.addAttribute("page", page.orElse(0));
         return "/shop/admin/all_shop_clients";
+    }
+
+
+    @GetMapping("/statistics")
+    public String displayStatisticsPage(Model model) {
+        System.out.println(statisticService.calculateWeekStatistic());
+        return "/shop/admin/global_statistics_page";
     }
 
 

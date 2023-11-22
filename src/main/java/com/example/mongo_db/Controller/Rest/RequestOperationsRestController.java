@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 
 @RestController
 @RequestMapping("/shop/api/help")
-public class RequestOperations {
+public class RequestOperationsRestController {
 
     @Autowired
     private RequestsService requestsService;

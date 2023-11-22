@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class GenerateSpecialCode {
-
     public  String createCode() {
         PasswordGenerator generatedPassword = new PasswordGenerator();
         CharacterData lowerCaseChars = EnglishCharacterData.LowerCase;

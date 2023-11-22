@@ -36,6 +36,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -117,7 +119,7 @@ public class ClientsService implements EntityOperations {
 
     public String sendVerificationMessage(String client_mail) {
         String verification_code = generateSpecialCode.createCode();
-        messageSenderService.sendClientVerificationMessage(client_mail, OutfitOasisMail.OUTFIT_OASIS_SENDER, mailSender);
+        messageSenderService.sendClientVerificationMessage(client_mail, verification_code, mailSender);
         return verification_code;
     }
 
@@ -145,6 +147,9 @@ public class ClientsService implements EntityOperations {
     @Override
     public void save_entity(Object obj) {
         Client client = (Client) obj;
+
+        client.setRegistrationDate(LocalDate.now());
+        client.setLastVisit(LocalDateTime.now());
 
         Bucket client_bucket = new Bucket();
         Image image = imageService.buildDefaultImage();
@@ -232,4 +237,6 @@ public class ClientsService implements EntityOperations {
         client.setClient_image(image);
         update_entity(client);
     }
+
+
 }

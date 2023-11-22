@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 
 @RestController
 @RequestMapping("/shop/api/client")
-public class ClientRequests {
+public class ClientRequestsRestController {
     @Autowired
     private ClientsService clientsService;
 

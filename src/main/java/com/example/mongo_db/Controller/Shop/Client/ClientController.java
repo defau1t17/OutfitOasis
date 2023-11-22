@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.logging.Logger;
 
@@ -128,11 +129,12 @@ public class ClientController {
         Client client = (Client) request.getSession().getAttribute(GLOBAL_CLIENT);
         if (addressValidation.isAddressNull(address)) {
             client.setAddress(null);
-            clientsService.update_entity(client);
         } else {
             client.setAddress(address);
-            clientsService.update_entity(client);
         }
+        client.setLastVisit(LocalDateTime.now());
+        clientsService.update_entity(client);
+
         UpdateGlobalClient.updateGlobalClient(GLOBAL_CLIENT, client, request.getSession());
 
         loggerService.log(client.getId(), "new client created with id [" + client.getId() + "]");
@@ -162,6 +164,7 @@ public class ClientController {
         Client client = clientsService.findClientByUserName(username);
         if (client != null) {
             if (client.getClient_password().equals(password)) {
+                client.setLastVisit(LocalDateTime.now());
                 request.getSession().setAttribute("global_client", client);
                 String redirection_gateway = roleRedirection.redirectClientByRole(client.getRole(), client.getId());
                 loggerService.log(client.getId(), "entered into the system");
@@ -229,6 +232,7 @@ public class ClientController {
         if (recovery_code.equals(user_verification_code)) {
             Optional<Client> clientById = clientsService.findClientById(id);
             Client client = clientById.get();
+            client.setLastVisit(LocalDateTime.now());
             UpdateGlobalClient.updateGlobalClient(GLOBAL_CLIENT, client, request.getSession());
             return "redirect:/shop/client/account/" + id + "/edit/password";
         } else {
@@ -261,7 +265,6 @@ public class ClientController {
             UpdateGlobalClient.updateGlobalClient(GLOBAL_CLIENT, client, request.getSession());
             loggerService.log(client.getId(), "updated password");
         }
-
         return "redirect:/shop/client/account/" + id;
     }
 

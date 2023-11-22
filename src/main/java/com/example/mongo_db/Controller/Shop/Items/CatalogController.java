@@ -28,9 +28,10 @@ public class CatalogController {
         model.addAttribute("all_items", catalogService.findAllItems());
         Page<ShopItem> page = catalogService.findByPage(current_page.orElse(0));
 
+
         model.addAttribute("page_information", page);
 
-        model.addAttribute("page_count", IntStream.rangeClosed(0, page.getTotalPages()-1).boxed().collect(Collectors.toList()));
+        model.addAttribute("page_count", IntStream.rangeClosed(0, page.getTotalPages() - 1).boxed().collect(Collectors.toList()));
 
 
         return "shop/items/catalog_page";
@@ -38,17 +39,16 @@ public class CatalogController {
 
     @GetMapping("/categories")
     public String displayCategoriesPage(Model model) {
-
         model.addAttribute("categories", catalogService.findAllCategories());
         return "shop/items/categories_page";
     }
 
 
     @GetMapping("/categories/{category}")
-    public String displayItemsByCategory(@PathVariable(value = "category") String category,@RequestParam(value = "page")Optional<Integer> page, Model model) {
+    public String displayItemsByCategory(@PathVariable(value = "category") String category, @RequestParam(value = "page") Optional<Integer> page, Model model) {
         Page<ShopItem> allItemsByCategory = catalogService.findAllItemsByCategory(category, page.orElse(0));
         model.addAttribute("category_page_information", allItemsByCategory);
-        model.addAttribute("page_count", IntStream.rangeClosed(0, allItemsByCategory.getTotalPages()-1).boxed().collect(Collectors.toList()));
+        model.addAttribute("page_count", IntStream.rangeClosed(0, allItemsByCategory.getTotalPages() - 1).boxed().collect(Collectors.toList()));
         return "shop/items/catalog_page";
     }
 

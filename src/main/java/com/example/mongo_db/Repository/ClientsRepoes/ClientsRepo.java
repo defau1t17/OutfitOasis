@@ -1,11 +1,14 @@
 package com.example.mongo_db.Repository.ClientsRepoes;
 
 import com.example.mongo_db.Entity.Client.Client;
+import com.example.mongo_db.Entity.Role;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.mongodb.repository.Update;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,5 +30,9 @@ public interface ClientsRepo extends MongoRepository<Client, String> {
 
 
     Optional<Client> findById(String id);
+
+    List<Client> findAllByRole(Role role);
+
+    List<Client> findAllByRegistrationDate(LocalDate localDate);
 
 }
