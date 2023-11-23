@@ -1,10 +1,119 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>OutFitOasis Statistic</title>
+    <link rel="stylesheet" th:href="@{/admin/globla_statistics_style.css}">
+    <script
+            th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js}"></script>
+    <link rel="stylesheet"
+          th:href="@{https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css}">
+    <script type="text/javascript"
+            th:src="@{https://www.gstatic.com/charts/loader.js}"></script>
 </head>
 <body>
 
+
+<div class="container">
+    <div class="current-web-statistic">
+        <div class="statistic-block">
+            <h2 style="color: #ffffff">Clients</h2>
+            <h3 style="color: #ffffff" class="clients-statistic"
+                th:text="${currentStatistic.quantityOfClients}"></h3>
+        </div>
+
+        <div class="statistic-block">
+            <h2 style="color: #ffffff">Producers</h2>
+            <h3 style="color: #ffffff" class="producers-statistic"
+                th:text="${currentStatistic.quantityOfProducers}"></h3>
+        </div>
+
+        <div class="statistic-block">
+            <h2 style="color: #ffffff">Employees</h2>
+
+            <h3 style="color: #ffffff" class="employees-statistic"
+                th:text="${currentStatistic.quantityOfEmployees}"></h3>
+        </div>
+
+        <div class="statistic-block">
+            <h2 style="color: #ffffff"> Visitors</h2>
+            <h3 style="color: #ffffff" class="visitors-statistic"
+                th:text="${currentStatistic.quantityOfSiteVisitors}"></h3>
+        </div>
+
+        <div class="statistic-block">
+            <h2 style="color: #ffffff">New Clients</h2>
+            <h3 style="color: #ffffff" class="daily-new-clients-statistic"
+                th:text="${currentStatistic.quantityOfDailyNewClients}"></h3>
+        </div>
+
+    </div>
+
+    <div class="average-web-statistic">
+        <div id="chart_div"></div>
+        <div id="visitors"></div>
+    </div>
+
+
+</div>
+<script th:inline="javascript">
+    var weekStat = [[${avgStatistic}]];
+    var todayStat = [[${currentStatistic}]];
+    var weekVisitors = [[${weekVisitorsStatistic}]];
+    $(document).ready(function () {
+        google.charts.load('current', {
+            packages: ['corechart', 'bar']
+        });
+        google.charts.setOnLoadCallback(drawColumnChart);
+        google.charts.setOnLoadCallback(drawVisitorsChart);
+    });
+
+    function drawColumnChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Statistic');
+        data.addColumn('number', 'Week');
+        data.addColumn('number', 'Today');
+        data.addRow(['Clients', weekStat.quantityOfClients, todayStat.quantityOfClients]);
+        data.addRow(['Producers', weekStat.quantityOfProducers, todayStat.quantityOfProducers]);
+        data.addRow(['Employees', weekStat.quantityOfEmployees, todayStat.quantityOfEmployees]);
+        data.addRow(['New Clients', weekStat.quantityOfDailyNewClients, todayStat.quantityOfDailyNewClients]);
+        var options = {
+            title: 'Clients ',
+            hAxis: {
+                title: '',
+            },
+            vAxis: {
+                title: 'Quantity'
+            }
+        };
+        var chart = new google.visualization.ColumnChart(document
+            .getElementById('chart_div'));
+        chart.draw(data, options);
+    }
+
+    function drawVisitorsChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Day Of Week');
+        data.addColumn('number', 'Quantity');
+        Object.entries(weekVisitors).forEach(function ([dayOfWeek, quantity]) {
+            data.addRow([dayOfWeek, quantity]);
+        });
+        var options = {
+            title: 'Visitors ',
+            hAxis: {
+                title: '',
+            },
+            vAxis: {
+                title: 'Quantity',
+                minValue: 0,
+                maxValue: 10000
+            }
+        };
+        var chart = new google.visualization.ColumnChart(document
+            .getElementById('visitors'));
+        chart.draw(data, options);
+    }
+
+</script>
 </body>
 </html>

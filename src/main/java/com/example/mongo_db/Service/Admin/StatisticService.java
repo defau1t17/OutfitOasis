@@ -21,6 +21,7 @@ import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAccessor;
 import java.time.temporal.TemporalAdjuster;
 import java.time.temporal.TemporalAdjusters;
+import java.util.HashMap;
 import java.util.List;
 
 @EnableScheduling
@@ -92,6 +93,22 @@ public class StatisticService {
         statistic.setQuantityOfDailyNewClients(avgWeekNewDailyClientsIncrement / daysDiff);
 
         return statistic;
+    }
+
+
+    public HashMap<DayOfWeek, Long> getWeekVisitorsStatistic() {
+        HashMap<DayOfWeek, Long> weekVisitorsStatistic = new HashMap<>();
+        LocalDate day = LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+        LocalDate currentDayOfWeek = LocalDate.now();
+        while (!day.isAfter(currentDayOfWeek)) {
+            Statistic dailyStatistics = statisticsRepository.findByCurrentDate(day);
+            if (dailyStatistics != null) {
+                weekVisitorsStatistic.put(day.getDayOfWeek(), statisticsRepository.findByCurrentDate(day).getQuantityOfSiteVisitors());
+            }
+            day = day.plusDays(1);
+
+        }
+        return weekVisitorsStatistic;
     }
 
     public Statistic getStatistic() {

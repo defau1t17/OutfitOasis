@@ -3,6 +3,7 @@ package com.example.mongo_db.Controller.Admin;
 
 import com.example.mongo_db.Entity.Client.Client;
 import com.example.mongo_db.Entity.Requests.GlobalRequests;
+import com.example.mongo_db.Entity.Stistics.Statistic;
 import com.example.mongo_db.Service.Admin.AdminService;
 import com.example.mongo_db.Service.Admin.StatisticService;
 import com.example.mongo_db.Service.LogData.LoggerService;
@@ -66,7 +67,10 @@ public class AdminController {
 
     @GetMapping("/statistics")
     public String displayStatisticsPage(Model model) {
-        System.out.println(statisticService.calculateWeekStatistic());
+        model.addAttribute("avgStatistic", statisticService.calculateWeekStatistic());
+        model.addAttribute("currentStatistic", statisticService.getStatistic());
+        model.addAttribute("weekVisitorsStatistic", statisticService.getWeekVisitorsStatistic());
+
         return "/shop/admin/global_statistics_page";
     }
 
