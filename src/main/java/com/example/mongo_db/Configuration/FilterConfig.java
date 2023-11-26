@@ -1,7 +1,8 @@
 package com.example.mongo_db.Configuration;
 
-import com.example.mongo_db.Security.ClientFilter;
-import com.example.mongo_db.Security.ClientRegistrationFilter;
+import com.example.mongo_db.Configuration.filters.VisitorFiler;
+import com.example.mongo_db.Configuration.filters.ClientFilter;
+import com.example.mongo_db.Configuration.filters.ClientRegistrationFilter;
 import com.example.mongo_db.Service.Admin.StatisticService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -13,14 +14,6 @@ public class FilterConfig {
 
     @Autowired
     private StatisticService service;
-
-    @Bean
-    public FilterRegistrationBean<ClientFilter> clientFilter() {
-        FilterRegistrationBean<ClientFilter> filter = new FilterRegistrationBean<>();
-        filter.setFilter(new ClientFilter());
-        filter.addUrlPatterns("/shop/client/account/*", "/shop/client/registration/address", "/shop/client", "/shop/producer/request/form");
-        return filter;
-    }
 
     @Bean
     public FilterRegistrationBean<ClientRegistrationFilter> clientRegistrationFilter() {
@@ -37,5 +30,7 @@ public class FilterConfig {
         filter.addUrlPatterns("/shop/*");
         return filter;
     }
+
+
 
 }

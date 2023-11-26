@@ -1,14 +1,23 @@
-package com.example.mongo_db.Security;
+package com.example.mongo_db.Configuration.filters;
 
-import com.example.mongo_db.Entity.Client.Client;
+import com.example.mongo_db.Service.Admin.StatisticService;
 import jakarta.servlet.*;
+import jakarta.servlet.FilterConfig;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
-public class ClientFilter implements Filter {
+public class VisitorFiler implements Filter {
+
+
+    private final StatisticService statisticService;
+
+    public VisitorFiler(StatisticService statisticService) {
+        this.statisticService = statisticService;
+    }
+
+
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         Filter.super.init(filterConfig);
@@ -18,17 +27,18 @@ public class ClientFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
-        Client global_client = (Client) request.getSession().getAttribute("global_client");
-        if (global_client == null) {
-            response.sendRedirect("/shop/client/login");
+        if (request.getSession().isNew()) {
+            statisticService.addNewVisitor();
+            filterChain.doFilter(request, response);
         } else {
             filterChain.doFilter(request, response);
         }
-
     }
 
     @Override
     public void destroy() {
         Filter.super.destroy();
     }
+
+
 }

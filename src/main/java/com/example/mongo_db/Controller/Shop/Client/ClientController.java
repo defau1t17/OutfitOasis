@@ -3,14 +3,20 @@ package com.example.mongo_db.Controller.Shop.Client;
 
 import com.example.mongo_db.Entity.Client.Address;
 import com.example.mongo_db.Entity.Client.Client;
+import com.example.mongo_db.Security.ClientDetailsService;
 import com.example.mongo_db.Service.Clients.*;
-import com.example.mongo_db.Service.Image.ImageService;
 import com.example.mongo_db.Service.LogData.LoggerService;
 import com.example.mongo_db.Service.LoginRedirection;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -26,15 +32,13 @@ import java.util.logging.Logger;
 @Controller
 @RequestMapping("/shop/client/")
 public class ClientController {
-    private static final Logger logger = Logger.getGlobal();
-
     private static final String GLOBAL_CLIENT = "global_client";
 
     @Autowired
     private ClientsService clientsService;
 
     @Autowired
-    private ImageService imageService;
+    private ClientDetailsService clientDetailsService;
 
     @Autowired
     private AddressValidation addressValidation;
@@ -50,9 +54,8 @@ public class ClientController {
 
     @GetMapping("/registration")
     public String viewRegistrationPage(Model model, HttpServletRequest request) {
-
         if (request.getSession().getAttribute(GLOBAL_CLIENT) != null) {
-            UpdateGlobalClient.updateGlobalClient(GLOBAL_CLIENT, null, request.getSession());
+            clientsService.logout(request);
         }
         if (request.getSession().getAttribute("clientExists") == null) {
             model.addAttribute("newClient", new Client());
@@ -60,7 +63,6 @@ public class ClientController {
             model.addAttribute("newClient", request.getSession().getAttribute("clientExists"));
             model.addAttribute("error_message", request.getSession().getAttribute("existed_params"));
         }
-        logger.info("create new client page was shown successfully!");
         return "shop/client/client_registration";
     }
 
@@ -68,7 +70,6 @@ public class ClientController {
     @PostMapping("/registration")
     public String createNewUser(@ModelAttribute Client client, HttpServletRequest request) {
         if (!clientsService.isClientExists(client)) {
-            logger.info("new client was sent to verification successfully.");
             String verification_code = clientsService.sendVerificationMessage(client.getMail());
             request.getSession().setAttribute("newClient", client);
             request.getSession().setAttribute("verification_code", verification_code);
@@ -76,22 +77,18 @@ public class ClientController {
         } else {
             request.getSession().setAttribute("clientExists", client);
             request.getSession().setAttribute("existed_params", clientsService.getExistedFields(client));
-            logger.info("client with same data was found! Redirected to registration page");
             return "redirect:/shop/client/registration";
         }
     }
 
     @GetMapping("/registration/verification")
     public String displayAccountVerificationPage(Model model, HttpServletRequest request) {
-        logger.info("new client verification page was shown successfully!");
         String issue = request.getParameter("issue");
         if (issue != null) {
-            model.addAttribute("issue", "Your verification code doesn't matches! Try again");
+            model.addAttribute("issue", "Verification code doesn't matches! Try again");
         }
         Client newClient = (Client) request.getSession().getAttribute("newClient");
-
         model.addAttribute("info", newClient.getMail());
-
         return "shop/client/client_account_verification";
     }
 
@@ -99,15 +96,13 @@ public class ClientController {
     @PostMapping("/registration/verification")
     public String verifyNewAccount(String user_verification_code, HttpServletRequest request, RedirectAttributes redirectAttributes) {
         String verification_code = (String) request.getSession().getAttribute("verification_code");
-
         if (verification_code.equals(user_verification_code)) {
-            logger.info("user verified successfully. Redirected to new password page");
-            clientsService.save_entity((Client) request.getSession().getAttribute("newClient"));
-            UpdateGlobalClient.updateGlobalClient(GLOBAL_CLIENT, (Client) request.getSession().getAttribute("newClient"), request.getSession());
-
+            Client newClient = (Client) request.getSession().getAttribute("newClient");
+            clientsService.save_entity(newClient);
+            clientDetailsService.authenticateClient(newClient, request);
+            clientsService.updateGlobalClient(newClient, request.getSession());
             return "redirect:/shop/client/registration/address";
         } else {
-            logger.info("User wrote incorrect verification code. Redirected back");
             redirectAttributes.addAttribute("issue", "WRONG_CODE");
             return "redirect:/shop/client/registration/verification";
         }
@@ -132,10 +127,8 @@ public class ClientController {
         } else {
             client.setAddress(address);
         }
-        client.setLastVisit(LocalDateTime.now());
         clientsService.update_entity(client);
-
-        UpdateGlobalClient.updateGlobalClient(GLOBAL_CLIENT, client, request.getSession());
+        clientsService.updateGlobalClient(client, request.getSession());
 
         loggerService.log(client.getId(), "new client created with id [" + client.getId() + "]");
 
@@ -146,10 +139,11 @@ public class ClientController {
     @GetMapping("/login")
     public String displayClientLoginPage(Model model, HttpServletRequest request) {
         if (request.getSession().getAttribute(GLOBAL_CLIENT) != null) {
-            UpdateGlobalClient.updateGlobalClient(GLOBAL_CLIENT, null, request.getSession());
+            clientsService.logout(request);
         }
         String total_client = request.getParameter("client_user_name");
         String total_issue = request.getParameter("issue");
+
         if (total_client != null) {
             if (loginRedirection.addModels(total_client)) {
                 model.addAttribute("client_user_name", total_client);
@@ -164,11 +158,10 @@ public class ClientController {
         Client client = clientsService.findClientByUserName(username);
         if (client != null) {
             if (client.getClient_password().equals(password)) {
+                clientDetailsService.authenticateClient(client, request);
                 client.setLastVisit(LocalDateTime.now());
-                request.getSession().setAttribute("global_client", client);
-                String redirection_gateway = roleRedirection.redirectClientByRole(client.getRole(), client.getId());
-                loggerService.log(client.getId(), "entered into the system");
-                return "redirect:" + redirection_gateway;
+                clientsService.updateGlobalClient(client, request.getSession());
+                return "redirect:" + roleRedirection.redirectClientByRole(client);
             } else {
                 attributes.addAttribute("client_user_name", username);
                 attributes.addAttribute("issue", "WRONG_PASSWORD");
@@ -221,8 +214,6 @@ public class ClientController {
             Client client = clientById.get();
             model.addAttribute("info", client.getMail());
         }
-        logger.info("verification page for client with id " + id + " was shown successfully!");
-
         return "shop/client/client_password_recovery_verification";
     }
 
@@ -232,8 +223,7 @@ public class ClientController {
         if (recovery_code.equals(user_verification_code)) {
             Optional<Client> clientById = clientsService.findClientById(id);
             Client client = clientById.get();
-            client.setLastVisit(LocalDateTime.now());
-            UpdateGlobalClient.updateGlobalClient(GLOBAL_CLIENT, client, request.getSession());
+            clientsService.updateGlobalClient(client, request.getSession());
             return "redirect:/shop/client/account/" + id + "/edit/password";
         } else {
             redirectAttributes.addAttribute("issue", "WRONG_CODE");
@@ -262,7 +252,7 @@ public class ClientController {
         } else {
             client.setClient_password(new_password);
             clientsService.update_entity(client);
-            UpdateGlobalClient.updateGlobalClient(GLOBAL_CLIENT, client, request.getSession());
+            clientsService.updateGlobalClient(client, request.getSession());
             loggerService.log(client.getId(), "updated password");
         }
         return "redirect:/shop/client/account/" + id;
@@ -271,7 +261,6 @@ public class ClientController {
 
     @GetMapping("/account/{id}")
     public String displayClientAccountPage(@PathVariable(value = "id") String id, Model model, HttpServletRequest request) {
-
         Client client = (Client) request.getSession().getAttribute(GLOBAL_CLIENT);
         model.addAttribute("current_client", client);
         if (addressValidation.isAddressNull(client.getAddress())) {
@@ -310,10 +299,7 @@ public class ClientController {
         Client updated_client = clientsService.requestClientUpdate(client, addressValidation.isAddressNull(client.getAddress()));
         if (updated_client != null) {
             clientsService.update_entity(updated_client);
-            UpdateGlobalClient.updateGlobalClient(GLOBAL_CLIENT, updated_client, request.getSession());
-
-            loggerService.log(client.getId(), "updated account information");
-
+            clientsService.updateGlobalClient(client, request.getSession());
             return "redirect:/shop/client/account/" + id;
         } else {
             attributes.addAttribute("issue", "FORBIDDEN");
@@ -354,9 +340,8 @@ public class ClientController {
             model.addAttribute("newMail", request.getSession().getAttribute("mail_for_verification"));
         }
         if (request.getParameter("issue") != null) {
-            model.addAttribute("issue", "Your verification code doesn't matches! Try again");
+            model.addAttribute("issue", "Verification code doesn't matches! Try again");
         }
-
         return "shop/client/client_account_verification";
 
     }
@@ -371,7 +356,7 @@ public class ClientController {
             loggerService.log(client.getId(), "changed mail from " + client.getMail() + " to " + mail_for_verification);
             client.setMail(mail_for_verification);
             clientsService.update_entity(client);
-            UpdateGlobalClient.updateGlobalClient(GLOBAL_CLIENT, client, request.getSession());
+            clientsService.updateGlobalClient(client, request.getSession());
             return "redirect:/shop/client/account/" + id;
         } else {
             attributes.addAttribute("issue", "WRONG_CODE");
@@ -394,7 +379,7 @@ public class ClientController {
         if (image != null) {
             clientsService.updateClientImage(image, client);
             loggerService.log(client.getId(), "updated image");
-            UpdateGlobalClient.updateGlobalClient(GLOBAL_CLIENT, client, request.getSession());
+            clientsService.updateGlobalClient(client, request.getSession());
             attributes.addAttribute("imageUpdated", true);
             return "redirect:/shop/client/account/" + id + "/edit/image";
         } else {
@@ -404,9 +389,9 @@ public class ClientController {
     }
 
 
-    @GetMapping("/account/{id}/logout")
-    public String logOutPage(@PathVariable(value = "id") String id, HttpServletRequest request) {
-        UpdateGlobalClient.updateGlobalClient(GLOBAL_CLIENT, null, request.getSession());
+    @GetMapping("/account/logout")
+    public String logOutPage(HttpServletRequest request) {
+        clientsService.logout(request);
         return "redirect:/shop/client/login";
     }
 }

@@ -1,4 +1,4 @@
-package com.example.mongo_db.Security;
+package com.example.mongo_db.Configuration.filters;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;

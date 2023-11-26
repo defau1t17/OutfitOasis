@@ -143,12 +143,11 @@
                     showNotification('Item has been added successfully!', 2000);
                     console.log("");
                 }
-                if (xhr.status === 401) {
+            },
+            error: function (data, status, code) {
+                if (data.statusCode().status === 401) {
                     window.location.href = 'http://localhost:8081/shop/client/login';
                 }
-            },
-            error: function () {
-                console.log("Ошибка при отправке запроса");
             }
         });
     }

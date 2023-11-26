@@ -10,6 +10,9 @@ import com.example.mongo_db.Service.LogData.LoggerService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,6 +34,9 @@ public class AdminController {
 
     @GetMapping("/panel")
     public String displayAdminPanelPage() {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println(authentication);
         return "/shop/admin/admin_panel_page";
     }
 
@@ -38,6 +44,8 @@ public class AdminController {
     public String displayRequestPage(@RequestParam(required = false) Optional<Integer> page,
                                      @RequestParam(required = false) List<String> tag,
                                      Model model) {
+
+
         Page<GlobalRequests> requestsByParams = adminService.getRequestsByParams(page.orElse(0), tag);
         model.addAttribute("requests_data", requestsByParams);
         model.addAttribute("tags", tag);

@@ -23,6 +23,7 @@ import com.example.mongo_db.Service.MessageSenderService;
 import com.example.mongo_db.Service.Producer.ProducerService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -30,6 +31,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -70,13 +72,17 @@ public class ClientsService implements EntityOperations {
 
     @Autowired
     private MongoTemplate mongoTemplate;
+
     private static final int REQUESTS_PAGE_SIZE = 20;
+    private static final String GLOBAL_CLIENT = "global_client";
+
 
     public boolean isClientExists(Client client) {
         if (client != null && clientsRepo.doesUserExists(client.getPhone_number(), client.getMail(), client.getClient_user_name()) == null) {
             return false;
         } else return true;
     }
+
 
     public String getExistedFields(Client client) {
         String fields = "client with ";
@@ -190,7 +196,7 @@ public class ClientsService implements EntityOperations {
         client.getBucket().setClient_items(client_items);
         bucketService.update_entity(client.getBucket());
         update_entity(client);
-        UpdateGlobalClient.updateGlobalClient("global_client", client, request.getSession());
+        updateGlobalClient(client, request.getSession());
     }
 
 
@@ -209,7 +215,7 @@ public class ClientsService implements EntityOperations {
         client.getBucket().setClient_items(client_items);
         bucketService.update_entity(client.getBucket());
         update_entity(client);
-        UpdateGlobalClient.updateGlobalClient("global_client", client, request.getSession());
+        updateGlobalClient(client, request.getSession());
     }
 
     public Page<Client> getClientsByParams(int page, List<String> roles, String name, String secondName, int age, String gender) {
@@ -238,5 +244,16 @@ public class ClientsService implements EntityOperations {
         update_entity(client);
     }
 
+
+    public void updateGlobalClient(Client updated_client, HttpSession httpSession) {
+        httpSession.setAttribute(GLOBAL_CLIENT, updated_client);
+        updated_client.setLastVisit(LocalDateTime.now());
+        save_entity(updated_client);
+    }
+
+    public void logout(HttpServletRequest request) {
+        updateGlobalClient(null, request.getSession());
+        SecurityContextHolder.getContext().setAuthentication(null);
+    }
 
 }
