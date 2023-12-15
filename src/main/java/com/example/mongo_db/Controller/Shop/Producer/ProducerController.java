@@ -2,7 +2,9 @@ package com.example.mongo_db.Controller.Shop.Producer;
 
 
 import com.example.mongo_db.Entity.Client.Client;
+import com.example.mongo_db.Entity.Producer.Producer;
 import com.example.mongo_db.Service.Clients.ClientsService;
+import com.example.mongo_db.Service.Producer.ProducerService;
 import com.example.mongo_db.Service.Requests.RequestsService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +15,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
 import java.nio.file.AccessDeniedException;
+import java.util.Optional;
 import java.util.logging.Logger;
 
 @Controller
@@ -24,6 +28,9 @@ public class ProducerController {
 
     @Autowired
     private ClientsService service;
+
+    @Autowired
+    private ProducerService producerService;
 
     @Autowired
     private RequestsService requestsService;
@@ -43,10 +50,20 @@ public class ProducerController {
     }
 
 
-    @GetMapping("/account/{id}")
-    public String displayProducerPage(@PathVariable(value = "id") String id, Model model, HttpServletRequest request) {
-
-
+    @GetMapping("/{id}")
+    public String displayProducerPageForClients(@PathVariable(value = "id") String id, Model model,
+                                      @RequestParam(required = false, name = "page") Optional<Integer> page,
+                                      HttpServletRequest request) {
+        Optional<Producer> optionalProducer = producerService.findProducerByID(id);
+        if (optionalProducer.isPresent()) {
+            model.addAttribute("producer", optionalProducer.get());
+            model.addAttribute("producerItems", producerService.getPageProducerItems(page.orElse(0), optionalProducer.get().getId()));
+        } else {
+            // throw not fount exception
+        }
         return "shop/producer/producer_page";
     }
+
+    @GetMapping("/account/{id}")
+    public String displayProducerPage(@PathVariable(value = "id") String id, )
 }

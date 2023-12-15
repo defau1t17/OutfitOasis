@@ -3,6 +3,7 @@ package com.example.mongo_db.Service.Admin;
 import com.example.mongo_db.DTO.AdminRequestOperationDTO;
 import com.example.mongo_db.Entity.Client.Client;
 import com.example.mongo_db.Entity.Requests.GlobalRequests;
+import com.example.mongo_db.Entity.Requests.RequestData;
 import com.example.mongo_db.Entity.Requests.Types.RequestStatus;
 import com.example.mongo_db.Entity.Requests.Types.RequestTags;
 import com.example.mongo_db.Entity.Role;
@@ -10,6 +11,7 @@ import com.example.mongo_db.Service.BugsAndQos.BugsAndQosService;
 import com.example.mongo_db.Service.Clients.ClientsService;
 import com.example.mongo_db.Service.LogData.LoggerService;
 import com.example.mongo_db.Service.MessageSenderService;
+import com.example.mongo_db.Service.Producer.ProducerService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -24,9 +26,14 @@ public class RequestsOperations {
     private MessageSenderService messageSenderService;
 
     @Autowired
+    private ProducerService producerService;
+
+    @Autowired
     private LoggerService loggerService;
 
-    private void upgradeClientsRoleToProducer(Client client, String clients_work_mail, ClientsService clientsService, JavaMailSender mailSender, String request_id, AdminService adminService) {
+
+    private void upgradeClientToProducerAndGenerateNewProducerAccount(Client client, GlobalRequests<RequestData> request, String clients_work_mail, ClientsService clientsService, JavaMailSender mailSender, String request_id, AdminService adminService) {
+        producerService.generateProducerFromRequestAndSave(request.getData_inf(), client);
         client.setRole(Role.ROLE_PRODUCER);
         clientsService.update_entity(client);
         messageSenderService.sendClientNotificationAboutNewRole(clients_work_mail, mailSender);
@@ -64,7 +71,7 @@ public class RequestsOperations {
                         removeRequests(request.getId(), adminService, true);
                         return true;
                     } else if (request.getTag() == RequestTags.PRODUCER_NEW) {
-                        upgradeClientsRoleToProducer(request.getRequest_sender(), request.getRequest_sender().getMail(), clientsService, mailSender, request.getId(), adminService);
+                        upgradeClientToProducerAndGenerateNewProducerAccount(request.getRequest_sender(), request, request.getRequest_sender().getMail(), clientsService, mailSender, request.getId(), adminService);
                         loggerService.log(admin.getId(), "approved role reversal for " + request.getRequest_sender().getId() + " client");
                         loggerService.log(request.getRequest_sender().getId(), "role reversed to PRODUCER");
                         removeRequests(request.getId(), adminService, true);
