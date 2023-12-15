@@ -10,6 +10,9 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Data
 @Document(collection = "clients")
 public class Client extends User {
@@ -48,6 +51,11 @@ public class Client extends User {
 
     @Field(name = "role")
     private Role role = Role.ROLE_CLIENT;
+
+    private LocalDate registrationDate;
+
+    private LocalDateTime lastVisit;
+
 
     public Client updateClient(Client updatedClient, boolean isAddressEmpty) {
         if (updatedClient.getName() != null && updatedClient.getName().trim() != "") {

@@ -35,6 +35,7 @@ public class LoggerService {
     }
 
 
+
     private void save(LogData logData) {
         logDataRepo.save(logData);
     }

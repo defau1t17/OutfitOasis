@@ -5,9 +5,8 @@ import com.example.mongo_db.Entity.Requests.GlobalRequests;
 import com.example.mongo_db.Entity.Requests.RequestData;
 import com.example.mongo_db.Entity.Requests.Types.RequestTags;
 import com.example.mongo_db.Entity.Role;
-import com.example.mongo_db.Repository.ItemsRepoes.ItemRepo;
 import com.example.mongo_db.Repository.RequestsRepost.RequestsRepo;
-import com.example.mongo_db.Service.Clients.UpdateGlobalClient;
+import com.example.mongo_db.Service.Clients.ClientsService;
 import com.example.mongo_db.Service.EntityOperations;
 import com.example.mongo_db.Service.Items.CatalogService;
 import com.example.mongo_db.Service.MessageSenderService;
@@ -32,6 +31,9 @@ public class RequestsService implements EntityOperations {
     private CatalogService catalogService;
 
     @Autowired
+    private ClientsService clientsService;
+
+    @Autowired
     private MessageSenderService messageSenderService;
 
     public boolean isClientOnModeration(Client client) {
@@ -50,7 +52,7 @@ public class RequestsService implements EntityOperations {
         Client client = (Client) request.getSession().getAttribute("global_client");
         producer_request.setRequest_sender(client);
         save_entity(producer_request);
-        UpdateGlobalClient.updateGlobalClient("global_client", client, request.getSession());
+        clientsService.updateGlobalClient(client, request.getSession());
         sendMessage(producer_request.getData_inf().getRequest_producer_mail());
         return producer_request.getId();
     }
@@ -77,9 +79,6 @@ public class RequestsService implements EntityOperations {
             return "PRODUCER";
         else return "CLIENT";
     }
-
-
-
 
 
     @Override
