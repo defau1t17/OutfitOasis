@@ -8,6 +8,7 @@ import com.example.mongo_db.Service.Producer.ProducerService;
 import com.example.mongo_db.Service.Requests.RequestsService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.aggregation.ArithmeticOperators;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -52,18 +53,55 @@ public class ProducerController {
 
     @GetMapping("/{id}")
     public String displayProducerPageForClients(@PathVariable(value = "id") String id, Model model,
-                                      @RequestParam(required = false, name = "page") Optional<Integer> page,
-                                      HttpServletRequest request) {
+                                                @RequestParam(required = false, name = "page") Optional<Integer> page,
+                                                HttpServletRequest request) {
         Optional<Producer> optionalProducer = producerService.findProducerByID(id);
         if (optionalProducer.isPresent()) {
             model.addAttribute("producer", optionalProducer.get());
             model.addAttribute("producerItems", producerService.getPageProducerItems(page.orElse(0), optionalProducer.get().getId()));
         } else {
-            // throw not fount exception
+            //throw not found window
         }
         return "shop/producer/producer_page";
     }
 
-    @GetMapping("/account/{id}")
-    public String displayProducerPage(@PathVariable(value = "id") String id, )
+    @GetMapping("/{id}/creator")
+    public String displayProducerAccountPage(@PathVariable(value = "id") String id, Model model) {
+        Optional<Producer> optionalProducer = producerService.findProducerByID(id);
+        if (optionalProducer.isPresent()) {
+            model.addAttribute("producer", optionalProducer.get());
+        } else {
+            //throw not found window
+        }
+        return "shop/producer/producer_personal_account_page";
+    }
+
+    @GetMapping("/{id}/creator/products")
+    public String displayProducerAllProducts(@PathVariable(value = "id") String id,
+                                             @RequestParam(name = "page", required = false) Optional<Integer> page,
+                                             Model model) {
+        Optional<Producer> optionalProducer = producerService.findProducerByID(id);
+        if (optionalProducer.isPresent()) {
+            model.addAttribute("products", producerService.getPageProducerItems(page.orElse(0), id));
+        } else {
+            //throw not found window
+        }
+
+        return "shop/producer/manage_products";
+    }
+
+    @GetMapping("/{id}/creator/product")
+    public String createNewProduct(@PathVariable(value = "id") String id, Model model) {
+
+        return "shop/producer/manage_products";
+    }
+
+    @GetMapping("/{id}/creator/team")
+    public String editProducersTeam(@PathVariable(value = "id") String id, Model model) {
+
+
+        return "shop/producer/manage_products";
+    }
+
+
 }

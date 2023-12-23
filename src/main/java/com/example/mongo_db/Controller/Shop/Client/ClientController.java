@@ -8,15 +8,9 @@ import com.example.mongo_db.Service.Clients.*;
 import com.example.mongo_db.Service.LogData.LoggerService;
 import com.example.mongo_db.Service.LoginRedirection;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -27,7 +21,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.logging.Logger;
 
 @Controller
 @RequestMapping("/shop/client/")
@@ -47,7 +40,7 @@ public class ClientController {
     private LoginRedirection loginRedirection;
 
     @Autowired
-    private RoleRedirection roleRedirection;
+    private ClientAuthentication clientAuthentication;
 
     @Autowired
     private LoggerService loggerService;
@@ -155,24 +148,7 @@ public class ClientController {
 
     @PostMapping("/login")
     public String loginClient(String username, String password, HttpServletRequest request, RedirectAttributes attributes) {
-        Client client = clientsService.findClientByUserName(username);
-        if (client != null) {
-            if (client.getClient_password().equals(password)) {
-                clientDetailsService.authenticateClient(client, request);
-                client.setLastVisit(LocalDateTime.now());
-                clientsService.updateGlobalClient(client, request.getSession());
-                return "redirect:" + roleRedirection.redirectClientByRole(client);
-            } else {
-                attributes.addAttribute("client_user_name", username);
-                attributes.addAttribute("issue", "WRONG_PASSWORD");
-                return "redirect:/shop/client/login";
-            }
-        } else {
-            attributes.addAttribute("client_user_name", username);
-            attributes.addAttribute("issue", "USER_NOT_FOUND");
-            return "redirect:/shop/client/login";
-        }
-
+        return clientAuthentication.authenticateClient(username, password, clientDetailsService, request);
     }
 
     @GetMapping("/login/passwordrecovery")

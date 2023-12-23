@@ -1,5 +1,6 @@
 package com.example.mongo_db.Repository.ProducerRepoes;
 
+import com.example.mongo_db.Entity.Client.Client;
 import com.example.mongo_db.Entity.Items.Item.ShopItem;
 import com.example.mongo_db.Entity.Producer.Producer;
 import org.springframework.data.domain.Page;
@@ -14,9 +15,10 @@ import java.util.Optional;
 @Repository
 public interface ProducerRepo extends MongoRepository<Producer, String> {
 
-    @Override
     Optional<Producer> findById(String id);
 
+    @Query(value = "{'client.id' :  ?0}")
+    Optional<Producer> findByClientID(String clientID);
 
     @Query(value = "{'id' :  ?0, }", fields = "{'producedItems': 1}")
     Page<ShopItem> findAllShopItemsByProducerID(String producerID, Pageable Pageable);

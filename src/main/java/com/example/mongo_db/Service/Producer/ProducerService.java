@@ -35,6 +35,11 @@ public class ProducerService implements EntityOperations {
         return producerRepo.findAllShopItemsByProducerID(producerID, pageRequest);
     }
 
+    public String findProducerByClientsID(String clientID) {
+        Optional<Producer> optionalProducer = producerRepo.findByClientID(clientID);
+        return optionalProducer.map(Producer::getId).orElse(null);
+    }
+
 
     @Override
     public void update_entity(Object obj) {

@@ -1,7 +1,7 @@
 package com.example.mongo_db.Security;
 
 import com.example.mongo_db.Entity.Client.Client;
-import com.example.mongo_db.Service.Clients.RoleRedirection;
+import com.example.mongo_db.Service.Clients.ClientAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,7 +24,7 @@ public class SecurityConfigurations {
     }
 
     @Autowired
-    private RoleRedirection roleRedirection;
+    private ClientAuthentication clientAuthentication;
 
 
     @Bean
@@ -45,7 +45,7 @@ public class SecurityConfigurations {
                                             if (global_client == null) {
                                                 response.sendRedirect("/shop/client/login");
                                             } else {
-                                                response.sendRedirect(roleRedirection.redirectClientByRole(global_client));
+                                                response.sendRedirect(clientAuthentication.redirectAuthenticatedClientByRole(global_client));
                                             }
                                         }))
                                         .exceptionHandling(handle -> handle.authenticationEntryPoint((request, response, authException) -> {
@@ -53,7 +53,7 @@ public class SecurityConfigurations {
                                             if (global_client == null) {
                                                 response.sendRedirect("/shop/client/login");
                                             } else {
-                                                response.sendRedirect(roleRedirection.redirectClientByRole(global_client));
+                                                response.sendRedirect(clientAuthentication.redirectAuthenticatedClientByRole(global_client));
                                             }
                                         }));
                             } catch (Exception e) {
