@@ -44,8 +44,6 @@ public class AdminController {
     public String displayRequestPage(@RequestParam(required = false) Optional<Integer> page,
                                      @RequestParam(required = false) List<String> tag,
                                      Model model) {
-
-
         Page<GlobalRequests> requestsByParams = adminService.getRequestsByParams(page.orElse(0), tag);
         model.addAttribute("requests_data", requestsByParams);
         model.addAttribute("tags", tag);

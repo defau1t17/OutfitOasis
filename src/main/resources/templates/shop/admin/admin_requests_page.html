@@ -19,6 +19,7 @@
         <button type="submit">Filter</button>
     </form>
 </div>
+
 <div class="container" th:if="${requests_data != null}">
     <div class="list-of-requests" th:each="request : ${requests_data.content}">
         <div class="request-block">

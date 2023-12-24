@@ -6,7 +6,6 @@ import com.example.mongo_db.Entity.Client.Client;
 import com.example.mongo_db.Security.ClientDetailsService;
 import com.example.mongo_db.Service.Clients.*;
 import com.example.mongo_db.Service.LogData.LoggerService;
-import com.example.mongo_db.Service.LoginRedirection;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -19,7 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Controller
@@ -35,9 +33,6 @@ public class ClientController {
 
     @Autowired
     private AddressValidation addressValidation;
-
-    @Autowired
-    private LoginRedirection loginRedirection;
 
     @Autowired
     private ClientAuthentication clientAuthentication;
@@ -138,10 +133,8 @@ public class ClientController {
         String total_issue = request.getParameter("issue");
 
         if (total_client != null) {
-            if (loginRedirection.addModels(total_client)) {
-                model.addAttribute("client_user_name", total_client);
-                model.addAttribute("issue", loginRedirection.printIssue(total_issue));
-            }
+            model.addAttribute("client_user_name", total_client);
+            model.addAttribute("issue", total_issue);
         }
         return "shop/client/client_login";
     }

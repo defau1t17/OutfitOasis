@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>I'm A Producer</title>
+    <link rel="stylesheet" th:href="@{/producer/creator_account.css}">
+
+</head>
+<body>
+
+
+<div class="container">
+    <div class="products">
+        <p><a th:href="@{/shop/producer/{id}/creator/products}">View All Products</a></p>
+    </div>
+    <div class="new-product">
+        <p><a th:href="@{/shop/producer/{id}/creator/product}">Create New Product </a></p>
+    </div>
+    <div class="team">
+        <p th:href="@{/shop/producer/{id}/creator/team}">Manage Team</p>
+    </div>
+
+</div>
+
+
+</body>
+</html>

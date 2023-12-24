@@ -1,4 +1,4 @@
-package com.example.mongo_db.Controller.Rest.admin;
+package com.example.mongo_db.Controller.Rest;
 
 import com.example.mongo_db.DTO.AdminRequestOperationDTO;
 import com.example.mongo_db.Entity.Client.Client;
@@ -40,6 +40,8 @@ public class AdminRequestsRestController {
         } else
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Operation rejected. Caused : " + ((Client) httpServletRequest.getSession().getAttribute("global_client")).getRole().toString());
     }
+
+
 
 
 }

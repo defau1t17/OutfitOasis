@@ -250,7 +250,7 @@ public class ClientsService implements EntityOperations {
     }
 
     public void logout(HttpServletRequest request) {
-        updateGlobalClient(null, request.getSession());
+        request.getSession().setAttribute(GLOBAL_CLIENT, null);
         SecurityContextHolder.getContext().setAuthentication(null);
     }
 
