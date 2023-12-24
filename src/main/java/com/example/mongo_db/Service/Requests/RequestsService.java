@@ -96,6 +96,7 @@ public class RequestsService implements EntityOperations {
     @Override
     public void remove_entity(Object obj) {
         requestsRepo.delete((GlobalRequests<?>) obj);
-
     }
+
+
 }

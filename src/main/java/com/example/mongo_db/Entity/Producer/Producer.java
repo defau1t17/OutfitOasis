@@ -29,4 +29,8 @@ public class Producer {
     private Client client;
 
 
+    public void addNewItem(ShopItem shopItem) {
+        this.producedItems.add(shopItem);
+    }
+
 }

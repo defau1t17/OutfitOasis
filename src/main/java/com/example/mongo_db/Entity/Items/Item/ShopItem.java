@@ -17,5 +17,6 @@ public class ShopItem {
 
     private String producer_id;
 
+    //private List<Image> images;
 
 }

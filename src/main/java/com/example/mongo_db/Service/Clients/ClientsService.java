@@ -249,6 +249,7 @@ public class ClientsService implements EntityOperations {
         save_entity(updated_client);
     }
 
+
     public void logout(HttpServletRequest request) {
         request.getSession().setAttribute(GLOBAL_CLIENT, null);
         SecurityContextHolder.getContext().setAuthentication(null);

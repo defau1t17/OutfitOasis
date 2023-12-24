@@ -45,7 +45,7 @@ public class SecurityConfigurations {
                                             if (global_client == null) {
                                                 response.sendRedirect("/shop/client/login");
                                             } else {
-                                                response.sendRedirect(clientAuthentication.redirectAuthenticatedClientByRole(global_client));
+                                                response.sendRedirect(clientAuthentication.redirectAuthenticatedClientByRole(global_client, request));
                                             }
                                         }))
                                         .exceptionHandling(handle -> handle.authenticationEntryPoint((request, response, authException) -> {
@@ -53,7 +53,7 @@ public class SecurityConfigurations {
                                             if (global_client == null) {
                                                 response.sendRedirect("/shop/client/login");
                                             } else {
-                                                response.sendRedirect(clientAuthentication.redirectAuthenticatedClientByRole(global_client));
+                                                response.sendRedirect(clientAuthentication.redirectAuthenticatedClientByRole(global_client, request));
                                             }
                                         }));
                             } catch (Exception e) {

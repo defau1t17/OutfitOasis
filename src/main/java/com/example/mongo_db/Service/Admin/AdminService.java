@@ -7,6 +7,7 @@ import com.example.mongo_db.Filter.RequestsFilter;
 import com.example.mongo_db.Filter.GlobalClientsFilter;
 import com.example.mongo_db.Repository.RequestsRepost.RequestsRepo;
 import com.example.mongo_db.Service.Clients.ClientsService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -47,6 +48,10 @@ public class AdminService {
 
     public void deleteRequestByID(String id) {
         requestsRepo.deleteById(id);
+    }
+
+    public void createSession(Client client, HttpSession session) {
+        session.setAttribute("global_client", client);
     }
 
     public boolean operationValidation(Client client) {

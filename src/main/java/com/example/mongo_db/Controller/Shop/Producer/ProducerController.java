@@ -1,6 +1,7 @@
 package com.example.mongo_db.Controller.Shop.Producer;
 
 
+import com.example.mongo_db.DTO.NewProducerItemDTO;
 import com.example.mongo_db.Entity.Client.Client;
 import com.example.mongo_db.Entity.Producer.Producer;
 import com.example.mongo_db.Service.Clients.ClientsService;
@@ -8,20 +9,14 @@ import com.example.mongo_db.Service.Producer.ProducerService;
 import com.example.mongo_db.Service.Requests.RequestsService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.aggregation.ArithmeticOperators;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.data.mongodb.util.BsonUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.nio.file.AccessDeniedException;
 import java.util.Optional;
-import java.util.logging.Logger;
 
 @Controller
 @RequestMapping("/shop/producer")
@@ -91,10 +86,12 @@ public class ProducerController {
     }
 
     @GetMapping("/{id}/creator/product")
-    public String createNewProduct(@PathVariable(value = "id") String id, Model model) {
-
-        return "shop/producer/manage_products";
+    public String createNewProduct(@PathVariable(value = "id") String id, Model model, HttpServletRequest request) {
+        model.addAttribute("producerID", id);
+        model.addAttribute("newProducerItemDTO", new NewProducerItemDTO());
+        return "shop/producer/new_product";
     }
+
 
     @GetMapping("/{id}/creator/team")
     public String editProducersTeam(@PathVariable(value = "id") String id, Model model) {

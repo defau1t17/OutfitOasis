@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Net </title>
+</head>
+<body>
+<div class="title-block">
+    <h1>Add new Product</h1>
+</div>
+
+
+<div class="container">
+    <form id="new-form" th:object="${newProducerItemDTO}" onsubmit="sendNewItemRequest(); return false">
+        <input type="hidden" id="_csrf_token" name="_csrf" th:content="${_csrf.token}">
+        <input type="hidden" id="producerID" th:value="${producerID}"  th:name="${producerID}">
+
+        <div class="new-item-info-block">
+            <input type="text" class="info-input-block" placeholder="input name of the product" th:field="*{name}">
+            <select class="selection-container" th:field="*{category}">
+                <option th:each="category : ${T(com.example.mongo_db.Entity.Items.models.Category).values()}"
+                        th:text="${category}" th:name="category" th:value="${category}">category
+                </option>
+            </select>
+            <input type="number" class="info-input-block" placeholder="input price of the product" min="100"
+                   th:field="*{price}">
+        </div>
+        <div class="new-item-description-block">
+            <div class="selection-container">
+                <select class="selection" th:field="*{season}">
+                    <option th:each="season : ${T(com.example.mongo_db.Entity.Items.models.Season).values()}"
+                            th:text="${season}"
+                            th:value="${season}" th:name="${season}"></option>
+                </select>
+                <select class="selection" th:field="*{size}">
+                    <option th:each="size : ${T(com.example.mongo_db.Entity.Items.models.Size).values()}"
+                            th:text="${size}"
+                            th:value="${size}" th:name="${size}"></option>
+                </select>
+
+                <select class="selection" th:field="*{composition}">
+                    <option th:each="comp : ${T(com.example.mongo_db.Entity.Items.models.Composition).values()}"
+                            th:text="${comp}"
+                            th:value="${comp}" th:name="${comp}"></option>
+                </select>
+                <select class="selection" th:field="*{gender}">
+                    <option th:each="gender : ${T(com.example.mongo_db.Entity.Gender).values()}"
+                            th:text="${gender}" th:value="${gender}" th:name="gender">
+                    </option>
+                </select>
+            </div>
+            <!--          upload image block  -->
+            <label>Description</label>
+            <textarea placeholder="input description of the product" th:field="*{description}"></textarea>
+        </div>
+
+        <button type="submit">test</button>
+
+
+    </form>
+
+
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    function sendNewItemRequest() {
+        const form = document.getElementById('new-form');
+        var csrf_token = $('#_csrf_token').attr("content");
+
+        form.addEventListener('submit', function (event) {
+            event.preventDefault();
+            const myFormData = new FormData(event.target);
+            myFormData.append('_csrf', csrf_token);
+            myFormData.append('producerID', $('#producerID').val());
+            console.log($('#producerID').val())
+            const formDataObj = Object.fromEntries(myFormData.entries());
+            console.log(formDataObj);
+            var newProducerItemDTO = JSON.stringify(formDataObj);
+
+            $.ajax({
+                url: '/api/v1/producer/',
+                type: 'POST',
+                contentType: 'application/json',
+                data: newProducerItemDTO,
+                dataType: 'json',
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('X-CSRF-TOKEN', csrf_token);
+                },
+                success: function (data, status, xhr) {
+                    if (xhr.status === 201)
+                        console.log("success");
+                },
+                error: function () {
+                    console.log("error");
+                }
+            });
+        });
+    }
+
+
+</script>
+
+</body>
+</html>

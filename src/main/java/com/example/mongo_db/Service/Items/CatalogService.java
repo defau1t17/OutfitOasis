@@ -5,7 +5,6 @@ import com.example.mongo_db.Entity.Client.Client;
 import com.example.mongo_db.Entity.Client.Image;
 import com.example.mongo_db.Entity.Gender;
 import com.example.mongo_db.Entity.Items.Item.ShopItem;
-import com.example.mongo_db.Entity.Items.Types.Clothes.Dress.Dress;
 import com.example.mongo_db.Entity.Items.models.Category;
 import com.example.mongo_db.Entity.Items.models.Composition;
 import com.example.mongo_db.Entity.Items.models.Size;

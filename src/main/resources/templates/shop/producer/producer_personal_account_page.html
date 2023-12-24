@@ -11,15 +11,14 @@
 
 <div class="container">
     <div class="products">
-        <p><a th:href="@{/shop/producer/{id}/creator/products}">View All Products</a></p>
+        <p><a th:href="@{/shop/producer/__${session.get('global_client').id}__/creator/products}">View All Products</a></p>
     </div>
     <div class="new-product">
-        <p><a th:href="@{/shop/producer/{id}/creator/product}">Create New Product </a></p>
+        <p><a th:href="@{/shop/producer/__${session.get('global_client').id}__/creator/product}">Create New Product </a></p>
     </div>
     <div class="team">
-        <p th:href="@{/shop/producer/{id}/creator/team}">Manage Team</p>
+        <a th:href="@{/shop/producer/__${session.get('global_client').id}__/creator/team}">Manage Team</a>
     </div>
-
 </div>
 
 
